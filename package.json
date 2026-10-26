@@ -7,7 +7,7 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",
-    "build:pages": "tsc -b && vite build --base=/Site_happy_new_year/ && node -e \"require('fs').copyFileSync('dist/index.html','dist/404.html')\"",
+    "build:pages": "tsc -b && vite build --base=/Site_happy_new_year/ && node -e \"for (const f of ['route.html', '404.html']) require('fs').copyFileSync('dist/index.html', 'dist/' + f)\"",
     "preview": "vite preview",
     "lint": "oxlint src",
     "typecheck": "tsc -b"

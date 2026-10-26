@@ -184,8 +184,8 @@ public/
 Для настоящего хостинга ничего из этого не нужно: обычный `npm run build`, сайт в корне домена.
 
 - `.github/workflows/pages.yml` собирает сайт при каждой заливке в `main` и публикует его на GitHub Pages.
-- `npm run build:pages` — сборка для подпапки `/Site_happy_new_year/` (`--base`) и копия `index.html` в `404.html`,
-  чтобы прямые ссылки вроде `/route` открывались.
+- `npm run build:pages` — сборка для подпапки `/Site_happy_new_year/` (`--base`) и копии `index.html`: `route.html`
+  (GitHub Pages отдаёт его по адресу `/route`) и `404.html` (остальные адреса — роутер переводит на главную).
 - Плагин `publicPathsWithBase` в `vite.config.ts` добавляет подпапку к адресам картинок `/img/…` в коде
   (в стилях и `index.html` это делает сам Vite); роутер берёт подпапку из `import.meta.env.BASE_URL` (`src/app/App.tsx`).
 - `VITE_NOINDEX=1` при сборке закрывает демо от поисковиков (`widgets/page-layout/PageLayout.tsx`).
