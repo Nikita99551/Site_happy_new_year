@@ -1,0 +1,37 @@
+// Токены дизайна и миксины. Файл подключается в каждый SCSS автоматически (vite.config.ts → additionalData),
+// поэтому здесь только переменные и миксины, без CSS-вывода.
+
+// Цвета кампании (дублируются CSS-переменными в base.scss, чтобы были доступны и в JS через getComputedStyle)
+$green: #173f2a;
+$green-dark: #0f2d1e;
+$cream: #fff8e8;
+$page: #f6f2ea;
+$red: #e31e24;
+$red-dark: #b3121a;
+$gold: #e2b24a;
+$gold-dark: #b98a2e;
+$ink: #173f2a;
+$muted: #4e5f54;
+$kraft: #d9b98c;
+$placeholder: #8c978f;
+
+// Точки перелома (совпадают со статической версией сайта)
+$bp-sm: 480px;
+$bp-md: 900px;
+$bp-lg: 1200px;
+$bp-xl: 1439px;
+$bp-wide: 1800px;
+$bp-ultra: 2300px;
+
+@mixin below-sm { @media (max-width: $bp-sm) { @content; } }
+@mixin below-md { @media (max-width: $bp-md) { @content; } }
+@mixin below-lg { @media (max-width: $bp-lg) { @content; } }
+@mixin below-xl { @media (max-width: $bp-xl) { @content; } }
+@mixin above-xl { @media (min-width: $bp-wide) { @content; } }
+@mixin above-xxl { @media (min-width: $bp-ultra) { @content; } }
+@mixin hover { @media (hover: hover) { @content; } }
+
+// Планшеты: альбом (901–1200) поверх правил below-lg, портрет (768–900) поверх мобильных правил below-md
+$bp-tablet: 768px;
+@mixin tablet-land { @media (min-width: #{$bp-md + 1px}) and (max-width: $bp-lg) { @content; } }
+@mixin tablet-port { @media (min-width: $bp-tablet) and (max-width: $bp-md) { @content; } }

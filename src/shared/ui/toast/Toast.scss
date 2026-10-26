@@ -1,0 +1,4 @@
+@use '@/shared/styles/tokens' as *;
+
+.toast { position: fixed; left: 50%; bottom: 32px; z-index: 70; transform: translate(-50%, 20px); padding: 16px 26px; background: var(--gd); color: var(--cr); border-radius: 12px; font-weight: 700; box-shadow: var(--shadow-deep); opacity: 0; transition: opacity 200ms var(--ease-out), transform 200ms var(--ease-out); pointer-events: none; }
+.toast.is-open { opacity: 1; transform: translate(-50%, 0); }

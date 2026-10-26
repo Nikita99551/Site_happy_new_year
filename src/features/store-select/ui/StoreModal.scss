@@ -1,0 +1,29 @@
+@use '@/shared/styles/tokens' as *;
+
+/* Список прокручивается внутри окна: когда магазинов будет много, окно не вырастет выше экрана */
+.store-search { margin-top: 20px; }
+.store-list { display: grid; gap: 12px; margin-top: 14px; max-height: max(220px, 100dvh - 680px); overflow-y: auto; padding-right: 6px; overscroll-behavior: contain; scrollbar-width: thin; scrollbar-color: var(--g) rgba(217, 185, 140, 0.45); }
+.store { display: grid; grid-template-columns: 44px 1fr auto auto; align-items: center; gap: 20px; padding: 20px 24px; background: rgba(255, 255, 255, 0.6); border: 1.5px solid var(--kr); border-radius: 12px; }
+.store--selected { background: #fff; border: 2.5px solid var(--g); }
+.store__pin { width: 44px; height: 44px; border-radius: 50%; background: var(--pa); display: grid; place-items: center; color: var(--rd); }
+.store--selected .store__pin { background: var(--rd); color: var(--cr); }
+.store b { display: block; font-size: 21px; font-weight: 800; color: var(--g); }
+.store small { display: block; font-size: 17px; color: var(--mu); margin-top: 2px; }
+.store .btn--small { min-width: 150px; }
+.store--selected .btn--primary { background: var(--g); }
+.modal__fill { margin-top: 16px; font-weight: 600; font-size: 15px; color: var(--rd); }
+
+@media (max-height: 900px) { .store-list { max-height: max(200px, 100dvh - 600px); } .store { padding-block: 14px; } }
+@media (max-height: 700px) { .store-list { max-height: none; overflow: visible; } }
+
+@include below-md {
+  /* Телефон: прокручивается всё окно, вложенной прокрутки списка нет (неудобно пальцем) */
+  .store-list { max-height: none; overflow: visible; padding-right: 0; }
+  /* Телефон: название во всю ширину, две кнопки в один ряд — карточка вдвое ниже */
+  .store { grid-template-columns: 1fr 1fr; gap: 12px 10px; padding: 16px; }
+  .store__pin { display: none; }
+  .store > div { grid-column: 1 / -1; }
+  .store b { font-size: 19px; }
+  .store small { font-size: 15px; }
+  .store .btn--small { min-width: 0; padding-inline: 8px; }
+}

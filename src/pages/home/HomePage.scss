@@ -1,0 +1,373 @@
+@use '@/shared/styles/tokens' as *;
+
+/* Первый экран главной */
+.hero { position: relative; overflow: hidden; background: linear-gradient(rgba(23, 63, 42, 0.18), rgba(23, 63, 42, 0.18)), var(--g) url('/img/paper-green.webp') center/cover; color: var(--cr); padding-bottom: 0; }
+/* Слой фона для параллакса: та же бумага, что у .hero, едет медленнее страницы. Открывшаяся полоса сверху всегда выше экрана,
+   а без JS / при ?noanim слой стоит на месте и совпадает с фоном секции */
+.hero__bg { position: absolute; inset: 0; z-index: 0; pointer-events: none; background: linear-gradient(rgba(23, 63, 42, 0.18), rgba(23, 63, 42, 0.18)), var(--g) url('/img/paper-green.webp') center/cover; }
+/* Наезд блоков (useCoverHero): первый экран замирает, «Как участвовать» наезжает поверх рваным краем.
+   z-index 0 делает первый экран отдельным слоем — иначе коза и текст (z 3) рисовались бы поверх наезжающей бумаги.
+   Под бумагой первый экран темнеет и чуть отдаляется. Без класса .hero--pin (reduced-motion, ?noanim) — обычная прокрутка */
+.hero--pin { position: sticky; top: min(0px, 100vh - var(--hero-h, 0px)); top: min(0px, 100svh - var(--hero-h, 0px)); z-index: 0; }
+.hero--pin::after { content: ''; position: absolute; inset: 0; z-index: 6; pointer-events: none; background: #04140b; opacity: calc(var(--cover, 0) * 0.6); }
+.hero--pin .hero__inner { scale: calc(1 - var(--cover, 0) * 0.06); }
+.hero-stack > .how { z-index: 1; background-color: var(--cr); }
+/* Рваный край (38 px) теперь лежит поверх первого экрана и подрезал низ «2027» — поднимаем его над краем.
+   На телефоне «2027» над козой, край его не задевает. Копыта козы чуть уходят за край — «стоит в снегу», так и задумано */
+@media (min-width: 768px) { .hero--pin .hero__text { padding-bottom: 76px; } }
+/* Снежинки параллакса (index.tsx → HERO_FLAKES): в пустых местах первого экрана, за текстом и козой. a, b — ближние (крупнее, ярче,
+   медленно вращаются), c, d, e — дальние (мелкие, бледные). Числа подобраны по раскладке 1304–1920 */
+.hero__flakes { position: absolute; inset: 0; z-index: 1; pointer-events: none; }
+.hero__flake { position: absolute; display: block; aspect-ratio: 1; background: url('/img/snowflake.svg') center/contain no-repeat; }
+.hero__flake--a { right: 7%; top: 13%; width: clamp(110px, 11vw, 190px); opacity: 0.32; animation: flake-spin 70s linear infinite; }
+.hero__flake--b { right: 27%; top: 27%; width: clamp(60px, 6vw, 100px); opacity: 0.26; animation: flake-spin 50s linear infinite reverse; }
+.hero__flake--c { right: 16%; top: 41%; width: 40px; opacity: 0.3; }
+.hero__flake--d { left: 51%; top: 54%; width: 34px; opacity: 0.26; }
+.hero__flake--e { left: 41%; top: 12%; width: 56px; opacity: 0.2; }
+@keyframes flake-spin { to { rotate: 360deg; } }
+/* Телефон: текст во всю ширину, поэтому снежинок две и они у правого края возле козы, не за заголовком */
+@include below-md {
+  .hero__flake--b, .hero__flake--d, .hero__flake--e { display: none; }
+  .hero__flake--a { right: -9%; top: 61%; width: 120px; opacity: 0.26; }
+  .hero__flake--c { right: 10%; top: 47%; width: 30px; }
+}
+@media (prefers-reduced-motion: reduce) { .hero__flake { animation: none; } }
+.hero__lights { position: absolute; left: 0; right: 0; top: 0; height: 96px; z-index: 2; }
+.hero__lights .lights { height: 96px; width: 100%; }
+.hero__inner { position: relative; z-index: 3; display: grid; grid-template-columns: 1.15fr 0.85fr; align-items: end; gap: 24px; padding-top: 118px; }
+.hero__text { padding-bottom: 36px; }
+.hero__dates { margin-bottom: 24px; }
+/* Главный акцент первого экрана — заголовок крупнее (правка 24.10); лента с датами поднята выше, чтобы освободить место */
+.hero h1 { color: var(--cr); max-width: 11ch; font-size: clamp(64px, 9.4vw, 150px); line-height: 0.94; }
+.hero .lead { color: rgba(255, 248, 232, 0.92); max-width: 560px; margin-top: 24px; }
+.hero__actions { display: flex; flex-wrap: wrap; align-items: center; gap: 16px 32px; margin-top: 32px; }
+.hero__actions .link { color: var(--cr); font-weight: 700; }
+.hero__year { display: block; margin-top: 44px; font-family: var(--font-num); font-weight: 900; font-size: clamp(120px, 24vw, 400px); line-height: 0.82; letter-spacing: -0.01em; color: var(--rd); text-shadow: 10px 10px 0 var(--go); white-space: nowrap; }
+.hero__goat { position: relative; justify-self: end; align-self: end; width: min(100%, 520px); margin-bottom: -4px; transform-origin: 50% 100%; }
+.hero__goat img { width: 100%; }
+/* Короткая строка шагов */
+.steps-strip { display: grid; grid-template-columns: auto repeat(3, 1fr); gap: 32px; align-items: start; margin-bottom: clamp(56px, 7vw, 96px); }
+.steps-strip__ticket { display: flex; align-items: center; gap: 14px; padding: 22px 46px; }
+.steps-strip__ticket .num { font-size: 64px; }
+.steps-strip__ticket b { font-size: 24px; font-weight: 800; }
+.milestone { display: flex; align-items: flex-start; gap: 18px; }
+.milestone > div { padding-top: 10px; }
+.milestone b { display: block; font-size: 22px; font-weight: 800; text-align: left; }
+.milestone p { font-size: 18px; color: var(--mu); line-height: 1.4; text-align: left; }
+/* Как участвовать: волнистые карточки */
+.how { text-align: center; }
+.how .section-head { margin-inline: auto; }
+.how__cards { position: relative; display: grid; grid-template-columns: repeat(3, 1fr); gap: 40px; text-align: left; margin-top: 40px; }
+.wavy {
+  position: relative; min-height: 430px; padding: 44px 48px 48px 58px;
+  clip-path: url(#clip-wavy);
+  background: var(--rd); color: var(--cr);
+}
+.wavy--green { background: var(--g); }
+.wavy--gold { background: var(--go); color: var(--g); }
+.wavy__n { font-family: var(--font-num); font-weight: 900; font-size: 120px; line-height: 0.9; opacity: 0.95; }
+.wavy__icon { position: absolute; right: 48px; top: 44px; width: 84px; height: 84px; }
+.wavy::after { content: ''; position: absolute; inset: 0; pointer-events: none; background: url('/img/wavy-stitch-cream.svg') center/100% 100% no-repeat; }
+.wavy--gold::after { background-image: url('/img/wavy-stitch-green.svg'); }
+.wavy__icon svg { width: 100%; height: 100%; }
+.wavy h3 { margin-top: 22px; font-family: var(--font-text); font-size: 32px; font-weight: 800; color: inherit; line-height: 1.2; }
+.wavy p { margin-top: 14px; font-size: 21px; line-height: 1.45; opacity: 0.95; }
+.how__card { filter: drop-shadow(0 12px 26px rgba(5, 20, 12, 0.18)); }
+.how__card:nth-child(1) { rotate: 3deg; }
+.how__card:nth-child(2) { rotate: -2deg; }
+.how__card:nth-child(3) { rotate: 2deg; }
+.how__peek { position: absolute; left: calc(66.66% + 120px); top: -50px; width: 230px; z-index: -1; }
+.how__cards-wrap { position: relative; isolation: isolate; padding-top: 150px; }
+.how__more { margin-top: 56px; font-size: 21px; }
+/* Акция в цифрах */
+.numbers { display: grid; grid-template-columns: 1fr 600px; gap: 64px; align-items: start; }
+.numbers__rows { margin-top: 36px; border-top: 1px solid rgba(255, 248, 232, 0.35); }
+.numbers__row { display: grid; grid-template-columns: 1fr auto; align-items: center; gap: 24px; padding: 22px 0; border-bottom: 1px solid rgba(255, 248, 232, 0.35); }
+.numbers__row b { display: block; font-size: 22px; font-weight: 800; }
+.numbers__row p { font-size: 17px; opacity: 0.85; max-width: 330px; }
+.numbers__val { display: flex; align-items: baseline; gap: 10px; color: var(--go); }
+.numbers__val .num { font-size: 96px; }
+.numbers__val small { font-family: var(--font-num); font-weight: 700; font-size: 28px; }
+.chart-card { position: relative; padding: 48px 44px 40px; rotate: -1.5deg; color: var(--ink); }
+.chart-card h3, .section--green .chart-card h3 { font-size: 42px; line-height: 1.1; color: var(--g); }
+.chart-card h3 .num { font-size: 1.1em; color: var(--rd); }
+.chart-card__sub { margin-top: 16px; font-weight: 700; color: var(--mu); font-size: 17px; }
+.chart { display: grid; grid-template-columns: repeat(8, 1fr); gap: 14px; align-items: end; height: 300px; margin-top: 36px; padding-bottom: 2px; border-bottom: 2px solid rgba(23, 63, 42, 0.6); }
+.chart__bar { position: relative; display: flex; flex-direction: column; justify-content: flex-end; height: 100%; }
+.chart__fill { background: var(--g); height: var(--h, 0%); align-self: stretch; }
+.chart__bar--now .chart__fill { background: var(--rd); }
+.chart__bar--future .chart__fill { background: transparent; border: 2px dashed var(--kr); height: 20%; }
+.chart__val { position: absolute; left: 50%; transform: translateX(-50%); bottom: calc(var(--h, 0%) + 6px); font-family: var(--font-num); font-weight: 700; font-size: 18px; white-space: nowrap; }
+.chart__bar--now .chart__val { color: var(--rd); font-size: 22px; }
+.chart__labels { display: grid; grid-template-columns: repeat(8, 1fr); gap: 14px; margin-top: 12px; text-align: center; font-family: var(--font-num); font-weight: 900; font-size: 24px; }
+.chart__labels span { color: var(--kr); } .chart__labels .is-past { color: var(--g); } .chart__labels .is-now { color: var(--rd); }
+.chart__labels small { display: block; font-family: var(--font-text); font-weight: 800; font-size: 15px; }
+.chart-card__note { margin-top: 28px; font-size: 15px; color: var(--mu); }
+.chart-card__clip { position: absolute; left: -52px; top: -74px; width: 110px; rotate: 12deg; }
+/* Путь к подаркам: открытка */
+.postcard-sec { display: grid; grid-template-columns: 1fr 1fr; gap: 64px; align-items: center; }
+.postcard-sec .btn { margin-top: 36px; }
+.postcard-stack { position: relative; padding-top: 130px; }
+#path { padding-bottom: 210px; }
+.postcard-stack__red { position: absolute; left: 36%; top: 0; width: 72%; height: 62%; background: var(--rd) url('/img/paper-red.webp') center/cover; rotate: 7deg; box-shadow: var(--shadow-card); }
+.postcard-stack__stamp { position: absolute; right: -2%; top: -30px; width: 150px; rotate: -8deg; }
+.postcard { position: relative; width: 100%; padding: 44px 48px; background: linear-gradient(rgba(23, 63, 42, 0.18), rgba(23, 63, 42, 0.18)), var(--g) url('/img/paper-green.webp') center/cover; color: var(--cr); box-shadow: 0 18px 36px rgba(5, 20, 12, 0.3); rotate: -2.5deg; }
+/* Пунктирная строчка по краю открытки (раньше картинкой dash-rect.svg, теперь inline-SVG, чтобы её можно было «прошить» при прокрутке) */
+.postcard__stitch { position: absolute; left: 17.5px; top: 17.5px; width: calc(100% - 35px); height: calc(100% - 35px); overflow: visible; pointer-events: none; }
+.postcard__stitch-line { fill: none; stroke: var(--go); stroke-opacity: 0.85; stroke-width: 3; stroke-dasharray: 14 10; }
+.postcard__stitch-draw { fill: none; stroke: #fff; stroke-width: 12; stroke-linecap: square; stroke-dasharray: 1 2; }
+.postcard__label { font-weight: 800; font-size: 19px; color: var(--go); }
+.postcard__big { display: flex; align-items: flex-end; gap: 18px; margin-top: 4px; }
+.postcard__big .num { font-size: 170px; color: var(--go); }
+.postcard__big b { font-size: 34px; font-weight: 800; padding-bottom: 36px; }
+.postcard__next { margin-top: -18px; font-weight: 700; font-size: 20px; }
+.postcard__next em { font-style: normal; color: var(--go); }
+.postcard__lights { margin-top: 28px; padding-right: 70px; }
+.postcard__seal { position: absolute; z-index: 4; right: -20px; bottom: -30px; width: 124px; }
+.postcard-stack__tag { position: absolute; z-index: 3; left: -6%; top: 10px; width: 150px; rotate: -12deg; }
+.postcard-stack__tag span { position: absolute; left: 50%; top: 56%; transform: translate(-50%, -50%) rotate(4deg); width: 80%; text-align: center; font-family: var(--font-display); font-style: italic; font-size: 17px; line-height: 1.1; color: var(--rdd); }
+.postcard-stack__branch { position: absolute; z-index: 3; right: -70px; bottom: -190px; width: 250px; rotate: 0deg; }
+
+.final-strip { display: flex; flex-wrap: wrap; align-items: center; gap: 20px 32px; margin-top: 44px; padding: 22px 28px; background: var(--g); color: var(--cr); border-radius: 14px; }
+.final-strip .star-shape { width: 40px; height: 40px; flex: none; }
+.final-strip p { flex: 1; font-size: 17px; min-width: 240px; line-height: 1.4; }
+.final-strip p b { display: block; font-size: 20px; font-weight: 800; }
+/* Победители: записки */
+/* Победители: 6 карточек сеткой 3×2 (на телефоне карусель). Вместо фото — рисунок приза на «полароиде» с номером билета (правка 24.10) */
+.winners__grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 72px 32px; margin-top: 64px; }
+.note-card { position: relative; padding: 226px 32px 36px; filter: drop-shadow(0 12px 22px rgba(5, 20, 12, 0.18)); }
+.note-card::before { content: ''; position: absolute; inset: 0; z-index: -1; background: #fff; clip-path: url(#clip-torn-bottom); }
+.note-card:nth-child(odd) { rotate: 2deg; } .note-card:nth-child(even) { rotate: -1.5deg; }
+.note-card__photo { position: absolute; z-index: 2; left: 28px; top: -16px; width: 190px; padding: 10px 10px 40px; background: #fff; box-shadow: 0 6px 14px rgba(5, 20, 12, 0.2); rotate: 5deg; }
+.note-card:nth-child(even) .note-card__photo { rotate: 4deg; }
+.note-card__photo svg { display: block; width: 100%; height: auto; }
+.note-card__photo span { position: absolute; left: 0; right: 0; bottom: 9px; text-align: center; font-family: var(--font-display); font-style: italic; font-weight: 700; font-size: 18px; color: var(--rdd); }
+.note-card__clip { position: absolute; z-index: 3; left: 8px; top: -40px; width: 56px; rotate: -18deg; }
+.note-card__badge { position: absolute; z-index: 3; right: 20px; top: 24px; width: 84px; height: 84px; display: grid; place-items: center; background: var(--rd); color: var(--cr); font-weight: 800; font-size: 12px; line-height: 1.05; text-align: center; }
+.note-card h3 { font-family: var(--font-text); font-size: 22px; font-weight: 800; }
+.note-card__city { margin-top: 6px; font-weight: 700; color: var(--mu); }
+.note-card__prize { margin-top: 16px; padding-top: 14px; border-top: 1px solid var(--kr); font-weight: 800; font-size: 22px; line-height: 1.25; color: var(--rd); }
+.note-card__prize small { display: block; margin-bottom: 2px; font-size: 14px; font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase; color: var(--mu); }
+/* Карусель победителей на телефоне: место сверху под полароид и скрепку */
+.winners .carousel__track { margin: 8px 0 0; padding: 60px 10px 24px; }
+.winners .carousel__track .note-card { flex: 0 0 84%; scroll-snap-align: center; }
+.winners__goat { position: absolute; z-index: 2; right: var(--gutter); top: 0; width: 200px; }
+/* Партнёры */
+.partners { padding-block: 64px 96px; }
+.partners__paper { position: relative; padding: 46px 56px 36px; background: linear-gradient(rgba(255, 248, 232, 0.45), rgba(255, 248, 232, 0.45)), var(--cr) url('/img/paper-cream.webp') center/cover; clip-path: url(#clip-torn-both); }
+.partners__paper-wrap { filter: drop-shadow(0 12px 28px rgba(5, 20, 12, 0.3)); }
+.partners__paper h2 { font-size: clamp(32px, 4vw, 54px); }
+.partners__paper .lead { margin-top: 14px; max-width: 900px; }
+/* Логотипы крупно: по 4 в ряд, последний ряд по центру (правка 24.10: на заглушке тоже должны быть заметны) */
+.partners__logos { --cols: 4; --gap: 32px; display: flex; flex-wrap: wrap; justify-content: flex-start; gap: 24px var(--gap); margin-top: 40px; }
+.partners__logos a { flex: 0 0 calc((100% - (var(--cols) - 1) * var(--gap)) / var(--cols)); max-width: 260px; display: block; border-radius: 10px; transition: transform var(--dur-fast) var(--ease-out); }
+.partners__logos a:active { transform: scale(0.96); }
+@media (hover: hover) { .partners__logos a:hover { transform: translateY(-3px); } }
+.partners__note { margin-top: 24px; font-size: 15px; color: var(--mu); }
+
+@include below-lg {
+  .how__peek { display: none; }
+  .numbers { grid-template-columns: 1fr; }
+  .chart-card { max-width: 640px; }
+  .winners__grid { grid-template-columns: repeat(2, 1fr); gap: 72px 24px; }
+}
+
+@include below-md {
+  .hero__inner { grid-template-columns: 1fr; padding-top: 58px; }
+  /* Гирлянда поднята, чтобы лента с датами её не перекрывала (правка 24.10) */
+  .hero__lights { top: -34px; }
+  .hero__goat { width: min(80%, 360px); justify-self: center; }
+  .hero__year { font-size: clamp(120px, 40vw, 220px); text-shadow: 6px 6px 0 var(--go); margin-top: 20px; line-height: 0.8; }
+  .steps-strip { grid-template-columns: 1fr; gap: 20px; }
+  .steps-strip__ticket { padding: 18px 40px; }
+  .how__cards { grid-template-columns: 1fr; gap: 32px; max-width: 420px; margin-inline: auto; }
+  .how__cards-wrap { padding-top: 0; }
+  .how__cards { margin-top: 16px; }
+  .how__peek { display: none; }
+  .wavy { min-height: 0; }
+  .postcard-sec { grid-template-columns: 1fr; }
+  .postcard-stack { padding: 100px 0 80px; }
+  #path { padding-bottom: 40px; }
+  .postcard { width: 92%; margin-left: 3%; padding: 30px 30px 26px; rotate: -2deg; }
+  .postcard__stitch { left: 13.5px; top: 13.5px; width: calc(100% - 27px); height: calc(100% - 27px); }
+  .postcard__label { font-size: 15px; }
+  .postcard__big { gap: 12px; }
+  .postcard__big .num { font-size: 104px; }
+  .postcard__big b { font-size: 22px; padding-bottom: 20px; }
+  .postcard__next { margin-top: -4px; font-size: 16px; line-height: 1.35; }
+  .postcard__lights { margin-top: 16px; padding-right: 0; }
+  .postcard__rows { display: grid; gap: 2px; }
+  .postcard__rows .lights { display: block; width: 100%; height: auto; }
+  .postcard-stack__red { left: 32%; width: 70%; height: 62%; top: 32px; rotate: 7deg; }
+  /* Бирка и марка ближе к открытке, печать на её правом нижнем углу (правка 24.10) */
+  .postcard-stack__stamp { width: 80px; right: 2%; top: 64px; z-index: 3; }
+  .postcard-stack__tag { width: 84px; left: -1%; top: 26px; }
+  .postcard__label { display: block; padding-left: 62px; }
+  .postcard-stack__tag span { font-size: 9px; }
+  /* Ветка на правом краю зелёной открытки, над печатью (правка 24.10) */
+  .postcard-stack__branch { width: 110px; right: -10px; bottom: 96px; rotate: 18deg; }
+  .postcard__seal { width: 66px; right: 2%; bottom: 46px; }
+  .winners__goat { display: none; }
+  .partners__paper { padding: 32px 24px; }
+  .partners__logos { --cols: 2; --gap: 20px; row-gap: 16px; margin-top: 28px; justify-content: center; }
+  .numbers__val .num { font-size: 64px; }
+  .numbers__row p { max-width: none; }
+  .chart { height: 220px; gap: 8px; }
+  .chart-card { padding: 32px 24px; transform: none; }
+  .chart-card__clip { display: none; }
+  .chart__val { font-size: 13px; }
+  .chart__bar--now .chart__val { font-size: 15px; }
+  .chart__labels { gap: 8px; font-size: 18px; }
+  .note-card { padding-top: 220px; }
+}
+
+@include below-md {
+  .hero h1 { max-width: none; font-size: clamp(44px, 14.2vw, 76px); line-height: 0.98; }
+  .hero__text, .section-head, .lead, p { max-width: 100%; overflow-wrap: anywhere; }
+  .hero__actions { gap: 12px 20px; }
+  .milestone { gap: 14px; }
+  .milestone p { font-size: 15px; }
+  .numbers__row { grid-template-columns: 1fr auto; gap: 12px; }
+  .numbers__val { flex-direction: column; align-items: flex-end; gap: 0; }
+  .numbers__val .num { font-size: 56px; }
+  .numbers__val small { font-size: 18px; }
+  .how { text-align: left; }
+  .how .section-head { margin-inline: 0; }
+  .how__more { margin-top: 32px; font-size: 18px; }
+  .chart-card h3 { font-size: 30px; }
+  .postcard-stack { overflow: visible; }
+  .final-strip .btn { width: 100%; }
+}
+
+@include below-sm {
+  .hero__actions .btn { width: 100%; }
+  .steps-strip__ticket .num { font-size: 48px; }
+}
+
+// ---- Адаптив: Full HD и планшеты (правка 23.10.2026) ----
+@include above-xl {
+  .hero__inner { padding-top: 128px; gap: 40px; }
+  .hero__goat { width: min(100%, 600px); }
+  .hero .lead { max-width: 620px; }
+  .steps-strip__ticket .num { font-size: 72px; }
+  .milestone b { font-size: 24px; }
+  .milestone p { font-size: 19px; }
+  .how__cards { gap: 48px; }
+  .wavy { min-height: 470px; padding: 52px 56px 56px 66px; }
+  .wavy h3 { font-size: 36px; }
+  .wavy p { font-size: 23px; }
+  .numbers { grid-template-columns: 1fr 680px; gap: 80px; }
+  .numbers__row p { max-width: 400px; }
+  .postcard-sec { gap: 96px; }
+  .winners__grid { gap: 80px 40px; }
+  .partners__logos { --gap: 48px; }
+  .partners__logos a { max-width: 300px; }
+  .partners__paper { padding: 56px 72px 44px; }
+}
+@include below-lg { .winners__goat { width: 200px; opacity: 0.9; } }
+@include tablet-land {
+  .hero__inner { gap: 16px; }
+  .winners__goat { width: 160px; top: 16px; }
+  #winners .section-head { max-width: calc(100% - 200px); }
+  .hero__goat { width: min(100%, 420px); }
+  .steps-strip { grid-template-columns: 1fr 1fr; gap: 24px 40px; }
+  .steps-strip__ticket { justify-self: start; }
+  .how__cards { grid-template-columns: repeat(2, 1fr); gap: 32px; max-width: 880px; margin-inline: auto; }
+  .how__card:nth-child(3) { grid-column: 1 / -1; width: calc(50% - 16px); margin-inline: auto; }
+  .how__cards-wrap { padding-top: 40px; }
+  .wavy { min-height: 0; padding: 40px 44px 44px 52px; }
+  .wavy h3 { font-size: 28px; }
+  .wavy p { font-size: 19px; }
+  .wavy__n { font-size: 96px; }
+  .postcard-sec { gap: 40px; }
+  .postcard__big .num { font-size: 130px; }
+}
+@include tablet-port {
+  .winners__goat { display: block; width: 140px; top: 16px; }
+  #winners .section-head { max-width: calc(100% - 170px); }
+  .hero__inner { grid-template-columns: 1.1fr 0.9fr; padding-top: 56px; align-items: end; }
+  .hero h1 { font-size: clamp(52px, 7.6vw, 66px); }
+  .hero__goat { width: min(100%, 360px); justify-self: end; }
+  .hero__year { font-size: clamp(120px, 20vw, 180px); }
+  .steps-strip { grid-template-columns: 1fr 1fr; gap: 24px 32px; max-width: none; }
+  .how__cards { grid-template-columns: repeat(2, 1fr); gap: 28px; max-width: none; }
+  .how__card:nth-child(3) { grid-column: 1 / -1; width: calc(50% - 14px); margin-inline: auto; }
+  .numbers { gap: 40px; }
+  .chart-card { max-width: none; }
+  .postcard-sec { grid-template-columns: 1fr 1fr; gap: 32px; align-items: center; }
+  .postcard-stack { padding: 90px 0 70px; }
+  .postcard__seal { bottom: 36px; }
+  .winners .carousel__track .note-card { flex-basis: calc(50% - 8px); }
+  .partners__logos { --cols: 4; --gap: 20px; }
+  .partners__paper { padding: 40px 36px 32px; }
+}
+
+// ---- Анимации главной: каждая что-то показывает (шаг, рост, подтверждение), чтению не мешают ----
+@keyframes seal-stamp { 0% { opacity: 0; transform: scale(1.6) rotate(-18deg); } 55% { opacity: 1; transform: scale(0.92) rotate(3deg); } 100% { opacity: 1; transform: none; } }
+/* Печати 10 → 20 → 30 ставятся по очереди, как отметки на маршрутном листе */
+.steps-strip.is-in .seal { animation: seal-stamp 560ms var(--ease-out) both; }
+.steps-strip.is-in .milestone:nth-child(2) .seal { animation-delay: 250ms; }
+.steps-strip.is-in .milestone:nth-child(3) .seal { animation-delay: 500ms; }
+.steps-strip.is-in .milestone:nth-child(4) .seal { animation-delay: 750ms; }
+/* Наведение на веху: печать проворачивается на один зубец из 14 — «ещё шаг»; цифра остаётся ровной */
+.milestone .seal .num { display: inline-block; }
+@media (hover: hover) {
+  .milestone .seal, .milestone .seal .num { transition: rotate 600ms var(--ease-out); }
+  .milestone:hover .seal { rotate: 25.714deg; }
+  .milestone:hover .seal .num { rotate: -25.714deg; }
+}
+/* Цифры досчитывают (CountUp) — ширина цифр одинаковая, строка не прыгает */
+.numbers__val .num, .chart-card h3 .num { font-variant-numeric: tabular-nums; }
+/* График участников: столбики растут по неделям слева направо, подписи появляются следом */
+.chart-card .chart__fill { transform-origin: 50% 100%; transition: transform 900ms var(--ease-out) calc(250ms + var(--i, 8) * 90ms); }
+.chart-card:not(.is-in) .chart__fill { transform: scaleY(0); }
+.chart-card .chart__val { transition: opacity 400ms ease calc(700ms + var(--i, 8) * 90ms); }
+.chart-card:not(.is-in) .chart__val { opacity: 0; }
+/* Победители: печать «приз получен» ставится, когда карточка появилась */
+.note-card.is-in .note-card__badge { animation: seal-stamp 520ms var(--ease-out) calc(var(--d, 0ms) + 450ms) both; }
+/* Наведение на победителя: записка выпрямляется и приподнимается, полароид поворачивается почти ровно — как будто карточку взяли в руки */
+@media (hover: hover) {
+  .note-card, .note-card__photo { transition: rotate 450ms var(--ease-out), translate 450ms var(--ease-out), scale 450ms var(--ease-out); }
+  .note-card:hover { rotate: 0deg; translate: 0 -8px; }
+  .note-card:hover .note-card__photo { rotate: -1deg; scale: 1.05; }
+}
+/* Звезда финала: раз в 5 с поблёскивает — по ней пробегает свет, она чуть поворачивается («12 января — главное событие») */
+@keyframes star-glint { 0%, 80%, 100% { transform: none; filter: none; } 88% { transform: scale(1.16) rotate(14deg); filter: brightness(1.2); } }
+@keyframes star-sheen { 0%, 78% { transform: translateX(-110%); } 96%, 100% { transform: translateX(110%); } }
+.final-strip .star-shape { position: relative; overflow: hidden; }
+.final-strip .star-shape::after { content: ''; position: absolute; inset: 0; background: linear-gradient(100deg, transparent 30%, rgba(255, 248, 232, 0.85) 50%, transparent 70%); transform: translateX(-110%); }
+.final-strip.is-in .star-shape { animation: star-glint 5s ease-in-out 1s infinite; }
+.final-strip.is-in .star-shape::after { animation: star-sheen 5s ease-in-out 1s infinite; }
+/* Коза первого экрана подпрыгивает от нажатия (index.tsx): приседает → прыжок с вытягиванием → приземление с приседом → маленький отскок.
+   Вверх — замедляясь, вниз — разгоняясь. Точка опоры — копыта (transform-origin у .hero__goat) */
+@keyframes goat-jump {
+  0% { transform: none; animation-timing-function: ease-out; }
+  16% { transform: scale(1.05, 0.9); animation-timing-function: ease-out; }
+  44% { transform: translateY(-80px) scale(0.96, 1.06) rotate(-3deg); animation-timing-function: ease-in; }
+  68% { transform: translateY(0) scale(1.06, 0.9); animation-timing-function: ease-out; }
+  84% { transform: translateY(-12px) scale(0.99, 1.02) rotate(1deg); animation-timing-function: ease-in; }
+  100% { transform: none; }
+}
+.hero__goat--toy { cursor: pointer; -webkit-tap-highlight-color: transparent; }
+.hero__goat--jump { animation: goat-jump 750ms both; }
+/* Строчка открытки прошивается при прокрутке: от левого верхнего угла по часовой, к середине экрана рамка целая.
+   Анимация привязана к прокрутке (scroll-driven); где их нет, рамка сразу целая */
+@keyframes stitch-draw { from { stroke-dashoffset: 1.05; } to { stroke-dashoffset: 0; } }
+@supports (animation-timeline: view()) {
+  .postcard { view-timeline: --postcard block; }
+  .postcard__stitch-draw { animation: stitch-draw linear both; animation-timeline: --postcard; animation-range: entry 10% cover 50%; }
+}
+/* Открытка: ярлык «вы здесь» спокойно «дышит», как текущий шар на ёлке «Маршрута» */
+@keyframes here-breathe { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.08); } }
+.postcard .lights__here:not(.lights__here--pop) { transform-box: fill-box; transform-origin: center; animation: here-breathe 2.4s ease-in-out infinite; }
+.no-anim {
+  .steps-strip.is-in .seal, .note-card.is-in .note-card__badge { animation: none; }
+  .final-strip.is-in .star-shape, .final-strip.is-in .star-shape::after, .postcard .lights__here { animation: none; }
+  .chart-card .chart__fill, .chart-card .chart__val { transition: none; }
+  .postcard__stitch-draw { animation: none; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .steps-strip.is-in .seal, .note-card.is-in .note-card__badge { animation: none; }
+  .final-strip.is-in .star-shape, .final-strip.is-in .star-shape::after, .postcard .lights__here, .postcard__stitch-draw { animation: none; }
+  .milestone .seal, .milestone .seal .num, .chart-card .chart__fill, .chart-card .chart__val, .note-card, .note-card__photo { transition: none; }
+}

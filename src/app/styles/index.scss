@@ -1,0 +1,6 @@
+// Глобальные стили приложения. Порядок важен: токены → шрифты → база → фигурные плашки → анимации.
+// Стили страниц, виджетов и фич подключаются из их компонентов.
+@use '@/shared/styles/fonts';
+@use '@/shared/styles/base';
+@use '@/shared/styles/shapes';
+@use '@/shared/styles/animations';

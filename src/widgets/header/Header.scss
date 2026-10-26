@@ -1,0 +1,99 @@
+@use '@/shared/styles/tokens' as *;
+
+/* ---------- 4. Шапка и подвал ---------- */
+/* Шапка липкая целиком, но с отрицательным top на высоту верхней строки: строка уезжает, белая панель остаётся.
+   Высота шапки при этом постоянна — страница не дёргается. --header-offset считает ui.js. */
+.header { position: sticky; top: calc(-1 * var(--header-offset, 54px)); z-index: 20; padding-top: 14px; }
+/* Подложка панели прозрачная: при прокрутке под белой панелью видна только страница, без полосы */
+.header__bar-wrap { padding: 0 0 12px; background: transparent; }
+.is-scrolled .header__bar { box-shadow: 0 10px 28px rgba(5, 20, 12, 0.22); }
+.header--hero { background: linear-gradient(rgba(23, 63, 42, 0.18), rgba(23, 63, 42, 0.18)), var(--g) url('/img/paper-green.webp') center top/cover; }
+.header__top { display: flex; justify-content: flex-end; align-items: center; gap: 12px; margin-bottom: 14px; font-size: 15px; color: var(--mu); }
+.header--hero .header__top { color: rgba(255, 248, 232, 0.9); }
+.header--hero .header__chip { background: var(--cr); color: var(--g); border-color: var(--cr); }
+.header__dates { margin-right: 8px; }
+.header__chip {
+  display: inline-flex; align-items: center; gap: 8px; min-height: 40px; padding: 0 16px;
+  border: 1.5px solid currentColor; border-radius: 999px; background: transparent; font-weight: 700; font-size: 15px; color: inherit; text-decoration: none;
+  transition: background-color var(--dur-fast) ease, transform var(--dur-fast) var(--ease-out);
+}
+.header__chip:active { transform: scale(0.97); }
+.header__chip svg { width: 16px; height: 16px; }
+@media (hover: hover) { .header__chip:hover { background: rgba(255, 255, 255, 0.12); } .header--hero .header__chip:hover { background: #fff; } .header:not(.header--hero) .header__chip:hover { background: rgba(23, 63, 42, 0.08); } }
+.header__profile { position: relative; }
+/* Меню профиля: имя, телефон, «Мой маршрут», «Выйти» (правка 24.10) */
+.profile-pop { position: absolute; right: 0; top: calc(100% + 8px); z-index: 30; display: grid; gap: 2px; min-width: 260px; padding: 16px; background: #fff; color: var(--ink); border-radius: 16px; box-shadow: var(--shadow-deep); text-align: left; }
+.profile-pop b { font-size: 17px; font-weight: 800; color: var(--g); }
+.profile-pop small { margin-bottom: 10px; font-size: 14px; color: var(--mu); }
+.profile-pop__item { display: block; width: 100%; padding: 11px 12px; border: 0; border-radius: 10px; background: transparent; font: inherit; font-weight: 700; font-size: 16px; color: var(--g); text-align: left; text-decoration: none; cursor: pointer; }
+.profile-pop__item--out { margin-top: 6px; border-top: 1px solid rgba(23, 63, 42, 0.12); border-radius: 0 0 10px 10px; color: var(--rd); }
+@media (hover: hover) { .profile-pop__item:hover { background: rgba(23, 63, 42, 0.07); } }
+.nav__account { display: none; }
+.header__bar {
+  display: flex; align-items: center; gap: 28px; min-height: 88px; padding: 0 28px 0 32px;
+  background: #fff; border-radius: 18px; box-shadow: 0 8px 24px rgba(5, 20, 12, 0.14);
+}
+.header__logo { display: block; width: 136px; flex: none; }
+.header__logo img { width: 100%; }
+.nav { display: flex; gap: 14px; margin-left: auto; }
+.nav a {
+  white-space: nowrap;
+  display: inline-flex; align-items: center; min-height: 48px; padding: 0 22px; border-radius: 999px;
+  font-weight: 700; font-size: 17px; text-decoration: none; color: var(--ink);
+  transition: background-color var(--dur-fast) ease, color var(--dur-fast) ease;
+}
+.nav a[aria-current='page'] { background: var(--g); color: var(--cr); }
+@media (hover: hover) { .nav a:not([aria-current]):hover { background: rgba(23, 63, 42, 0.08); } }
+.header__cta { margin-left: 16px; }
+.burger { display: none; width: 48px; height: 48px; border: 0; background: transparent; border-radius: 10px; }
+.burger span { display: block; width: 24px; height: 3px; margin: 5px auto; background: var(--g); border-radius: 2px; transition: transform var(--dur) var(--ease-out), opacity var(--dur) ease; }
+.menu-open .burger span:nth-child(1) { transform: translateY(8px) rotate(45deg); }
+.menu-open .burger span:nth-child(2) { opacity: 0; }
+.menu-open .burger span:nth-child(3) { transform: translateY(-8px) rotate(-45deg); }
+
+@include below-lg {
+  .header__cta { display: none; }
+  .nav a { padding: 0 14px; font-size: 16px; }
+}
+
+@include below-md {
+  .header__top { display: none; }
+  .header__bar { min-height: 76px; padding: 0 12px 0 20px; gap: 12px; }
+  .header__logo { width: 110px; }
+  .header__cta { display: none; }
+  .burger { display: block; margin-left: auto; }
+  .nav { position: absolute; left: 0; right: 0; top: calc(100% + 8px); flex-direction: column; gap: 4px; padding: 12px; background: #fff; border-radius: 16px; box-shadow: var(--shadow-deep); opacity: 0; transform: translateY(-8px) scale(0.98); pointer-events: none; transition: opacity var(--dur) var(--ease-out), transform var(--dur) var(--ease-out); }
+  .menu-open .nav { opacity: 1; transform: none; pointer-events: auto; }
+  // Телефон боком (высота ~375): меню выше экрана — прокручивается внутри, нижние пункты («Войти», магазин) достижимы
+  .nav { max-height: calc(100vh - 110px); max-height: calc(100dvh - 110px); overflow-y: auto; overscroll-behavior: contain; scrollbar-width: thin; }
+  .nav a { min-height: 52px; font-size: 18px; }
+  .nav__account { display: grid; gap: 12px; margin-top: 8px; padding: 14px 10px 4px; border-top: 1px solid rgba(23, 63, 42, 0.12); }
+  .nav__store { display: flex; align-items: center; gap: 10px; min-height: 48px; padding: 0 12px; border: 1.5px solid var(--g); border-radius: 999px; background: transparent; font: inherit; font-weight: 700; font-size: 16px; color: var(--g); text-align: left; }
+  .nav__user { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+  .nav__user b { display: block; font-size: 17px; color: var(--g); }
+  .nav__user small { display: block; font-size: 14px; color: var(--mu); }
+  .nav__account > .btn { width: 100%; white-space: normal; line-height: 1.2; padding-block: 10px; }
+  .header__bar { position: relative; }
+  // Открытое меню выше cookie-открытки (z-index 50), иначе она закрывает кнопку входа
+  .header.menu-open { z-index: 60; }
+}
+
+// ---- Адаптив: Full HD и планшеты (правка 23.10.2026) ----
+@include above-xl {
+  .header__bar { min-height: 96px; gap: 32px; }
+  .header__logo { width: 150px; }
+  .nav a { font-size: 18px; padding: 0 24px; }
+}
+/* Ноутбуки 1201–1439: меню и кнопка «Зарегистрировать чек» не помещались в белую панель (на 1304 кнопка вылезала на 38 px, правка 24.10) */
+@media (min-width: #{$bp-lg + 1px}) and (max-width: $bp-xl) {
+  .header__bar { gap: 18px; padding: 0 20px 0 26px; }
+  .nav { gap: 4px; }
+  .nav a { padding: 0 16px; font-size: 16px; }
+  .header__cta { margin-left: 4px; padding: 0 22px; font-size: 16px; }
+}
+@include tablet-land {
+  .header__bar { gap: 16px; padding: 0 20px 0 24px; }
+  .nav { gap: 6px; }
+  .nav a { padding: 0 12px; font-size: 15px; }
+  .header__top { font-size: 14px; }
+}

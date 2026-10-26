@@ -1,0 +1,162 @@
+@use '@/shared/styles/tokens' as *;
+
+/* ---------- 7. Окна ---------- */
+dialog.modal {
+  width: min(100% - 32px, var(--w, 640px)); max-height: 100dvh; overflow: visible; padding: 28px 0 20px; border: 0; border-radius: 0;
+  background: transparent; color: var(--ink);
+  opacity: 0; transform: translateY(14px) scale(0.96);
+  transition: opacity var(--dur) var(--ease-out), transform var(--dur) var(--ease-out), overlay var(--dur) allow-discrete, display var(--dur) allow-discrete;
+}
+dialog.modal[open] { opacity: 1; transform: none; }
+@starting-style { dialog.modal[open] { opacity: 0; transform: translateY(14px) scale(0.96); } }
+dialog.modal::backdrop { background: rgba(9, 23, 15, 0.82); backdrop-filter: blur(6px); opacity: 0; transition: opacity var(--dur) ease, overlay var(--dur) allow-discrete, display var(--dur) allow-discrete; }
+dialog.modal[open]::backdrop { opacity: 1; }
+@starting-style { dialog.modal[open]::backdrop { opacity: 0; } }
+/* Окно выше экрана (класс ставит Modal.tsx): прокручивается само окно, коза прячется */
+dialog.modal--tall { overflow-y: auto; scrollbar-width: thin; }
+dialog.modal--tall .modal__goat { display: none; }
+.modal__box { position: relative; padding: 70px 56px 52px; background: linear-gradient(rgba(255, 248, 232, 0.45), rgba(255, 248, 232, 0.45)), var(--cr) url('/img/paper-cream.webp') center/cover; box-shadow: var(--shadow-deep); }
+/* Если окно выше экрана — прокручиваем само окно, козу прячем */
+/* Невысокий экран: окно компактнее, коза остаётся. Совсем низкий (< 700): прокручивается само окно, коза прячется */
+@media (max-height: 900px) {
+  dialog.modal { padding: 20px 0 16px; }
+  .modal__box { padding: 54px 48px 40px; }
+  .modal__box h2 { font-size: 36px; }
+  .modal__box h2 + .lead { margin-top: 10px; font-size: 18px; }
+  .modal__form { margin-top: 20px; }
+  .field { margin-bottom: 16px; }
+  .field__box { min-height: 56px; }
+  .field input, .field__prefix { font-size: 19px; }
+  .check { margin-bottom: 10px; font-size: 16px; }
+  .tabs { margin-top: 18px; } .tabs button { min-height: 46px; font-size: 17px; }
+  .modal__ticket { margin: 18px 0 20px; padding: 14px 30px; }
+  .modal__ticket .num { font-size: 40px; }
+  .modal__foot { margin-top: 18px; }
+  .modal__big { margin: -4px 0 4px; } .modal__big .num { font-size: 120px; } .modal__big b { font-size: 32px; }
+  .modal__icon { width: 96px; height: 96px; margin-bottom: 16px; }
+  .modal__goat { width: 400px; } .modal__goat--right { right: -330px; } .modal__goat--left { left: -350px; }
+}
+@media (max-height: 700px) { dialog.modal { overflow-y: auto; } .modal__goat { display: none; } }
+/* Пока открыто окно, страница под ним не прокручивается; ширина полосы прокрутки (--sbw, считает ui.js) добавляется отступом, чтобы страница не дёргалась */
+html.modal-open { overflow: hidden; padding-right: var(--sbw, 0px); }
+.modal__box::before { content: ''; position: absolute; inset: 14px; border: 1.5px dashed var(--kr); pointer-events: none; }
+.modal__ribbon { position: absolute; left: 50%; top: -22px; transform: translateX(-50%); z-index: 2; white-space: nowrap; filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.25)); }
+.modal__close { position: absolute; right: 30px; top: 30px; width: 46px; height: 46px; border: 0; border-radius: 50%; background: var(--g); color: var(--cr); display: grid; place-items: center; z-index: 2; transition: transform var(--dur-fast) var(--ease-out); }
+.modal__close:active { transform: scale(0.92); }
+.modal__close svg { width: 18px; height: 18px; }
+.modal__box h2 { font-size: 44px; line-height: 1.08; padding-right: 50px; }
+.modal__box h2 + .lead { margin-top: 14px; font-size: 20px; }
+.modal__form { margin-top: 28px; }
+.modal__actions { margin-top: 10px; }
+.modal__actions .btn + .btn { margin-top: 16px; }
+.modal__foot { margin-top: 26px; text-align: center; font-size: 16px; color: var(--mu); }
+.modal__foot .link { font-size: 19px; }
+.modal__stamp { position: absolute; left: -56px; top: -36px; width: 115px; rotate: 10deg; z-index: 2; }
+.modal__clip { position: absolute; left: 34px; top: -52px; width: 80px; rotate: 12deg; z-index: 2; }
+.modal__goat { position: absolute; bottom: -20px; width: 460px; pointer-events: none; z-index: -1; }
+.modal__goat--right { right: -380px; } .modal__goat--left { left: -400px; }
+/* Коза не выше самого окна (правка 25.10): на невысоком экране голова уходила за верхний край. Рамка картинки — высотой
+   с окно (+20 px вниз), картинка вписана в неё целиком и прижата к низу и к окну; на высоком окне коза прежнего размера. */
+.modal__goat--right, .modal__goat--left { height: calc(100% + 20px); object-fit: contain; }
+.modal__goat--right { object-position: 0 100%; }
+.modal__goat--left { object-position: 100% 100%; }
+/* Клик по пустому полю окна делает активным само окно — браузер рисовал вокруг него рамку. У окна рамку не показываем;
+   у кнопок и полей рамка для клавиатуры (Tab) остаётся. */
+dialog.modal:focus, dialog.modal:focus-visible { outline: none; }
+.modal__goat--peek { width: 230px; top: -176px; right: 70px; bottom: auto; }
+/* Окно с выглядывающей козой: сверху оставляем место под её голову, чтобы окно у края экрана не обрезало козу (правка 24.10) */
+dialog.modal:has(.modal__goat--peek) { padding-top: 170px; }
+dialog.modal:has(.modal__goat--peek) .modal__goat--peek { top: 6px; }
+@media (max-height: 900px) { dialog.modal:has(.modal__goat--peek) { padding-top: 150px; } dialog.modal:has(.modal__goat--peek) .modal__goat--peek { width: 200px; top: 0; } }
+@media (max-height: 700px) { dialog.modal:has(.modal__goat--peek) { padding-top: 20px; } }
+.modal--center { text-align: center; }
+.modal--center h2 { padding-right: 0; }
+.modal__icon { width: 120px; height: 120px; margin: 0 auto 24px; }
+.modal__icon svg { width: 60px; height: 60px; }
+.modal__big { display: flex; justify-content: center; align-items: center; gap: 16px; margin: -10px 0 8px; }
+.modal__big .num { font-size: 160px; color: var(--rd); }
+.modal__big b { font-size: 40px; font-weight: 800; }
+.modal__lights { margin: 24px 40px 4px; }
+.modal__cap { font-weight: 700; font-size: 17px; }
+.tabs { display: flex; gap: 4px; padding: 4px; margin-top: 24px; background: var(--pa); border: 2px solid var(--kr); border-radius: 999px; }
+.tabs button { flex: 1; min-height: 52px; border: 0; border-radius: 999px; background: transparent; font-weight: 700; font-size: 18px; color: var(--g); transition: background-color var(--dur-fast) ease, color var(--dur-fast) ease; }
+.tabs__short { display: none; }
+@media (max-width: 600px) { .tabs__full { display: none; } .tabs__short { display: inline; } }
+.tabs button[aria-selected='true'] { background: var(--g); color: var(--cr); font-weight: 800; }
+.modal__ticket { display: grid; grid-template-columns: auto 1fr; align-items: center; gap: 12px 24px; margin: 24px 0 28px; padding: 18px 34px; }
+.modal__ticket .num { font-size: 46px; color: var(--go); }
+.modal__ticket b { font-size: 20px; font-weight: 800; }
+.modal__ticket p { font-size: 16px; opacity: 0.9; }
+
+.confetti { position: fixed; inset: 0; pointer-events: none; z-index: 60; }
+
+@include below-lg {
+  .modal__goat { display: none; }
+  .modal__goat--peek { display: block; }
+}
+
+@include below-md {
+  .modal__box { padding: 56px 24px 36px; }
+  .modal__box h2 { font-size: 32px; }
+  .modal__stamp { left: -20px; width: 90px; }
+  .modal__goat--peek { width: 170px; top: -130px; right: 24px; }
+  dialog.modal:has(.modal__goat--peek) { padding-top: 120px; }
+  dialog.modal:has(.modal__goat--peek) .modal__goat--peek { width: 170px; top: 0; }
+  .modal__big .num { font-size: 120px; }
+  .modal__lights { margin-inline: 0; }
+}
+
+@include below-sm {
+  .tabs button { font-size: 15px; }
+  .modal__box h2 { font-size: 28px; }
+}
+
+/* Телефон (правка 24.10): окна компактнее, а если всё же выше экрана — прокручивается само окно, лента сверху не уезжает за край */
+@media (max-width: 600px) {
+  dialog.modal { width: calc(100% - 24px); max-height: 100dvh; overflow-y: auto; overscroll-behavior: contain; padding: 34px 0 12px; scrollbar-width: none; }
+  dialog.modal::-webkit-scrollbar { display: none; }
+  .modal__box { padding: 44px 20px 22px; }
+  .modal__box::before { inset: 8px; }
+  .modal__box h2 { font-size: 26px; padding-right: 44px; }
+  .modal--center .modal__box h2 { padding-inline: 44px; }
+  .modal__box h2 + .lead { margin-top: 8px; font-size: 17px; }
+  .modal__close { right: 16px; top: 16px; width: 40px; height: 40px; }
+  .modal__clip { left: 14px; top: -30px; width: 56px; }
+  /* Марка в пределах окна: не уходит за край экрана слева и сверху */
+  .modal__stamp { left: 4px; top: 0; width: 54px; rotate: -8deg; }
+  .modal__form { margin-top: 18px; }
+  .tabs { margin-top: 16px; }
+  .tabs button { min-height: 44px; font-size: 15px; line-height: 1.15; }
+  .modal__ticket { gap: 4px 14px; margin: 16px 0 18px; padding: 12px 22px; --cut: 10px; }
+  .modal__ticket .num { font-size: 32px; }
+  .modal__ticket b { font-size: 17px; }
+  /* «600 ₽ = 1 шаг» одной строкой, пояснение под ней во всю ширину билета */
+  .modal__ticket > div { display: contents; }
+  .modal__ticket b { align-self: center; }
+  .modal__ticket p { grid-column: 1 / -1; font-size: 14px; line-height: 1.35; }
+  .field { margin-bottom: 14px; }
+  .field__box { min-height: 52px; }
+  .field input, .field__prefix { font-size: 18px; }
+  .field__hint { margin-top: 6px; font-size: 14px; line-height: 1.4; }
+  .field input::placeholder { font-size: 16px; }
+  .check { margin-bottom: 10px; font-size: 15px; }
+  .modal__note { font-size: 14px !important; }
+  .modal__actions { margin-top: 16px !important; }
+  .modal__actions .btn + .btn { margin-top: 10px; }
+  .modal__foot { margin-top: 14px; font-size: 15px; }
+  .modal__foot .link { font-size: 17px; }
+  .modal__icon { width: 80px; height: 80px; margin-bottom: 14px; }
+  .modal__icon svg { width: 40px; height: 40px; }
+  .modal__big .num { font-size: 96px; }
+  .modal__big b { font-size: 28px; }
+}
+/* Невысокий телефон (iPhone SE и т. п.): место под выглядывающую козу важнее отдать содержимому */
+@media (max-width: 600px) and (max-height: 720px) {
+  dialog.modal:has(.modal__goat--peek) { padding-top: 34px; }
+  .modal__goat--peek, dialog.modal:has(.modal__goat--peek) .modal__goat--peek { display: none; }
+}
+
+// ---- Адаптив: Full HD и планшеты (правка 23.10.2026) ----
+@include tablet-port {
+  .modal__goat--peek { display: block; }
+}

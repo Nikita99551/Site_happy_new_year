@@ -1,0 +1,52 @@
+@use '@/shared/styles/tokens' as *;
+
+/* ---------- 8. Анимации появления и новогодние ---------- */
+@keyframes bob { 0%, 100% { transform: translateY(0) rotate(-1deg); } 50% { transform: translateY(-10px) rotate(1deg); } }
+@keyframes swing { 0%, 100% { transform: rotate(-2.5deg); } 50% { transform: rotate(2.5deg); } }
+@keyframes glint { 0%, 100% { opacity: 0; } 50% { opacity: 1; } }
+.hero__goat img, .cta__goat, .how__peek, .winners__goat { animation: bob 5s ease-in-out infinite; transform-origin: 50% 100%; }
+.cta__goat { animation-duration: 6s; }
+.modal__stamp { transform-origin: 50% 0; animation: swing 4s ease-in-out infinite; }
+/* Бирка «С Новым годом!» на открытке чуть покачивается сама по себе (правка 25.10: остальное на открытке неподвижно, при прокрутке ничего не едет) */
+@keyframes swing-soft { 0%, 100% { transform: rotate(-1.2deg); } 50% { transform: rotate(1.2deg); } }
+.postcard-stack__tag { transform-origin: 50% 0; animation: swing-soft 5s ease-in-out infinite; }
+/* Свечение «2027»: ореол за цифрами меняет только прозрачность — видеокарта, без перерисовки текста (раньше анимировался text-shadow) */
+.hero__year { position: relative; }
+.hero__year::after { content: ''; position: absolute; inset: 8% 0 4%; z-index: -1; pointer-events: none; opacity: 0; background: radial-gradient(closest-side, rgba(226, 178, 74, 0.42), rgba(226, 178, 74, 0)); will-change: opacity; }
+.hero__year.is-in::after { animation: glint 3.5s ease-in-out infinite; }
+@media (prefers-reduced-motion: reduce) { .hero__goat img, .cta__goat, .how__peek, .winners__goat, .postcard-stack__tag, .modal__stamp, .hero__year.is-in::after { animation: none; } }
+/* Прохождение шагов: новая лампочка «прибывает», предыдущая вспыхивает золотом, цифры перещёлкиваются (Мой маршрут, открытка на главной) */
+@keyframes step-arrive { 0% { transform: scale(0.4); } 60% { transform: scale(1.35); } 100% { transform: scale(1); } }
+@keyframes step-lit { 0% { transform: scale(1.3); filter: brightness(1.5); } 100% { transform: scale(1); filter: none; } }
+@keyframes num-tick { 0% { transform: translateY(-0.12em) scale(1.08); opacity: 0.4; } 100% { transform: none; opacity: 1; } }
+.bulb--arrive, .bulb--lit, .milestone--pop, .lights__here--pop { transform-box: fill-box; transform-origin: center; }
+.bulb--arrive { animation: step-arrive 420ms var(--ease-out) both; }
+.bulb--lit { animation: step-lit 420ms var(--ease-out); }
+.milestone--pop { animation: step-arrive 800ms var(--ease-out); }
+.lights__here--pop { animation: step-arrive 360ms var(--ease-out); }
+.num--tick { display: inline-block; animation: num-tick 260ms var(--ease-out); }
+/* Блик на главной кнопке (.btn--shine): раз в 6 с по кнопке пробегает полоса света — подсказка, куда нажать */
+@keyframes btn-shine { 0%, 78% { transform: translateX(-150%) skewX(-20deg); } 100% { transform: translateX(300%) skewX(-20deg); } }
+.btn--shine { position: relative; overflow: hidden; isolation: isolate; }
+.btn--shine::after { content: ''; position: absolute; top: 0; bottom: 0; left: 0; width: 40%; pointer-events: none; background: linear-gradient(90deg, transparent, rgba(255, 248, 232, 0.4), transparent); transform: translateX(-150%) skewX(-20deg); animation: btn-shine 6s ease-in-out 2s infinite; }
+.no-anim .btn--shine::after { animation: none; }
+.reveal { opacity: 0; transform: translateY(24px); transition: opacity 600ms var(--ease-out), transform 600ms var(--ease-out); transition-delay: var(--d, 0ms); }
+.reveal.is-in { opacity: 1; transform: none; }
+/* Наклон задаётся свойством rotate:, оно не зависит от transform анимации появления */
+.no-anim .reveal, .no-anim .chart__fill { transition: none; }
+.hero__year.reveal { transform: translateY(40px) scale(0.98); }
+/* Параллакс (useParallax): сдвиг и масштаб приходят CSS-переменными и ставятся отдельными свойствами — transform появления и rotate наклонов не сбиваются */
+[data-speed] { translate: 0 var(--par-y, 0); }
+/* Блок ушёл за экран — его бесконечные анимации (мигание лампочек, покачивание козы…) на паузе: в покое страница не грузит процессор.
+   Класс ставит usePauseOffscreen (widgets/page-layout). */
+.anim-off, .anim-off *, .anim-off *::before, .anim-off *::after { animation-play-state: paused !important; }
+[data-grow] { scale: var(--par-s, 1); }
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  .reveal { transform: none; transition: opacity 300ms ease; }
+  .lights .bulb--on { animation: none; }
+  .chart__fill { transition: none; }
+  dialog.modal, dialog.modal::backdrop { transition-duration: 1ms; }
+  .btn, .arrow, .header__chip { transition: none; }
+  .btn--shine::after { animation: none; }
+}

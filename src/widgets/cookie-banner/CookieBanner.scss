@@ -1,0 +1,13 @@
+@use '@/shared/styles/tokens' as *;
+
+/* Cookie-открытка */
+.cookie { position: fixed; left: 24px; bottom: 24px; z-index: 50; width: min(100% - 48px, 560px); padding: 28px 32px; background: linear-gradient(rgba(255, 248, 232, 0.45), rgba(255, 248, 232, 0.45)), var(--cr) url('/img/paper-cream.webp') center/cover; box-shadow: var(--shadow-deep); rotate: 1deg; opacity: 0; translate: 0 20px; transition: opacity var(--dur) var(--ease-out), translate var(--dur) var(--ease-out); }
+.cookie.is-open { opacity: 1; translate: 0 0; }
+.cookie::before { content: ''; position: absolute; inset: 12px; border: 1.5px dashed var(--kr); pointer-events: none; }
+.cookie b { display: block; font-size: 20px; font-weight: 800; color: var(--g); }
+.cookie p { margin-top: 8px; font-size: 16px; color: var(--mu); }
+.cookie__actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 18px; }
+
+@include below-md {
+  .cookie { left: 16px; bottom: 16px; width: calc(100% - 32px); padding: 22px 24px; }
+}

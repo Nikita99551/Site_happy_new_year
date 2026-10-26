@@ -1,0 +1,200 @@
+@use '@/shared/styles/tokens' as *;
+
+/* Страница «Мой маршрут» */
+.route-hero { padding-top: 32px; padding-bottom: 40px; overflow: clip; }
+.route-hero__greet { font-weight: 700; font-size: 22px; line-height: 1.5; color: var(--go); }
+.route-hero h1 { margin-top: 18px; font-size: clamp(40px, 5vw, 72px); max-width: none; }
+.route-hero__grid { display: grid; grid-template-columns: minmax(0, 626px) auto; justify-content: start; align-items: start; gap: 0; margin-top: -4px; }
+.route-hero__progress { display: flex; align-items: flex-start; gap: 24px; }
+.route-hero__progress .num { font-size: clamp(120px, 17.4vw, 250px); color: var(--go); }
+.route-hero__of { padding-top: 90px; }
+.route-hero__of b { display: block; font-size: 44px; line-height: 1.2; font-weight: 800; }
+.route-hero__of .ticket { --cut: 9px; display: inline-block; margin-top: 13px; padding: 0 30px; height: 44px; line-height: 44px; font-weight: 800; font-size: 18px; }
+.route-hero__of p { margin-top: 18px; max-width: 470px; font-size: 22px; line-height: 1.45; font-weight: 500; opacity: 0.92; }
+.route-hero__of p span, .tree-panel__next span { white-space: nowrap; }
+.tree-panel__next p span { white-space: normal; }
+.counters { display: flex; gap: 12px; margin-top: 72px; }
+.counter { display: flex; flex-direction: column; align-items: center; width: 120px; height: 150px; padding: 12px 10px 0; text-align: center; }
+.counter .num { font-size: 64px; line-height: 1.15; color: var(--g); }
+.counter small { display: block; width: 100%; margin-top: 6px; padding-top: 8px; border-top: 1.5px dashed var(--kr); font-weight: 700; font-size: 15px; line-height: 1.15; color: var(--mu); }
+.counter--red .num { color: var(--rd); }
+/* Коза привязана к счётчикам, а не к краю экрана: на широких экранах не уезжает вправо (правка 24.10).
+   Левый край контента = 50% − половина контейнера; 1010 px = колонка прогресса 626 + счётчики 384 */
+.route-hero__goat { position: absolute; top: 34px; left: min(100% - 44px - 311px, 50% - min(50% - var(--gutter), var(--container) / 2) + 1010px + 24px); width: 311px; height: 430px; overflow: hidden; z-index: 0; }
+.route-hero__goat img { width: 104.72%; max-width: none; margin: -8.37% 0 0 -4.72%; }
+.route-hero__lights { margin-top: 36px; }
+.route-hero__rows { display: none; }
+.route-hero__actions { display: flex; flex-wrap: wrap; gap: 16px; margin-top: 28px; }
+.route-hero__note { margin-top: 18px; font-size: 16px; color: rgba(255, 248, 232, 0.75); }
+.tree-sec { padding-block: 36px 24px; }
+.tree-grid { display: grid; grid-template-columns: minmax(0, 660px) minmax(0, 436px); justify-content: space-between; gap: 40px; align-items: start; }
+.tree { width: 100%; height: auto; max-width: 660px; outline: none; -webkit-tap-highlight-color: transparent; user-select: none; }
+.tree:focus, .tree:focus-visible { outline: none; }
+.tree .ball { cursor: pointer; transition: transform var(--dur-fast) var(--ease-out); transform-box: fill-box; transform-origin: center; }
+/* Шар выглядит нажимаемым: при наведении увеличивается и получает белое кольцо; текущий шар мягко «дышит» (правка 24.10) */
+.tree .ball__ring { opacity: 0; transition: opacity var(--dur-fast) ease; }
+.tree .ball.is-active .ball__ring { opacity: 1; }
+.tree .ball--current { animation: ball-breathe 2.4s ease-in-out infinite; }
+@keyframes ball-breathe { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.07); } }
+@media (prefers-reduced-motion: reduce) { .tree .ball--current { animation: none; } }
+html.no-anim .tree .ball--current { animation: none; }
+.tree .ball--current.ball--arrive { animation: step-arrive 480ms var(--ease-out); }
+.tree .ball--lit { animation: step-lit 480ms var(--ease-out); }
+.tree__star--pop { transform-box: fill-box; transform-origin: center; animation: step-arrive 900ms var(--ease-out); }
+@media (hover: hover) { .tree .ball:hover { transform: scale(1.12); animation: none; } .tree .ball:hover .ball__ring { opacity: 1; } }
+.tree-hint { position: relative; z-index: 2; width: fit-content; margin-bottom: 12px; display: flex; align-items: center; gap: 10px; padding: 10px 18px; background: #fff; color: var(--g); border-radius: 999px; box-shadow: var(--shadow-card); font-weight: 700; font-size: 16px; line-height: 1.3; pointer-events: none; }
+.tree-hint svg { flex: none; width: 22px; height: 22px; color: var(--rd); }
+.tree .ball:focus-visible { outline: 3px solid var(--rd); outline-offset: 4px; border-radius: 50%; }
+.tree .ball--current circle { filter: drop-shadow(0 0 10px rgba(227, 30, 36, 0.9)); }
+.tree .ball--locked { opacity: 0.55; }
+.tree-panel { padding-top: 20px; }
+.tree-panel h2 { font-size: 44px; line-height: 50px; }
+.tree-panel__lead { margin-top: 20px; font-size: 19px; line-height: 28px; color: #46524a; }
+.tree-panel__next { margin-top: 22px; padding: 22px; background: linear-gradient(rgba(23, 63, 42, 0.18), rgba(23, 63, 42, 0.18)), var(--g) url('/img/paper-green.webp') center/cover; color: #fff; border-radius: 20px; }
+.tree-panel__next b { display: block; font-size: 24px; font-weight: 800; line-height: 32px; }
+.tree-panel__next b em { font-style: normal; color: #ffd36b; }
+.tree-panel__next p { margin-top: 10px; font-size: 18px; line-height: 27px; color: #d9e6db; }
+.tree-panel__next .btn { margin-top: 10px; min-height: 60px; border-radius: 8px; font-size: 18px; }
+.legend { margin-top: 32px; padding: 24px 26px; background: #fff; border-radius: 14px; box-shadow: var(--shadow-card); }
+.tree-panel .legend { margin-top: 20px; padding: 18px 22px; border-radius: 16px; box-shadow: none; }
+.legend li { display: flex; align-items: center; gap: 14px; padding: 8px 0; font-weight: 600; font-size: 16px; }
+.tree-panel .legend li { padding: 5px 0; font-size: 17px; line-height: 24px; color: #1f2420; }
+.tree-panel .legend i, .tree-panel .legend svg { width: 30px; height: 30px; }
+.legend ul { list-style: none; margin: 0; padding: 0; }
+.legend i { flex: none; width: 24px; height: 24px; border-radius: 50%; }
+.legend .i-gold { background: var(--go); } .legend .i-red { background: var(--rd); } .legend .i-dim { background: #cfd9d1; opacity: 0.7; }
+.legend .i-gift, .legend .i-box, .legend .i-star { border-radius: 0; background: none; display: grid; place-items: center; }
+.legend svg { width: 24px; height: 24px; }
+.tooltip { position: absolute; z-index: 30; max-width: 260px; padding: 14px 16px; background: var(--gd); color: var(--cr); border-radius: 10px; font-size: 15px; line-height: 1.4; box-shadow: var(--shadow-card); opacity: 0; transform: translateY(6px) scale(0.97); transition: opacity 150ms var(--ease-out), transform 150ms var(--ease-out); pointer-events: none; }
+.tooltip.is-open { opacity: 1; transform: none; }
+.tooltip b { display: block; font-size: 17px; margin-bottom: 4px; }
+.activity { padding-block: 72px 80px; }
+.activity .section-head { margin-bottom: 28px; }
+.activity .section-head .ribbon { margin-bottom: 16px; }
+.activity .section-head { max-width: none; }
+.activity h2 { font-size: 46px; white-space: nowrap; }
+.activity__grid { display: grid; grid-template-columns: minmax(0, 580px) minmax(0, 640px); justify-content: space-between; gap: 48px; align-items: start; }
+.ticket-card { display: grid; grid-template-columns: 100px 1fr; gap: 56px; align-items: center; padding: 34px; margin-bottom: 20px; }
+.ticket-card__divider { position: absolute; left: 166px; top: 16px; bottom: 16px; border-left: 2px dashed currentColor; opacity: 0.4; }
+.ticket-card b { display: block; font-size: 25px; font-weight: 800; line-height: 1.3; }
+.ticket-card p { margin-top: 10px; font-size: 18px; line-height: 1.45; color: #4e5f54; }
+.ticket-card .btn { margin-top: 26px; }
+.ticket-card__seal { display: block; width: 100px; height: 100px; }
+.share-tag { position: relative; margin-top: 20px; min-height: 230px; padding: 34px 44px 34px 96px; background: #d3aa79 url('/img/paper-cream.webp') center/cover; background-blend-mode: soft-light; color: var(--g); clip-path: polygon(46px 0, 100% 0, 100% 100%, 46px 100%, 0 calc(100% - 50px), 0 50px); }
+.share-tag::before { content: ''; position: absolute; left: 30px; top: 50%; width: 22px; height: 22px; margin-top: -11px; border-radius: 50%; background: var(--g); }
+.share-tag b { display: block; font-size: 24px; font-weight: 800; line-height: 1.2; }
+.share-tag p { margin-top: 8px; font-size: 18px; line-height: 1.45; color: rgba(23, 63, 42, 0.85); }
+.share-tag .btn { margin-top: 12px; width: 100%; max-width: 408px; min-height: 56px; white-space: normal; line-height: 1.2; padding-block: 10px; text-align: center; }
+.receipt { position: relative; padding: 44px 40px 48px; background: linear-gradient(rgba(250, 247, 240, 0.8), rgba(250, 247, 240, 0.8)), #faf7f0 url('/img/paper-cream.webp') center/cover; color: var(--ink); rotate: -1.2deg; clip-path: url(#clip-receipt); }
+.receipt-wrap { filter: drop-shadow(0 16px 34px rgba(5, 20, 12, 0.35)); }
+.receipt h2 { text-align: center; font-size: 46px; color: var(--g); }
+.receipt__sub { margin-top: 10px; text-align: center; font-weight: 700; color: var(--mu); font-size: 17px; padding-bottom: 18px; border-bottom: 1.5px dashed rgba(78, 95, 84, 0.6); }
+.receipt__row { display: grid; grid-template-columns: 1fr auto auto; gap: 16px 24px; align-items: center; padding: 22px 0; border-bottom: 1.5px dashed var(--kr); }
+.receipt__row b { display: block; font-size: 22px; font-weight: 800; }
+.receipt__row small { display: block; font-size: 17px; color: var(--mu); margin-top: 4px; }
+.receipt__steps { font-family: var(--font-num); font-weight: 900; font-size: 34px; color: var(--g); }
+.receipt__row--pending .receipt__steps { color: var(--mu); }
+.pill { padding: 10px 20px; border-radius: 999px; font-weight: 800; font-size: 15px; background: #e4efe6; color: #1f6b3a; white-space: nowrap; }
+.pill--pending { background: #fff0c2; color: #8a6400; }
+.receipt__note { grid-column: 1 / -1; font-size: 16px; color: var(--mu); }
+/* Список чеков с прокруткой: видно ~4 чека, как в макете 2855:4844 (полоса прокрутки, затухание снизу, подпись «Всего…») */
+.receipt__scroll { position: relative; }
+.receipt__list { max-height: 400px; overflow-y: auto; padding-right: 14px; scrollbar-width: thin; scrollbar-color: var(--g) rgba(217, 185, 140, 0.45); overscroll-behavior: contain; }
+.receipt__list::-webkit-scrollbar { width: 5px; }
+.receipt__list::-webkit-scrollbar-track { background: rgba(217, 185, 140, 0.45); border-radius: 3px; }
+.receipt__list::-webkit-scrollbar-thumb { background: var(--g); border-radius: 3px; }
+.receipt__scroll::after { content: ''; position: absolute; left: 0; right: 20px; bottom: 0; height: 56px; background: linear-gradient(rgba(250, 247, 240, 0), #faf7f0); pointer-events: none; }
+.receipt__circle { display: flex; align-items: center; gap: 12px; margin: 0; padding: 14px 0; border-bottom: 1.5px dashed var(--kr); font-weight: 800; font-size: 17px; color: var(--g); }
+.receipt__circle span { padding: 6px 14px; background: var(--go); border-radius: 14px; line-height: 1.3; }
+.receipt__row b { white-space: nowrap; }
+.receipt__sum { margin-top: 16px; padding-top: 14px; border-top: 1.5px dashed rgba(78, 95, 84, 0.6); text-align: center; font-size: 17px; color: var(--mu); line-height: 1.4; }
+.receipt__sum b { color: var(--g); font-size: 20px; }
+.receipt__sum p + p { margin-top: 4px; }
+.receipt__hint { font-weight: 700; }
+
+@include below-lg {
+  .tree-grid { grid-template-columns: minmax(0, 1fr); }
+  .tree-panel { padding-top: 0; }
+  .activity__grid { grid-template-columns: minmax(0, 1fr); }
+  .route-hero__goat { width: 200px; opacity: 0.9; left: auto; }
+  .route-hero__goat { height: 277px; right: var(--gutter); }
+}
+
+@include below-md {
+  .route-hero { padding-top: 60px; }
+  .route-hero__grid { grid-template-columns: minmax(0, 1fr); }
+  .route-hero__progress { gap: 16px; }
+  .route-hero__of b { font-size: 28px; }
+  .route-hero__of { padding-top: 16px; }
+  .route-hero__grid { margin-top: 0; }
+  .route-hero__of p { font-size: 18px; }
+  .route-hero__of p span { white-space: normal; }
+  .route-hero__lights { overflow-x: auto; margin-inline: calc(-1 * var(--gutter)); padding-inline: var(--gutter); scrollbar-width: none; }
+  .route-hero__lights .lights { min-width: 760px; }
+  .route-hero__lights { display: none; }
+  .route-hero__rows { display: grid; gap: 6px; margin-top: 28px; }
+  .route-hero__rows .lights { display: block; width: 100%; height: auto; }
+  .route-hero__goat { display: none; }
+  .counters { flex-wrap: wrap; margin-top: 24px; }
+  .activity h2 { white-space: normal; font-size: clamp(32px, 9vw, 44px); }
+  .tree-panel__next span { white-space: normal; }
+  .ticket-card { grid-template-columns: 1fr; gap: 20px; padding: 28px; }
+  .ticket-card__divider { display: none; }
+  .share-tag { padding-left: 80px; }
+  .receipt { padding: 36px 20px 44px; transform: none; }
+  .receipt__list { max-height: 360px; }
+  .receipt__row { grid-template-columns: 1fr auto; }
+  .receipt__row .pill { grid-column: 1 / -1; justify-self: start; }
+}
+
+@include below-md {
+  .tree-panel h2 { font-size: 34px; }
+  .tree-hint { font-size: 15px; padding: 9px 16px; }
+  .receipt h2 { font-size: 34px; }
+  .route-hero h1 { font-size: clamp(34px, 8.5vw, 44px); }
+  .route-hero__progress .num { font-size: 110px; }
+}
+
+/* Телефон: вытянутая ёлка во всю ширину экрана — шары ~46 px, цифры ~20 px (правка 24.10) */
+@media (max-width: 600px) {
+  .tree-host { margin-inline: calc(-1 * var(--gutter)); }
+  .tree-host .tree-hint { margin-inline: var(--gutter); max-width: calc(100% - 2 * var(--gutter)); }
+  .tree--tall { max-width: none; }
+}
+
+@include below-sm {
+  .counters { gap: 8px; }
+  .counter { width: calc(33.33% - 6px); }
+  .counter .num { font-size: 44px; }
+}
+
+// ---- Адаптив: Full HD и планшеты (правка 23.10.2026) ----
+@include above-xl {
+  .route-hero__grid { grid-template-columns: minmax(0, 760px) auto; }
+  /* Коза меньше (было 372×515): копытами не заходит на гирлянду шагов (правка по скриншоту) */
+  .route-hero__goat { left: min(100% - 60px - 316px, 50% - min(50% - var(--gutter), var(--container) / 2) + 1192px + 24px); width: 316px; height: 437px; }
+  .counter { width: 136px; height: 168px; }
+  .counter .num { font-size: 72px; }
+  .tree-grid { grid-template-columns: minmax(0, 780px) minmax(0, 520px); gap: 56px; }
+  .tree { max-width: 780px; }
+  .tree-panel h2 { font-size: 50px; line-height: 56px; }
+  .activity__grid { grid-template-columns: minmax(0, 680px) minmax(0, 760px); gap: 64px; }
+  .activity h2 { font-size: 52px; }
+}
+@include tablet-land {
+  .route-hero__grid { grid-template-columns: 1fr; }
+  .counters { margin-top: 28px; }
+  .tree { max-width: 620px; margin-inline: auto; }
+  .tree-panel { max-width: 720px; }
+}
+@include tablet-port {
+  .route-hero__lights { display: block; }
+  .route-hero__rows { display: none; }
+  .route-hero__goat { display: block; width: 220px; height: 304px; right: var(--gutter); top: 40px; opacity: 0.9; }
+  .route-hero__greet, .route-hero h1 { max-width: calc(100% - 250px); }
+  .route-hero__progress { padding-right: 240px; }
+  .tree { max-width: 560px; margin-inline: auto; }
+  .ticket-card { grid-template-columns: 100px 1fr; gap: 40px; padding: 30px; }
+  .ticket-card__divider { display: block; }
+  .receipt { padding: 40px 32px 44px; }
+}

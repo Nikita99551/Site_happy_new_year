@@ -1,0 +1,56 @@
+@use '@/shared/styles/tokens' as *;
+
+/* Финальный призыв с гирляндой */
+.cta { position: relative; overflow-x: clip; overflow-y: visible; padding-top: 180px; padding-bottom: 56px; }
+.cta__garland { position: absolute; left: 0; right: 0; top: -95px; height: 250px; z-index: 3; pointer-events: none; display: flex; justify-content: center; overflow: clip; filter: drop-shadow(0 10px 18px rgba(0, 12, 5, 0.35)); }
+.cta__garland img { height: 100%; width: auto; flex: none; max-width: none; }
+.cta__garland img { margin-left: -40px; }
+.cta__garland img:nth-child(even) { transform: scaleX(-1); }
+.cta__inner { display: grid; grid-template-columns: 1fr auto; align-items: end; gap: 32px; }
+.cta h2 { max-width: 760px; }
+.cta .lead { margin-top: 22px; max-width: 600px; }
+.cta__actions { display: flex; flex-wrap: wrap; align-items: center; gap: 16px 24px; margin-top: 36px; }
+.cta__goat { width: auto; height: min(440px, 30vw); margin-bottom: -40px; }
+.cta--cream { color: var(--ink); }
+.cta--route { padding-bottom: 8px; }
+.cta--route h2 { max-width: 860px; font-size: clamp(40px, 4.5vw, 64px); line-height: 1.05; }
+.cta--route .lead { margin-top: 20px; max-width: 600px; font-size: 23px; }
+.cta--route .cta__goat { height: min(440px, 30vw); margin-bottom: -20px; }
+.cta--cream h2 { color: var(--g); }
+
+/* Коза запрыгивает, когда баннер появляется: присела → прыжок → приземление с приседом → отскок, дальше обычное покачивание (bob).
+   Последний кадр совпадает с первым кадром bob (rotate −1°), чтобы переход был незаметным */
+@keyframes goat-hop-in {
+  0% { transform: translateY(16px) scale(1.04, 0.88); animation-timing-function: ease-out; }
+  34% { transform: translateY(-64px) scale(0.96, 1.06) rotate(-4deg); animation-timing-function: ease-in; }
+  58% { transform: translateY(0) scale(1.06, 0.9); animation-timing-function: ease-out; }
+  76% { transform: translateY(-16px) scale(0.99, 1.02) rotate(1deg); animation-timing-function: ease-in; }
+  90% { transform: translateY(0) scale(1.02, 0.97); animation-timing-function: ease-out; }
+  100% { transform: translateY(0) rotate(-1deg); }
+}
+.cta__goat.is-in { animation: goat-hop-in 1100ms 150ms both, bob 6s ease-in-out 1250ms infinite; }
+.no-anim .cta__goat.is-in { animation: bob 6s ease-in-out infinite; }
+@media (prefers-reduced-motion: reduce) { .cta__goat.is-in { animation: none; } }
+
+@include below-md {
+  .cta { padding-top: 150px; }
+  .cta__garland { top: -70px; height: 190px; }
+  .cta__inner { grid-template-columns: 1fr; }
+  .cta__goat { width: min(260px, 60%); height: auto; margin: 0 auto -40px; }
+  .cta--route .cta__goat { width: min(150px, 40%); height: auto; margin: 0 auto; } /* коза со звездой узкая (342×1000, 25.10): высота как раньше */
+}
+
+@include below-md {
+  .cta h2 { font-size: clamp(32px, 8.5vw, 44px); }
+}
+
+// ---- Адаптив: Full HD и планшеты (правка 23.10.2026) ----
+@include above-xl {
+  .cta__goat { height: min(520px, 28vw); }
+  .cta h2 { max-width: 900px; }
+}
+@include tablet-port {
+  .cta__inner { grid-template-columns: 1fr auto; align-items: end; }
+  .cta__goat { width: auto; height: min(340px, 36vw); margin: 0 0 -40px; }
+  .cta--route .cta__goat { height: min(300px, 32vw); margin: 0 0 -20px; }
+}

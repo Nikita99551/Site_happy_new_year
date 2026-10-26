@@ -1,0 +1,74 @@
+@use '@/shared/styles/tokens' as *;
+
+/* ---------- 5. Фигурные плашки ---------- */
+/* Лента с «ласточкиным хвостом» по краям */
+.ribbon {
+  display: inline-block; padding: 10px 34px; font-weight: 800; font-size: 17px; line-height: 1.3;
+  color: var(--cr); background: var(--rd);
+  clip-path: polygon(0 0, 100% 0, calc(100% - 14px) 50%, 100% 100%, 0 100%, 14px 50%);
+}
+.ribbon--green { background: var(--g); }
+.ribbon--cream { background: var(--cr); color: var(--rdd); }
+/* Билет с вырезами по бокам */
+.ticket {
+  position: relative; background: var(--rd); color: var(--cr);
+  --cut: 14px;
+  -webkit-mask-image: radial-gradient(circle at 0 50%, transparent var(--cut), #000 calc(var(--cut) + 1px)), radial-gradient(circle at 100% 50%, transparent var(--cut), #000 calc(var(--cut) + 1px));
+  mask-image: radial-gradient(circle at 0 50%, transparent var(--cut), #000 calc(var(--cut) + 1px)), radial-gradient(circle at 100% 50%, transparent var(--cut), #000 calc(var(--cut) + 1px));
+  -webkit-mask-composite: source-in; mask-composite: intersect;
+}
+.ticket--green { background: var(--g); }
+.ticket--gold { background: var(--go); color: var(--g); }
+.ticket--cream { background: var(--cr); color: var(--g); }
+.ticket__stitch { position: absolute; inset: 12px; border: 2px dashed currentColor; opacity: 0.6; pointer-events: none; }
+/* Зубчатая печать */
+.seal {
+  display: inline-flex; flex-direction: column; align-items: center; justify-content: center; flex: none;
+  width: 104px; height: 104px; background: var(--go); color: var(--g);
+  clip-path: url(#clip-scallop);
+}
+.seal { position: relative; }
+.seal::after { content: ''; position: absolute; inset: 0; background: url('/img/scallop-stitch-green.svg') center/contain no-repeat; }
+.seal--red::after, .seal--green::after { background-image: url('/img/scallop-stitch-cream.svg'); }
+.seal--red { background: var(--rd); color: var(--cr); }
+.seal--green { background: var(--g); color: var(--cr); }
+.seal .num { font-size: 50px; }
+.burst { clip-path: url(#clip-burst); }
+.star-shape { clip-path: url(#clip-star); background: var(--go); }
+/* Рваный бумажный край поверх предыдущего блока */
+.torn-top { position: relative; }
+.torn-top::before {
+  content: ''; position: absolute; left: 0; right: 0; top: -38px; height: 40px; z-index: 2; pointer-events: none;
+  background: var(--torn, var(--cr));
+  clip-path: url(#clip-torn-top);
+}
+.section--green.torn-top::before { --torn: var(--g); }
+.section--red.torn-top::before { --torn: var(--rd); }
+.section--white.torn-top::before { --torn: #fff; }
+.section--cream.torn-top::before, .section--plaid.torn-top::before { --torn: var(--cr); }
+/* Строчка по краю (пунктирная рамка) */
+.stitched { position: relative; }
+.stitched::after { content: ''; position: absolute; inset: 14px; border: 1.5px dashed var(--kr); pointer-events: none; }
+/* Бумажная карточка */
+.paper { background: linear-gradient(rgba(255, 255, 255, 0.72), rgba(255, 255, 255, 0.72)), #fff url('/img/paper-cream.webp') center/cover; box-shadow: var(--shadow-card); }
+.paper--cream { background: linear-gradient(rgba(255, 248, 232, 0.45), rgba(255, 248, 232, 0.45)), var(--cr) url('/img/paper-cream.webp') center/cover; }
+/* Крафтовая бирка с дыркой */
+.tag-shape { clip-path: url(#clip-tag); }
+/* Гирлянда-огоньки (рисуется JS, см. ui.js → renderLights) */
+.lights { display: block; width: 100%; height: auto; overflow: visible; }
+.lights .bulb { transform-box: fill-box; transform-origin: 50% 0; rotate: var(--sway, 0deg); }
+.lights .bulb--on { animation: twinkle 2.6s ease-in-out infinite; }
+.lights .bulb--new { --glow: #e31e24; animation-duration: 1.6s; }
+.lights .bulb:nth-child(3n) { animation-delay: -0.8s; }
+.lights .bulb:nth-child(3n + 1) { animation-delay: -1.7s; }
+@keyframes twinkle { 0%, 100% { opacity: 1; } 50% { opacity: 0.72; } }
+/* Снег */
+.snow { position: absolute; inset: 0; pointer-events: none; z-index: 1; }
+.snowflake { position: absolute; width: 44px; height: 44px; opacity: 0.2; background: url('/img/snowflake.svg') center/contain no-repeat; pointer-events: none; }
+
+// ---- Адаптив: Full HD и планшеты (правка 23.10.2026) ----
+@include above-xl {
+  .ribbon { padding: 12px 38px; font-size: 18px; }
+  .seal { width: 116px; height: 116px; }
+  .seal .num { font-size: 56px; }
+}
