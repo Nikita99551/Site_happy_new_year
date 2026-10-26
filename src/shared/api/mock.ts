@@ -4,7 +4,8 @@
  */
 import { CAMPAIGN } from '@/shared/config/campaign';
 import { toUser } from './progress';
-import type { AnixApi, MeResponse, Receipt, ReceiptResult, RegisterInput, Store, User } from './types';
+import { STORES } from './stores.data';
+import type { AnixApi, MeResponse, Receipt, ReceiptResult, RegisterInput, User } from './types';
 
 const STORAGE_KEY = 'anix_demo';
 
@@ -48,14 +49,6 @@ interface DemoState {
   fresh?: boolean;
 }
 
-/** Пример магазинов. ЗАПОЛНИТЬ: полный список и ссылки на группы MAX. */
-const STORES: Store[] = [
-  { id: 'slav', name: 'Аникс «Славянский»', address: 'Бийск, ул. Васильева, 30', max: '' },
-  { id: 's02', name: 'Аникс «Магазин 02»', address: 'Город · улица · номер дома', max: '' },
-  { id: 's03', name: 'Аникс «Магазин 03»', address: 'Город · улица · номер дома', max: '' },
-  { id: 's04', name: 'Аникс «Магазин 04»', address: 'Город · улица · номер дома', max: '' },
-];
-
 /** Дата для примера: days дней назад; minutes — время суток в минутах, а для сегодняшнего дня — сколько минут назад */
 function ago(days: number, minutes: number): string {
   const d = new Date();
@@ -72,7 +65,7 @@ function ago(days: number, minutes: number): string {
 const DEMO_ME: MeResponse = {
   name: 'Анна Сергеевна',
   phone: '9134567890',
-  storeId: 'slav',
+  storeId: '11', // «Славянский», Бийск
   partnerStops: [...CAMPAIGN.partnerStops],
   receipts: [
     { id: 'r1', last4: '2716', at: ago(0, 35), steps: 0, status: 'processing' },

@@ -9,7 +9,6 @@ import { Button } from '@/shared/ui/button/Button';
 import { IconCrate, IconGift, IconStar } from '@/shared/ui/icons/Icons';
 import { StepGarland, StepRow, useGarlandSway } from '@/shared/ui/lights';
 import { Snow } from '@/shared/ui/snow/Snow';
-import { useToast } from '@/shared/ui/toast/context';
 import { CtaBanner } from '@/widgets/cta-banner/CtaBanner';
 import { PageLayout } from '@/widgets/page-layout/PageLayout';
 import { RouteTree } from '@/widgets/route-tree/RouteTree';
@@ -20,9 +19,8 @@ const d = (ms: number) => ({ '--d': `${ms}ms` } as React.CSSProperties);
 
 /** Личная страница «Мой маршрут». Гость видит пример маршрута и приглашение войти. */
 export default function RoutePage() {
-  const { user, ready } = useSession();
+  const { user, ready, selectedStore } = useSession();
   const { open, state: modal } = useModal();
-  const toast = useToast();
   const reduced = useReducedMotion();
   const guest = !user;
   const shown = useMemo(() => user ?? { ...api.sample(), name: 'Гость' }, [user]);
@@ -134,8 +132,12 @@ export default function RoutePage() {
             <div className="share-tag reveal" style={d(160)}>
               <b>Поделитесь прогрессом в&nbsp;чате магазина</b>
               <p>Самых активных участников чата своего магазина ждёт дополнительный подарок.</p>
-              {/* ЗАПОЛНИТЬ: ссылка на группу MAX выбранного магазина */}
-              <Button variant="yellow" href="#" onClick={(e) => { e.preventDefault(); toast('Ссылка на чат магазина появится позже'); }}>Поделиться в&nbsp;чате MAX</Button>
+              {/* Чат MAX своего магазина; магазин не выбран — сначала выбор магазина; у магазина нет чата — кнопка серая */}
+              {selectedStore?.max
+                ? <Button variant="yellow" href={selectedStore.max} target="_blank" rel="noopener">Поделиться в&nbsp;чате MAX</Button>
+                : selectedStore
+                  ? <Button variant="yellow" className="btn--off" disabled title="Ссылки на чат вашего магазина пока нет">Поделиться в&nbsp;чате MAX</Button>
+                  : <Button variant="yellow" onClick={() => open('store')}>Поделиться в&nbsp;чате MAX</Button>}
             </div>
           </div>
           <div className="receipt-wrap reveal" style={d(120)}>

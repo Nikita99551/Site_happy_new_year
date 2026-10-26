@@ -102,6 +102,9 @@ p { margin: 0; }
   .section--green .btn--secondary:hover { background: rgba(255, 248, 232, 0.12); }
   .btn--light:hover { background: #fff; }
 }
+/* Неактивная кнопка: перейти пока нельзя (например, у магазина ещё нет чата MAX) */
+.btn.btn--off, .btn.btn--off:hover { background: #e6e1d7; color: #7a766e; box-shadow: none; cursor: not-allowed; }
+.btn.btn--off:active { transform: none; }
 .link { font-weight: 800; color: var(--rd); text-decoration: underline; text-underline-offset: 3px; }
 .link--green { color: var(--g); }
 
