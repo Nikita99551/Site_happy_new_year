@@ -146,6 +146,9 @@ export function RouteTree({ from, to, paused = false, partnerStops }: RouteTreeP
     if (!isGift && state === 'current') labels.push(<Label key={`l${n}`} x={cx} y={cy + tg.here.dy} text="Вы здесь" bg="#e31e24" color="#fff8e8" w={tg.here.w} fs={tg.here.fs} />);
     return (
       <g key={n} className={`ball ball--${state}${tip?.n === n ? ' is-active' : ''}${moving && n === step ? ' ball--arrive' : ''}${moving && n === step - 1 ? ' ball--lit' : ''}`} tabIndex={0} role="button" data-step={n} aria-label={`Шаг ${n}${state === 'done' ? ', пройден' : state === 'current' ? ', вы здесь' : ', ещё не открыт'}`}>
+        {/* Зона наведения — сплошной круг: при увеличении шара (hover) он только растёт и не уходит из-под курсора.
+            Кольцо — тонкая линия, по нему наведение ловить нельзя: шар увеличивается, кольцо уезжает, подсказка мигает */}
+        <circle className="ball__hit" cx={cx} cy={isGift ? cy + 4 * k : cy} r={isGift ? 48 * k : r + 11 * k} fill="transparent" />
         <circle className="ball__ring" cx={cx} cy={isGift ? cy + 4 * k : cy} r={isGift ? 46 * k : r + 7 * k} fill="none" stroke="#fff8e8" strokeWidth={3 * k} />
         <line x1={cx} y1={cy - 44 * k} x2={cx} y2={cy - 30 * k} stroke="#e2b24a" strokeWidth={2 * k} />
         <rect x={cx - 6 * k} y={cy - 36 * k} width={12 * k} height={8 * k} rx={2 * k} fill="#b98a2e" />

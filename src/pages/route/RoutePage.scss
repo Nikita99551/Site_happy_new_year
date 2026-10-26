@@ -32,7 +32,7 @@
 .tree:focus, .tree:focus-visible { outline: none; }
 .tree .ball { cursor: pointer; transition: transform var(--dur-fast) var(--ease-out); transform-box: fill-box; transform-origin: center; }
 /* Шар выглядит нажимаемым: при наведении увеличивается и получает белое кольцо; текущий шар мягко «дышит» (правка 24.10) */
-.tree .ball__ring { opacity: 0; transition: opacity var(--dur-fast) ease; }
+.tree .ball__ring { opacity: 0; transition: opacity var(--dur-fast) ease; pointer-events: none; }
 .tree .ball.is-active .ball__ring { opacity: 1; }
 .tree .ball--current { animation: ball-breathe 2.4s ease-in-out infinite; }
 @keyframes ball-breathe { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.07); } }

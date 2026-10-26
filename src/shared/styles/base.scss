@@ -121,12 +121,12 @@ p { margin: 0; }
 .field__error { display: none; margin-top: 8px; font-size: 15px; font-weight: 700; color: var(--rd); }
 .field--error .field__error { display: block; }
 .field__ok { width: 28px; height: 28px; border-radius: 50%; background: var(--g); flex: none; position: relative; }
-.field__ok::after { content: ''; position: absolute; left: 9px; top: 6px; width: 7px; height: 12px; border: solid var(--cr); border-width: 0 3px 3px 0; rotate: -45deg; }
+.field__ok::after { content: ''; position: absolute; left: 9px; top: 6px; width: 7px; height: 12px; border: solid var(--cr); border-width: 0 3px 3px 0; rotate: 45deg; }
 .check { display: flex; gap: 14px; align-items: flex-start; margin-bottom: 14px; font-weight: 600; font-size: 17px; cursor: pointer; }
 .check input { position: absolute; opacity: 0; width: 1px; height: 1px; }
 .check__box { flex: none; width: 28px; height: 28px; margin-top: 1px; border: 2px solid var(--g); border-radius: 6px; background: #fff; position: relative; transition: background-color var(--dur-fast) ease; }
 .check input:checked + .check__box { background: var(--g); }
-.check input:checked + .check__box::after { content: ''; position: absolute; left: 8px; top: 3px; width: 7px; height: 13px; border: solid var(--cr); border-width: 0 3px 3px 0; rotate: -45deg; }
+.check input:checked + .check__box::after { content: ''; position: absolute; left: 8px; top: 3px; width: 7px; height: 13px; border: solid var(--cr); border-width: 0 3px 3px 0; rotate: 45deg; }
 .check input:focus-visible + .check__box { outline: 3px solid var(--go); outline-offset: 2px; }
 .check--error .check__box { border-color: var(--rd); }
 
