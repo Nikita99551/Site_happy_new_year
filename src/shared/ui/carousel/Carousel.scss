@@ -9,7 +9,8 @@
 @media (hover: hover) { .arrow:hover { background: currentColor; } .arrow:hover svg { color: var(--rd); } .section--green .arrow:hover svg, .section--red .arrow:hover svg { color: var(--g); } .section--red .arrow:hover svg { color: var(--rd); } }
 .arrow svg { width: 22px; height: 22px; }
 /* Поля вокруг карточек: тень карточки не должна обрезаться дорожкой */
-.carousel__track { display: flex; gap: 24px; margin: 28px -6px 0; padding: 12px 6px 16px; scroll-padding-inline: 6px; overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none; cursor: grab; user-select: none; }
+/* Прокрутка свободная, без привязки к карточкам: где отпустили, там лента и осталась (правка 27.10) */
+.carousel__track { display: flex; gap: 24px; margin: 28px -6px 0; padding: 12px 6px 16px; overflow-x: auto; overscroll-behavior-x: contain; scrollbar-width: none; cursor: grab; user-select: none; }
 .carousel__track img { -webkit-user-drag: none; }
 .carousel__track::-webkit-scrollbar { display: none; }
 
