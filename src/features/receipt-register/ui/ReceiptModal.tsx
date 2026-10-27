@@ -78,12 +78,11 @@ export function ReceiptModal({ open }: { open: boolean }) {
       </div>
       <div className="ticket ticket--green modal__ticket">
         <span className="num">600&nbsp;₽</span>
-        <div><b>= 1&nbsp;шаг</b><p>Чек от&nbsp;600&nbsp;₽, не&nbsp;больше 5&nbsp;чеков в&nbsp;день. Оригинал храните до&nbsp;24&nbsp;января 2027.</p></div>
+        <div><b>= 1&nbsp;шаг</b><p>Чек от&nbsp;600&nbsp;₽, до&nbsp;5&nbsp;чеков в&nbsp;день, 5&nbsp;товаров партнёров&nbsp;— ещё шаг. Чек храните до&nbsp;24&nbsp;января&nbsp;2027.</p></div>
       </div>
       {channel === 'store' && <ReceiptHint />}
       <form className="modal__form" noValidate onSubmit={submit} style={{ marginTop: 0 }}>
         <Field label={c.label} hint={c.hint} type="text" name="number" inputMode="numeric" autoComplete="off" placeholder={c.placeholder} maxLength={30} required value={number} onChange={(e) => setNumber(e.target.value.replace(/[^\d\-/ ]/g, ''))} error={error} />
-        <p className="muted modal__note" style={{ fontWeight: 600, fontSize: 16 }}>5&nbsp;товаров партнёров = ещё 1&nbsp;шаг. Шаги за&nbsp;сумму и&nbsp;за&nbsp;товары партнёров складываются.</p>
         <div className="modal__actions" style={{ marginTop: 26 }}><Button block type="submit" disabled={busy}>{busy ? 'Секунду…' : 'Зарегистрировать'}</Button></div>
         <p className="modal__foot"><Link className="link link--green" to="/route" onClick={close}>Назад к&nbsp;маршруту</Link></p>
       </form>

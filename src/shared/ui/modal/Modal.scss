@@ -160,3 +160,12 @@ dialog.modal:has(.modal__goat--peek) .modal__goat--peek { top: 6px; }
 @include tablet-port {
   .modal__goat--peek { display: block; }
 }
+/* Низкие экраны ноутбуков (1366×768): окно чека с подсказкой должно поместиться целиком — отступы плотнее */
+@media (min-width: 601px) and (max-height: 800px) {
+  .modal__box { padding-top: 46px; padding-bottom: 32px; }
+  .modal__box h2 { font-size: 32px; }
+  .tabs { margin-top: 14px; } .tabs button { min-height: 42px; }
+  .modal__ticket { margin: 12px 0 14px; padding-block: 10px; }
+  .modal__ticket .num { font-size: 36px; }
+  .modal__foot { margin-top: 14px; }
+}

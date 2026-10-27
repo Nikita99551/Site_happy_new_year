@@ -1,14 +1,8 @@
 import './ReceiptHint.scss';
 
-/** Строки нарисованного чека: слева название, справа сумма */
-const ROWS: [string, string][] = [
-  ['Молоко 3,2%', '89,90'],
-  ['Хлеб нарезной', '45,00'],
-  ['Яблоки, 1 кг', '159,00'],
-];
-
 /**
- * Подсказка в окне чека «Где номер чека»: нарисованный чек, нужная строка подсвечена (правка 27.10).
+ * Подсказка в окне чека «Где номер чека»: верх нарисованного чека, нужная строка подсвечена (правка 27.10).
+ * Компактная, чтобы окно чека помещалось в экран без прокрутки и рядом оставалась коза.
  * ЗАПОЛНИТЬ: перерисовать по фото настоящего чека «Аникс» — какой номер вводить и где он напечатан.
  */
 export function ReceiptHint() {
@@ -20,15 +14,12 @@ export function ReceiptHint() {
           <span>Кассовый чек · приход</span>
           <span className="receipt-hint__num">Чек №&nbsp;<b>1234</b></span>
           <span>27.11.2026 · 14:05</span>
-          <span className="receipt-hint__rule" />
-          {ROWS.map(([name, sum]) => <span key={name} className="receipt-hint__row"><span>{name}</span><span>{sum}</span></span>)}
-          <span className="receipt-hint__row receipt-hint__total"><span>ИТОГО</span><span>1&nbsp;245,00</span></span>
+          <span className="receipt-hint__lines" />
         </div>
       </div>
       <div className="receipt-hint__text">
         <b>Где номер чека?</b>
-        <p>Вверху чека найдите строку <mark>Чек&nbsp;№</mark> и&nbsp;впишите цифры после неё.</p>
-        <p className="receipt-hint__example">На&nbsp;этом примере&nbsp;— <strong>1234</strong></p>
+        <p>Вверху чека найдите строку <mark>Чек&nbsp;№</mark> и&nbsp;впишите цифры после неё. На&nbsp;примере это&nbsp;<strong>1234</strong>.</p>
       </div>
     </div>
   );
