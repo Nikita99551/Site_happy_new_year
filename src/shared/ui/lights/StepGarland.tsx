@@ -7,7 +7,7 @@ export interface StepGarlandProps {
   step: number;
   /** Показать красный ярлык «вы здесь» под текущей лампочкой */
   here?: boolean;
-  /** Подписи вех внутри SVG («1 500 ₽», «3 000 ₽», «финиш») */
+  /** Подписи вех внутри SVG («Розыгрыш сертификата 1 500 ₽», «финиш») */
   labels?: boolean;
   /** Шаги с коробкой партнёра */
   partners?: number[];
@@ -53,11 +53,19 @@ export function StepGarland({ step, here = false, labels = true, partners = [], 
           </g>,
         );
       } else {
+        // Сертификат — розыгрыш, а не подарок каждому: мелкая строка «РОЗЫГРЫШ» над суммой (правка 27.10).
+        // Если «вы здесь» висит на соседней лампочке, подпись прячется — их не наложить друг на друга, а текст над гирляндой и так говорит, сколько осталось
+        const nearHere = here && Math.abs(step - n) === 1;
         milestones.push(
           <g key={n} className="milestone">
             <path d={G_SCALLOP} fill="#e2b24a" transform={`translate(${mx - 36} -2) scale(0.72)`} filter={`url(#${shadowId})`} />
             <text x={mx} y={46} textAnchor="middle" fontFamily={FONT_NUM} fontWeight={900} fontSize={34} fill="#173f2a" pointerEvents="none">{n}</text>
-            {labels && <text x={mx} y={97} textAnchor="middle" fontFamily={FONT_TEXT} fontWeight={800} fontSize={17} fill={textColor} pointerEvents="none">{n === 10 ? '1 500 ₽' : '3 000 ₽'}</text>}
+            {labels && !nearHere && (
+              <text x={mx} y={93} textAnchor="middle" fontFamily={FONT_TEXT} fontWeight={800} fill={textColor} pointerEvents="none">
+                <tspan x={mx} fontSize={12} letterSpacing={1.5} opacity={0.8}>РОЗЫГРЫШ</tspan>
+                <tspan x={mx} dy={20} fontSize={17}>сертификата {n === 10 ? '1 500 ₽' : '3 000 ₽'}</tspan>
+              </text>
+            )}
           </g>,
         );
       }

@@ -9,7 +9,7 @@ export interface StepRowProps {
   step: number;
   /** Красный ярлык «вы здесь» под текущей лампочкой */
   here?: boolean;
-  /** Подписи вех: «1 500 ₽», «3 000 ₽», «финиш» */
+  /** Подписи вех: «Розыгрыш сертификата 1 500 ₽», «финиш» */
   labels?: boolean;
   /** Шаги с коробкой партнёра */
   partners?: number[];
@@ -36,7 +36,8 @@ export function StepRow({ row, step, here = false, labels = true, partners = [],
   const milestone = first + 9;
   const hasHere = here && step >= first && step < milestone;
   const hasBoxes = partners.some((p) => p >= first && p < milestone);
-  const H = hasHere || hasBoxes ? 146 : 100;
+  // Подпись сертификата в три строки — ряду с вехой 10/20 нужно чуть больше высоты
+  const H = hasHere || hasBoxes ? 146 : labels && milestone !== 30 ? 126 : 100;
   const wirePath = Array.from({ length: 31 }, (_, i) => {
     const x = (i * W) / 30;
     return `${i ? 'L' : 'M'} ${x.toFixed(1)} ${wireY(x).toFixed(1)}`;
@@ -67,7 +68,8 @@ export function StepRow({ row, step, here = false, labels = true, partners = [],
   }
 
   const my = 42;
-  const labelText = milestone === 30 ? 'финиш' : milestone === 10 ? '1 500 ₽' : '3 000 ₽';
+  // «вы здесь» на двух последних лампочках ряда закрыл бы подпись вехи — тогда её не показываем (над гирляндой и так написано, сколько осталось)
+  const labelHidden = hasHere && step >= milestone - 2;
   const done = step >= milestone;
 
   return (
@@ -92,7 +94,15 @@ export function StepRow({ row, step, here = false, labels = true, partners = [],
             <text x={MX} y={my + 10} textAnchor="middle" fontFamily={FONT_NUM} fontWeight={900} fontSize={28} fill="#173f2a">{milestone}</text>
           </>
         )}
-        {labels && <text x={MX} y={my + 50} textAnchor="middle" fontFamily={FONT_TEXT} fontWeight={800} fontSize={15} fill={textColor}>{labelText}</text>}
+        {labels && milestone === 30 && <text x={MX} y={my + 50} textAnchor="middle" fontFamily={FONT_TEXT} fontWeight={800} fontSize={15} fill={textColor}>финиш</text>}
+        {/* Сертификат — розыгрыш, а не подарок каждому (правка 27.10): три узкие строки по правому краю, чтобы не вылезать за ряд */}
+        {labels && milestone !== 30 && !labelHidden && (
+          <text x={W - 2} y={my + 46} textAnchor="end" fontFamily={FONT_TEXT} fontWeight={800} fill={textColor}>
+            <tspan x={W - 2} fontSize={11} letterSpacing={1.2} opacity={0.8}>РОЗЫГРЫШ</tspan>
+            <tspan x={W - 2} dy={16} fontSize={13}>сертификата</tspan>
+            <tspan x={W - 2} dy={17} fontSize={15}>{milestone === 10 ? '1 500 ₽' : '3 000 ₽'}</tspan>
+          </text>
+        )}
       </g>
       {row === 0 && !(hx > 0 && hx < 60) && <text x={X0 - 10} y={78} fontFamily={FONT_TEXT} fontWeight={700} fontSize={13} fill={textColor}>Старт</text>}
       {hx > 0 && (
