@@ -12,7 +12,7 @@ interface Errors { fullName?: string; phone?: string; store?: string; rules?: bo
 
 /** Окно 06: регистрация. Два обязательных согласия — тексты из документа юристов. */
 export function RegisterModal({ open }: { open: boolean }) {
-  const { open: openModal, close } = useModal();
+  const { open: openModal, back } = useModal();
   const { register, selectedStore, selectedStoreId } = useSession();
   const [fullName, setFullName] = useState('');
   const [phone, setPhone] = useState('');
@@ -59,7 +59,7 @@ export function RegisterModal({ open }: { open: boolean }) {
     <Modal
       id="m-register"
       open={open}
-      onClose={close}
+      onClose={back}
       ribbon="Регистрация"
       width={680}
       title={<>Создайте кабинет для&nbsp;чеков и&nbsp;подарков</>}
@@ -67,15 +67,18 @@ export function RegisterModal({ open }: { open: boolean }) {
       decor={<img className="modal__goat modal__goat--right" src="/img/goat-scroll.webp" alt="" width={460} height={962} />}
     >
       <form className="modal__form" noValidate onSubmit={submit}>
-        <Field label="Фамилия, имя, отчество" type="text" name="fullName" autoComplete="name" placeholder="Введите ФИО полностью" maxLength={120} required value={fullName} onChange={(e) => setFullName(e.target.value)} error={errors.fullName} />
-        <Field label="Номер телефона" prefix="+7" type="tel" name="phone" inputMode="numeric" autoComplete="tel-national" placeholder="9XX XXX XX XX" required value={phone} onChange={(e) => setPhone(formatPhone(e.target.value))} error={errors.phone} />
+        {/* На невысоких экранах компьютера ФИО и телефон в один ряд — окно помещается без прокрутки */}
+        <div className="modal__pair">
+          <Field label="Фамилия, имя, отчество" type="text" name="fullName" autoComplete="name" placeholder="Введите ФИО полностью" maxLength={120} required value={fullName} onChange={(e) => setFullName(e.target.value)} error={errors.fullName} />
+          <Field label="Номер телефона" prefix="+7" type="tel" name="phone" inputMode="numeric" autoComplete="tel-national" placeholder="9XX XXX XX XX" required value={phone} onChange={(e) => setPhone(formatPhone(e.target.value))} error={errors.phone} />
+        </div>
         <div className={`field${errors.store ? ' field--error' : ''}`}>
           <span className="field__label">Ваш магазин <a className="link" href="#" onClick={(e) => { e.preventDefault(); openModal('store', { returnTo: 'register' }); }}>Изменить</a></span>
           <button className="field__box" type="button" style={{ width: '100%', textAlign: 'left' }} onClick={() => openModal('store', { returnTo: 'register' })}>
             <IconPin />
             <span style={{ fontWeight: 600, fontSize: 20 }}>{selectedStore ? `${selectedStore.name.replace('Аникс ', '')} · ${selectedStore.address}` : 'Выберите магазин'}</span>
           </button>
-          <span className="field__hint">Магазин нужен, чтобы показывать его новости и&nbsp;сообщество.</span>
+          <span className="field__hint field__hint--optional">Магазин нужен, чтобы показывать его новости и&nbsp;сообщество.</span>
           <span className="field__error" aria-live="polite">{errors.store}</span>
         </div>
         <Check name="consentRules" required checked={rules} onChange={(e) => setRules(e.target.checked)} error={errors.rules}>

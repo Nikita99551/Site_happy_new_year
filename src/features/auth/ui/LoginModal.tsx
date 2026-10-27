@@ -10,7 +10,7 @@ import { useToast } from '@/shared/ui/toast/context';
 
 /** Окно 05: вход по номеру телефона без SMS */
 export function LoginModal({ open }: { open: boolean }) {
-  const { open: openModal, close, finishAuth } = useModal();
+  const { open: openModal, back, finishAuth } = useModal();
   const { login } = useSession();
   const toast = useToast();
   const navigate = useNavigate();
@@ -53,7 +53,7 @@ export function LoginModal({ open }: { open: boolean }) {
     <Modal
       id="m-login"
       open={open}
-      onClose={close}
+      onClose={back}
       ribbon="Вход"
       title={<>Вход в&nbsp;личный кабинет</>}
       lead={<>Введите номер: 10&nbsp;цифр, без&nbsp;8 и&nbsp;+7. Используйте телефон, указанный при&nbsp;регистрации.</>}

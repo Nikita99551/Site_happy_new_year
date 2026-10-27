@@ -12,7 +12,7 @@ import './StoreModal.scss';
 
 /** Окно 10: выбор магазина. После выбора возвращает в окно, откуда пришли (returnTo). */
 export function StoreModal({ open, returnTo }: { open: boolean; returnTo?: ModalName }) {
-  const { open: openModal, close } = useModal();
+  const { open: openModal, close, back } = useModal();
   const { stores, selectedStoreId, selectStore } = useSession();
   const toast = useToast();
   const [q, setQ] = useState('');
@@ -44,7 +44,7 @@ export function StoreModal({ open, returnTo }: { open: boolean; returnTo?: Modal
       id="m-store"
       open={open}
       // Пришли из регистрации — крестик возвращает в неё (введённое там сохраняется), иначе просто закрывает
-      onClose={returnTo ? () => openModal(returnTo) : close}
+      onClose={back}
       ribbon="Ваш магазин"
       width={960}
       title="Выберите магазин"
