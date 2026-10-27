@@ -23,7 +23,7 @@ export function PrizeCard({ prize, badge, final = false, price }: PrizeCardProps
         <h3>{prize.title}</h3>
         {prize.model && <p className="prize-card__model">{prize.model}</p>}
         {price && <p className="prize-card__price">{price}</p>}
-        <p className="prize-card__note">{prize.note}</p>
+        {prize.note && <p className="prize-card__note">{prize.note}</p>}
       </div>
     </article>
   );
