@@ -3,6 +3,11 @@
 .prize-card { flex: 0 0 400px; scroll-snap-align: start; background: #fff; border-radius: 16px; overflow: hidden; color: var(--ink); box-shadow: var(--shadow-card); }
 .prize-card__pic { position: relative; aspect-ratio: 1 / 0.8; background: #f3ede2; }
 .prize-card__pic img { width: 100%; height: 100%; object-fit: cover; }
+/* Вырезка на прозрачном фоне: приз целиком, с мягкой тенью, на светлой «сцене» (еженедельные призы, 27.10) */
+.prize-card__pic--cutout { background: radial-gradient(ellipse 70% 60% at 50% 55%, #fffaf0 0%, #f3ede2 100%); }
+.prize-card__pic--cutout img { object-fit: contain; padding: 7% 9%; filter: drop-shadow(0 14px 14px rgba(23, 63, 42, 0.18)); }
+/* Подпись под каруселью призов: картинки иллюстративные */
+.prize-note { margin-top: 18px; font-size: 15px; line-height: 1.45; opacity: 0.85; max-width: 760px; }
 /* Плашка-лента с вырезом «ласточкин хвост», как ленты в заголовках (правка 24.10) */
 .prize-card__top { padding: 18px 0 14px; background: #fff; }
 .prize-card__badge { position: relative; display: inline-flex; align-items: center; gap: 8px; padding: 9px 28px 9px 16px; background: var(--rd); color: var(--cr); font-weight: 800; font-size: 14px; line-height: 1.1; clip-path: polygon(0 0, 100% 0, calc(100% - 12px) 50%, 100% 100%, 0 100%); filter: drop-shadow(0 3px 6px rgba(0, 0, 0, 0.2)); }
