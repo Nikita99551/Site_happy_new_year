@@ -17,6 +17,9 @@
 .prize-card__body h3, .section--red .prize-card h3, .section--green .prize-card h3 { font-family: var(--font-text); font-size: 24px; font-weight: 800; color: var(--ink); }
 .prize-card__price { margin-top: 6px; font-family: var(--font-num); font-weight: 900; font-size: 30px; }
 .prize-card__note { margin-top: 4px; font-size: 14px; color: var(--mu); }
+/* Бренд и модель — под крупным названием, спокойнее (правка 27.10) */
+.prize-card__model { margin-top: 4px; font-size: 17px; font-weight: 600; line-height: 1.3; color: var(--ink); }
+.prize-card__model + .prize-card__note { margin-top: 8px; }
 .prize-card--wide { flex-basis: 560px; }
 
 @include below-md {
