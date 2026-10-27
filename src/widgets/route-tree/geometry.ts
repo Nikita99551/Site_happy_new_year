@@ -57,7 +57,7 @@ export const DESKTOP_TREE: TreeGeo = {
   start: { x: 110, y: 1105, w: 130, fs: 20 },
   trunk: { x: 387, y: 1100, w: 86, h: 80 },
   snow: { cx: 430, cy: 1195, rx: 280, ry: 27 },
-  gift: { fs: 20, w: 220, dy: 72 },
+  gift: { fs: 17, w: 196, dy: 63 },
   here: { fs: 14, w: 96, dy: 62 },
 };
 

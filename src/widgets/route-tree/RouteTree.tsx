@@ -19,12 +19,12 @@ interface RouteTreeProps {
 
 /** Плашка-подпись на ёлке. kicker — мелкая строка сверху («РОЗЫГРЫШ»): сертификат не подарок каждому, а шанс */
 function Label({ x, y, text, kicker, bg, color, w, fs = 14 }: { x: number; y: number; text: string; kicker?: string; bg: string; color: string; w: number; fs?: number }) {
-  const h = Math.round(fs * (kicker ? 3.15 : 2.15));
+  const h = Math.round(fs * (kicker ? 2.95 : 2.15));
   return (
     <g>
       <rect x={x - w / 2} y={y - h / 2} width={w} height={h} rx={kicker ? fs * 0.9 : h / 2} fill={bg} />
-      {kicker && <text x={x} y={y - fs * 0.3} textAnchor="middle" fontFamily={FONT_TEXT} fontWeight={800} fontSize={fs * 0.68} letterSpacing={fs * 0.08} fill={color} opacity={0.85}>{kicker}</text>}
-      <text x={x} y={y + (kicker ? fs * 0.82 : fs * 0.36)} textAnchor="middle" fontFamily={FONT_TEXT} fontWeight={800} fontSize={fs} fill={color}>{text}</text>
+      {kicker && <text x={x} y={y - fs * 0.27} textAnchor="middle" fontFamily={FONT_TEXT} fontWeight={800} fontSize={fs * 0.72} letterSpacing={fs * 0.08} fill={color} opacity={0.85}>{kicker}</text>}
+      <text x={x} y={y + (kicker ? fs * 0.8 : fs * 0.36)} textAnchor="middle" fontFamily={FONT_TEXT} fontWeight={800} fontSize={fs} fill={color}>{text}</text>
     </g>
   );
 }
