@@ -373,3 +373,20 @@
   .final-strip.is-in .star-shape, .final-strip.is-in .star-shape::after, .postcard .lights__here, .postcard__stitch-draw { animation: none; }
   .milestone .seal, .milestone .seal .num, .chart-card .chart__fill, .chart-card .chart__val, .note-card, .note-card__photo { transition: none; }
 }
+
+/* Невысокие широкие экраны — ноутбуки с масштабом Windows 125–150 % (1536×730, 1707×800): первый экран подстраивается
+   и под высоту окна. Заголовок, «2027», коза и отступы уменьшаются, чтобы дата, заголовок и кнопки помещались целиком,
+   а коза и верх «2027» были видны сразу (правка 27.10). На Full HD (1080 по высоте) и выше всё как было */
+/* Размеры плавно зависят от высоты окна: на 1080 — как в макете, на 800 — заголовок ~96 px, «2027» ~260 px, коза ~400 px */
+@media (min-width: 1201px) {
+  .hero__inner { padding-top: clamp(100px, calc(6.4vh + 49px), 118px); }
+  .hero h1 { font-size: min(clamp(64px, 9.4vw, 150px), max(64px, calc(19.3vh - 58px))); }
+  .hero .lead { margin-top: min(24px, 2.2vh); }
+  .hero__actions { margin-top: min(32px, 3vh); }
+  .hero__year { margin-top: clamp(20px, calc(7.1vh - 33px), 44px); font-size: min(clamp(120px, 24vw, 400px), max(160px, calc(50vh - 140px))); }
+  .hero__goat { width: min(100%, 520px, calc(42.9vh + 57px)); }
+}
+@media (min-width: 1800px) {
+  .hero__inner { padding-top: clamp(100px, calc(10vh + 20px), 128px); }
+  .hero__goat { width: min(100%, 600px, calc(50vh + 60px)); }
+}
