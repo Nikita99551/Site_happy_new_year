@@ -12,7 +12,7 @@
     <link rel="preload" href="/fonts/Manrope-500-normal-cyrillic.woff2" as="font" type="font/woff2" crossorigin />
     <!--
       Загрузочный экран. Стили здесь, а не в SCSS: экран должен появиться раньше, чем загрузится код сайта.
-      Та же разметка — в src/shared/ui/page-loader/PageLoader.tsx (пока грузится страница).
+      Та же разметка — в src/shared/ui/page-loader/PageLoader.jsx (пока грузится страница).
       Лампочки зажигаются по одной, как шаги маршрута. Экран виден, только если загрузка дольше 0,25 с.
     -->
     <style>
@@ -54,6 +54,6 @@
       </div>
       <noscript><style>.boot { display: none; }</style><p style="padding: 24px; font: 18px Arial, sans-serif; color: #fff8e8; background: #173f2a">Для работы сайта включите JavaScript в настройках браузера.</p></noscript>
     </div>
-    <script type="module" src="/src/app/main.tsx"></script>
+    <script type="module" src="/src/app/main.jsx"></script>
   </body>
 </html>

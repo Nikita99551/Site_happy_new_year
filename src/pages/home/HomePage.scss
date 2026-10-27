@@ -15,7 +15,7 @@
 /* Рваный край (38 px) теперь лежит поверх первого экрана и подрезал низ «2027» — поднимаем его над краем.
    На телефоне «2027» над козой, край его не задевает. Копыта козы чуть уходят за край — «стоит в снегу», так и задумано */
 @media (min-width: 768px) { .hero--pin .hero__text { padding-bottom: 76px; } }
-/* Снежинки параллакса (index.tsx → HERO_FLAKES): в пустых местах первого экрана, за текстом и козой. a, b — ближние (крупнее, ярче,
+/* Снежинки параллакса (index.js → HERO_FLAKES): в пустых местах первого экрана, за текстом и козой. a, b — ближние (крупнее, ярче,
    медленно вращаются), c, d, e — дальние (мелкие, бледные). Числа подобраны по раскладке 1304–1920 */
 .hero__flakes { position: absolute; inset: 0; z-index: 1; pointer-events: none; }
 .hero__flake { position: absolute; display: block; aspect-ratio: 1; background: url('/img/snowflake.svg') center/contain no-repeat; }
@@ -340,7 +340,7 @@
 .final-strip .star-shape::after { content: ''; position: absolute; inset: 0; background: linear-gradient(100deg, transparent 30%, rgba(255, 248, 232, 0.85) 50%, transparent 70%); transform: translateX(-110%); }
 .final-strip.is-in .star-shape { animation: star-glint 5s ease-in-out 1s infinite; }
 .final-strip.is-in .star-shape::after { animation: star-sheen 5s ease-in-out 1s infinite; }
-/* Коза первого экрана подпрыгивает от нажатия (index.tsx): приседает → прыжок с вытягиванием → приземление с приседом → маленький отскок.
+/* Коза первого экрана подпрыгивает от нажатия (index.js): приседает → прыжок с вытягиванием → приземление с приседом → маленький отскок.
    Вверх — замедляясь, вниз — разгоняясь. Точка опоры — копыта (transform-origin у .hero__goat) */
 @keyframes goat-jump {
   0% { transform: none; animation-timing-function: ease-out; }
