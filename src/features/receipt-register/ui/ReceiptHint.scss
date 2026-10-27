@@ -1,0 +1,29 @@
+@use '@/shared/styles/tokens' as *;
+
+/* Подсказка «Где номер чека»: слева нарисованный чек, справа объяснение крупно (правка 27.10) */
+.receipt-hint { display: grid; grid-template-columns: 210px 1fr; gap: 24px; align-items: center; margin: 4px 0 22px; padding: 18px 22px; background: rgba(255, 255, 255, 0.55); border: 1.5px dashed var(--kr); border-radius: 12px; text-align: left; }
+/* Тень у бумаги — на обёртке: clip-path зубчиков обрезал бы её */
+.receipt-hint__paper { filter: drop-shadow(0 6px 12px rgba(23, 63, 42, 0.18)); rotate: -2deg; }
+.receipt-hint__body { display: flex; flex-direction: column; gap: 2px; padding: 18px 14px 20px; background: #fff; clip-path: url(#clip-receipt); font-family: 'Courier New', Courier, monospace; font-size: 13px; line-height: 1.35; color: #2b2b2b; text-align: center; }
+.receipt-hint__shop { font-size: 17px; letter-spacing: 0.14em; }
+/* Нужная строка: жёлтый маркер и красная рамка — сразу бросается в глаза */
+.receipt-hint__num { margin: 6px -6px; padding: 5px 6px; background: #ffd109; border-radius: 5px; box-shadow: 0 0 0 3px var(--rd); font-size: 16px; font-weight: 700; color: #1f2420; }
+.receipt-hint__rule { margin: 6px 0; border-top: 1.5px dashed #9a9a9a; }
+.receipt-hint__row { display: flex; justify-content: space-between; gap: 8px; text-align: left; }
+.receipt-hint__total { margin-top: 4px; font-weight: 700; }
+
+.receipt-hint__text > b { display: block; font-size: 21px; font-weight: 800; color: var(--g); }
+.receipt-hint__text p { margin-top: 8px; font-size: 18px; font-weight: 600; line-height: 1.45; }
+.receipt-hint__text mark { padding: 0 5px; background: #ffd109; border-radius: 4px; box-shadow: 0 0 0 2px var(--rd); font-weight: 800; color: #1f2420; white-space: nowrap; }
+.receipt-hint__example { color: var(--mu); }
+.receipt-hint__example strong { font-size: 22px; font-weight: 800; color: var(--rd); }
+
+@include below-sm {
+  .receipt-hint { grid-template-columns: 138px 1fr; gap: 14px; padding: 14px; }
+  .receipt-hint__body { padding: 14px 9px 16px; font-size: 10px; }
+  .receipt-hint__shop { font-size: 13px; }
+  .receipt-hint__num { margin-inline: -4px; padding-inline: 4px; font-size: 12px; }
+  .receipt-hint__text > b { font-size: 18px; }
+  .receipt-hint__text p { font-size: 16px; }
+  .receipt-hint__example strong { font-size: 19px; }
+}

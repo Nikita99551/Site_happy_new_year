@@ -15,13 +15,13 @@ export function HowCards() {
   return (
     <div className="how__cards">
       <article className="how__card reveal" style={d(0)}>
-        <div className="wavy"><span className="wavy__n">1</span><span className="wavy__icon"><IconBag /></span><h3>Покупайте в&nbsp;Аникс</h3><p>Чек от&nbsp;600&nbsp;₽. Алкоголь и&nbsp;табак в&nbsp;сумму не&nbsp;входят.</p></div>
+        <div className="wavy"><span className="wavy__n">1</span><span className="wavy__icon"><IconBag /></span><h3>Покупайте в&nbsp;Аникс</h3><p>Чек от&nbsp;600&nbsp;₽. Алкоголь и&nbsp;табачные изделия в&nbsp;сумму не&nbsp;входят. Сохраните чек до&nbsp;24&nbsp;января 2027&nbsp;года.</p></div>
       </article>
       <article className="how__card reveal" style={d(80)}>
-        <div className="wavy wavy--green"><span className="wavy__n">2</span><span className="wavy__icon"><IconReceipt /></span><h3>Регистрируйте чек</h3><p>На&nbsp;кассе, на&nbsp;кассе самообслуживания или на&nbsp;сайте. До&nbsp;5&nbsp;чеков в&nbsp;день.</p></div>
+        <div className="wavy wavy--green"><span className="wavy__n">2</span><span className="wavy__icon"><IconReceipt /></span><h3>Регистрируйте чек</h3><p>У&nbsp;кассира, на&nbsp;кассе самообслуживания или на&nbsp;сайте. До&nbsp;5&nbsp;чеков в&nbsp;день.</p></div>
       </article>
       <article className="how__card reveal" style={d(160)}>
-        <div className="wavy wavy--gold"><span className="wavy__n">3</span><span className="wavy__icon"><IconSteps /></span><h3>Шагайте к&nbsp;призам</h3><p>Каждые 600&nbsp;₽&nbsp;— шаг по&nbsp;маршруту. На&nbsp;10‑м и&nbsp;20‑м шагах&nbsp;— сертификаты Аникс, на&nbsp;30‑м&nbsp;— финиш и&nbsp;билет на&nbsp;розыгрыш призов.</p></div>
+        <div className="wavy wavy--gold"><span className="wavy__n">3</span><span className="wavy__icon"><IconSteps /></span><h3>Шагайте к&nbsp;призам</h3><p>Каждые 600&nbsp;₽&nbsp;— шаг по&nbsp;маршруту. На&nbsp;10‑м и&nbsp;20‑м шагах&nbsp;— розыгрыши сертификатов Аникс, на&nbsp;30‑м&nbsp;— финиш и&nbsp;билет на&nbsp;розыгрыш призов.</p></div>
       </article>
     </div>
   );

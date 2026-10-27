@@ -153,9 +153,9 @@ export function HomePage() {
           <div className="container">
             <div className="steps-strip reveal">
               <div className="ticket steps-strip__ticket"><span className="ticket__stitch" /><span className="num">600&nbsp;₽</span><b>= 1&nbsp;шаг</b></div>
-              <div className="milestone"><span className="seal"><span className="num">10</span></span><div><b>10‑й шаг</b><p>Сертификат Аникс на&nbsp;1&nbsp;500&nbsp;₽ каждому 30‑му</p></div></div>
-              <div className="milestone"><span className="seal"><span className="num">20</span></span><div><b>20‑й шаг</b><p>Сертификат Аникс на&nbsp;3&nbsp;000&nbsp;₽ каждому 100‑му</p></div></div>
-              <div className="milestone"><span className="seal seal--red"><span className="num">30</span></span><div><b>30‑й шаг — финиш</b><p>Билет на&nbsp;розыгрыш призов, главный&nbsp;— Алтай</p></div></div>
+              <div className="milestone"><span className="seal"><span className="num">10</span></span><div><b>10‑й шаг</b><p>Розыгрыш сертификата Аникс на&nbsp;1&nbsp;500&nbsp;₽</p></div></div>
+              <div className="milestone"><span className="seal"><span className="num">20</span></span><div><b>20‑й шаг</b><p>Розыгрыш сертификата Аникс на&nbsp;3&nbsp;000&nbsp;₽</p></div></div>
+              <div className="milestone"><span className="seal seal--red"><span className="num">30</span></span><div><b>30‑й шаг — финиш</b><p>Билет на&nbsp;розыгрыш, главный&nbsp;— сертификат в&nbsp;«Манжерок»</p></div></div>
             </div>
             <div className="section-head reveal">
               <span className="ribbon ribbon--green">Как участвовать</span>
@@ -182,7 +182,7 @@ export function HomePage() {
               <div className="numbers__row"><div><b>Столько длится акция</b><p>С&nbsp;16&nbsp;ноября 2026 по&nbsp;10&nbsp;января 2027&nbsp;года.</p></div><div className="numbers__val"><CountUp value={8} /><small>недель</small></div></div>
               <div className="numbers__row"><div><b>Один круг маршрута</b><p>Каждые полные 600&nbsp;₽ в&nbsp;чеке&nbsp;— один шаг.</p></div><div className="numbers__val"><CountUp value={30} /><small>шагов</small></div></div>
               <div className="numbers__row"><div><b>Еженедельные розыгрыши</b><p>7&nbsp;недель по&nbsp;5&nbsp;призов, каждый до&nbsp;15&nbsp;000&nbsp;₽.</p></div><div className="numbers__val"><CountUp value={35} /><small>призов</small></div></div>
-              <div className="numbers__row"><div><b>Финал 12&nbsp;января</b><p>Главный&nbsp;— семейное путешествие на&nbsp;Алтай.</p></div><div className="numbers__val"><CountUp value={5} /><small>призов</small></div></div>
+              <div className="numbers__row"><div><b>Финал 12&nbsp;января</b><p>Главный&nbsp;— сертификат на&nbsp;250&nbsp;000&nbsp;₽ на&nbsp;отдых на&nbsp;курорте «Манжерок» (Алтай).</p></div><div className="numbers__val"><CountUp value={5} /><small>призов</small></div></div>
             </div>
           </div>
           {/* Карточка графика отстаёт от текста слева (дальний слой), скрепка на ней едет быстрее (ближний) */}
@@ -261,10 +261,10 @@ export function HomePage() {
             <div className="section-head reveal" style={{ marginBottom: 0 }}>
               <span className="ribbon ribbon--cream">Еженедельные призы</span>
               <h2>5&nbsp;призов каждую неделю</h2>
-              <p className="lead" style={{ color: 'rgba(255,248,232,.92)' }}>7&nbsp;недель&nbsp;— 35&nbsp;призов стоимостью до&nbsp;15&nbsp;000&nbsp;₽. Участвуют все, кто прошёл круг: каждый круг&nbsp;— ещё один билет.</p>
+              <p className="lead" style={{ color: 'rgba(255,248,232,.92)' }}>Участвуют все, кто прошёл круг. Каждый круг&nbsp;— ещё один билет.</p>
             </div>
           }
-          after={<div className="final-strip reveal"><span className="star-shape" /><p><b>А&nbsp;12&nbsp;января&nbsp;— финал</b>5&nbsp;суперпризов, главный&nbsp;— семейное путешествие на&nbsp;Алтай</p><SoonLink className="btn">Посмотреть все призы</SoonLink></div>}
+          after={<div className="final-strip reveal"><span className="star-shape" /><p><b>А&nbsp;12&nbsp;января&nbsp;— финал</b>5&nbsp;суперпризов, главный&nbsp;— <span className="final-strip__prize">сертификат на&nbsp;250&nbsp;000&nbsp;₽</span> на&nbsp;отдых на&nbsp;курорте «Манжерок»</p><SoonLink className="btn">Посмотреть все призы</SoonLink></div>}
         >
           {WEEKLY_PRIZES.map((p) => <PrizeCard key={p.id} prize={p} badge="Еженедельный приз" price={WEEKLY_PRIZE_PRICE} />)}
         </Carousel>

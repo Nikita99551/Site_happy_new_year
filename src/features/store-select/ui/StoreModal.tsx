@@ -43,7 +43,8 @@ export function StoreModal({ open, returnTo }: { open: boolean; returnTo?: Modal
     <Modal
       id="m-store"
       open={open}
-      onClose={close}
+      // Пришли из регистрации — крестик возвращает в неё (введённое там сохраняется), иначе просто закрывает
+      onClose={returnTo ? () => openModal(returnTo) : close}
       ribbon="Ваш магазин"
       width={960}
       title="Выберите магазин"

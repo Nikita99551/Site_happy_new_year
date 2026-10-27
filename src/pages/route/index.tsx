@@ -88,12 +88,12 @@ export default function RoutePage() {
           <RouteTree from={start} to={target} paused={!ready || !!modal} partnerStops={shown.partnerStops} />
           <aside className="tree-panel reveal" style={d(120)}>
             <h2>Карта вашего пути</h2>
-            <p className="lead tree-panel__lead">Идите по&nbsp;гирлянде снизу вверх: от&nbsp;первого шара у&nbsp;подножия ёлки к&nbsp;звезде. На&nbsp;10‑м и&nbsp;20‑м шагах&nbsp;— подарки-сертификаты. Пройдёте все шаги&nbsp;— и&nbsp;звезда на&nbsp;верхушке зажжётся: это финиш и&nbsp;билет на&nbsp;розыгрыш призов.</p>
+            <p className="lead tree-panel__lead">Идите по&nbsp;гирлянде снизу вверх: от&nbsp;первого шара у&nbsp;подножия ёлки к&nbsp;звезде. На&nbsp;10‑м и&nbsp;20‑м шагах&nbsp;— розыгрыши сертификатов Аникс. Пройдёте все шаги&nbsp;— и&nbsp;звезда на&nbsp;верхушке зажжётся: это финиш и&nbsp;билет на&nbsp;розыгрыш призов.</p>
             <div className="tree-panel__next">
               {finished ? (
                 <><b>Круг пройден&nbsp;— <em>билет ваш!</em></b><p>Следующий чек начнёт новый круг и&nbsp;даст ещё один шанс.</p></>
               ) : (
-                <><b>До подарка на&nbsp;{p.next}‑м шаге&nbsp;— <em>всего {p.leftText}</em></b><p>Это покупки на&nbsp;<span>{p.leftRub}</span>. На&nbsp;{p.next}‑м шаге&nbsp;— {p.goalText}.</p></>
+                <><b>До {p.goalGen} на&nbsp;{p.next}‑м шаге&nbsp;— <em>всего {p.leftText}</em></b><p>Это покупки на&nbsp;<span>{p.leftRub}</span>. На&nbsp;{p.next}‑м шаге&nbsp;— {p.goalText}.</p></>
               )}
               <OpenModalButton modal="receipt" block>Добавить чек</OpenModalButton>
             </div>
@@ -102,7 +102,7 @@ export default function RoutePage() {
                 <li><i className="i-gold" />Золотой шар&nbsp;— шаг пройден</li>
                 <li><i className="i-red" />Красный шар&nbsp;— вы здесь</li>
                 <li><i className="i-dim" />Прозрачный шар&nbsp;— откроется после новых чеков</li>
-                <li><i className="i-gift"><IconGift /></i>Подарок&nbsp;— сертификат Аникс</li>
+                <li><i className="i-gift"><IconGift /></i>Подарок&nbsp;— розыгрыш сертификата Аникс</li>
                 <li><i className="i-box"><IconCrate /></i>Коробка&nbsp;— площадка партнёра: видео и&nbsp;отзывы</li>
                 <li><i className="i-star"><IconStar /></i>Звезда&nbsp;— финиш и&nbsp;билет на&nbsp;розыгрыш</li>
               </ul>

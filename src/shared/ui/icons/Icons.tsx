@@ -17,6 +17,9 @@ export const IconSearch = (p: Props) => (
 export const IconClock = (p: Props) => (
   <svg viewBox="0 0 60 60" fill="none" stroke="#173f2a" strokeWidth={5} strokeLinecap="round" aria-hidden="true" {...p}><circle cx={30} cy={30} r={24} /><path d="M30 14v16l10 6" /></svg>
 );
+export const IconCheck = (p: Props) => (
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.8} strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" {...p}><path d="M5 12.5l4.5 4.5L19 7.5" /></svg>
+);
 export const IconArrowLeft = (p: Props) => (
   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5} aria-hidden="true" {...p}><path d="M15 5l-7 7 7 7" /></svg>
 );

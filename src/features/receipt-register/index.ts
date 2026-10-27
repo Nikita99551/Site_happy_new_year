@@ -1,2 +1,2 @@
 export { ReceiptModal } from './ui/ReceiptModal';
-export { ProcessingModal, SuccessModal } from './ui/ReceiptResultModals';
+export { ProcessingModal } from './ui/ReceiptResultModals';

@@ -1,5 +1,4 @@
 import { useState, type FormEvent } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { useSession } from '@/entities/user';
 import { useModal } from '@/features/modal';
 import { formatPhone, isValidPhone, normalizePhone } from '@/shared/lib/phone';
@@ -8,16 +7,13 @@ import { Check, Field } from '@/shared/ui/field/Field';
 import { IconPin } from '@/shared/ui/icons/Icons';
 import { Modal } from '@/shared/ui/modal/Modal';
 import { SoonLink } from '@/shared/ui/soon-link/SoonLink';
-import { useToast } from '@/shared/ui/toast/context';
 
 interface Errors { fullName?: string; phone?: string; store?: string; rules?: boolean; pd?: boolean }
 
 /** Окно 06: регистрация. Два обязательных согласия — тексты из документа юристов. */
 export function RegisterModal({ open }: { open: boolean }) {
-  const { open: openModal, close, finishAuth } = useModal();
+  const { open: openModal, close } = useModal();
   const { register, selectedStore, selectedStoreId } = useSession();
-  const toast = useToast();
-  const navigate = useNavigate();
   const [fullName, setFullName] = useState('');
   const [phone, setPhone] = useState('');
   const [rules, setRules] = useState(false);
@@ -45,15 +41,13 @@ export function RegisterModal({ open }: { open: boolean }) {
     setBusy(true);
     try {
       await register({ fullName: fullName.trim(), phone: normalizePhone(phone), storeId: selectedStoreId as string, consents: { pd: true, rules: true } });
-      // Пришёл из кнопки чека — сразу окно чека на этой же странице; иначе — на свой маршрут
-      const toReceipt = finishAuth();
       // Форма чистая для следующего человека (общий компьютер в магазине)
       setFullName('');
       setPhone('');
       setRules(false);
       setPd(false);
-      toast('Кабинет создан. С наступающим!');
-      if (!toReceipt) navigate('/route');
+      // Окно «Вы зарегистрированы»: видно, что всё получилось; оттуда — к чеку или на маршрут (правка 27.10)
+      openModal('registered');
     } catch (err) {
       setErrors({ phone: err instanceof Error ? err.message : 'Не удалось зарегистрироваться' });
     } finally {

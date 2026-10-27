@@ -7,6 +7,7 @@ import { Button } from '@/shared/ui/button/Button';
 import { Field } from '@/shared/ui/field/Field';
 import { Modal } from '@/shared/ui/modal/Modal';
 import { useToast } from '@/shared/ui/toast/context';
+import { ReceiptHint } from './ReceiptHint';
 
 const CHANNELS: Record<ReceiptChannel, { tab: string; short: string; label: string; hint: string; placeholder: string }> = {
   store: { tab: 'Покупка в магазине', short: 'В магазине', label: 'Номер чека', hint: 'Дата и сумма покупки подтянутся автоматически.', placeholder: 'Цифры с бумажного или e‑чека' },
@@ -46,10 +47,10 @@ export function ReceiptModal({ open }: { open: boolean }) {
     setError('');
     setBusy(true);
     try {
-      const res = await registerReceipt(number.trim(), channel);
+      await registerReceipt(number.trim(), channel);
       setNumber('');
-      if (res.status === 'processing') openModal('processing');
-      else openModal('success', res);
+      // Всегда «Чек обрабатывается»: шаги могут начислиться сразу или чуть позже — человек увидит их на маршруте (правка 27.10)
+      openModal('processing');
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Не удалось зарегистрировать чек');
     } finally {
@@ -79,6 +80,7 @@ export function ReceiptModal({ open }: { open: boolean }) {
         <span className="num">600&nbsp;₽</span>
         <div><b>= 1&nbsp;шаг</b><p>Чек от&nbsp;600&nbsp;₽, не&nbsp;больше 5&nbsp;чеков в&nbsp;день. Оригинал храните до&nbsp;24&nbsp;января 2027.</p></div>
       </div>
+      {channel === 'store' && <ReceiptHint />}
       <form className="modal__form" noValidate onSubmit={submit} style={{ marginTop: 0 }}>
         <Field label={c.label} hint={c.hint} type="text" name="number" inputMode="numeric" autoComplete="off" placeholder={c.placeholder} maxLength={30} required value={number} onChange={(e) => setNumber(e.target.value.replace(/[^\d\-/ ]/g, ''))} error={error} />
         <p className="muted modal__note" style={{ fontWeight: 600, fontSize: 16 }}>5&nbsp;товаров партнёров = ещё 1&nbsp;шаг. Шаги за&nbsp;сумму и&nbsp;за&nbsp;товары партнёров складываются.</p>

@@ -17,12 +17,14 @@ interface RouteTreeProps {
   partnerStops: number[];
 }
 
-function Label({ x, y, text, bg, color, w, fs = 14 }: { x: number; y: number; text: string; bg: string; color: string; w: number; fs?: number }) {
-  const h = Math.round(fs * 2.15);
+/** Плашка-подпись на ёлке. kicker — мелкая строка сверху («РОЗЫГРЫШ»): сертификат не подарок каждому, а шанс */
+function Label({ x, y, text, kicker, bg, color, w, fs = 14 }: { x: number; y: number; text: string; kicker?: string; bg: string; color: string; w: number; fs?: number }) {
+  const h = Math.round(fs * (kicker ? 3.15 : 2.15));
   return (
     <g>
-      <rect x={x - w / 2} y={y - h / 2} width={w} height={h} rx={h / 2} fill={bg} />
-      <text x={x} y={y + fs * 0.36} textAnchor="middle" fontFamily={FONT_TEXT} fontWeight={800} fontSize={fs} fill={color}>{text}</text>
+      <rect x={x - w / 2} y={y - h / 2} width={w} height={h} rx={kicker ? fs * 0.9 : h / 2} fill={bg} />
+      {kicker && <text x={x} y={y - fs * 0.3} textAnchor="middle" fontFamily={FONT_TEXT} fontWeight={800} fontSize={fs * 0.68} letterSpacing={fs * 0.08} fill={color} opacity={0.85}>{kicker}</text>}
+      <text x={x} y={y + (kicker ? fs * 0.82 : fs * 0.36)} textAnchor="middle" fontFamily={FONT_TEXT} fontWeight={800} fontSize={fs} fill={color}>{text}</text>
     </g>
   );
 }
@@ -52,7 +54,7 @@ function starPoints(cx: number, cy: number, r: number): string {
 
 function tooltipText(n: number, step: number, partner: number[]): string {
   let body: string;
-  if (n === 10 || n === 20) body = `Сертификат Аникс на ${n === 10 ? '1 500' : '3 000'} ₽: его получает каждый ${CAMPAIGN.milestoneEvery[n]}‑й, кто дошёл до этого шага за неделю.`;
+  if (n === 10 || n === 20) body = `Розыгрыш сертификата Аникс на ${n === 10 ? '1 500' : '3 000'} ₽: его получает каждый ${CAMPAIGN.milestoneEvery[n]}‑й, кто дошёл до этого шага за неделю. Это шанс, а не подарок каждому.`;
   else if (n < step) body = 'Пройден. Спасибо за покупки!';
   else if (n === step) {
     const dl = nextMilestone(n) - n;
@@ -142,7 +144,7 @@ export function RouteTree({ from, to, paused = false, partnerStops }: RouteTreeP
     const state = n < step ? 'done' : n === step ? 'current' : 'locked';
     const isGift = n === 10 || n === 20;
     const r = (state === 'current' ? 36 : 30) * k;
-    if (isGift) labels.push(<Label key={`l${n}`} x={cx} y={cy + tg.gift.dy} text={`Сертификат ${n === 10 ? '1 500 ₽' : '3 000 ₽'}`} bg="#e31e24" color="#fff8e8" w={tg.gift.w} fs={tg.gift.fs} />);
+    if (isGift) labels.push(<Label key={`l${n}`} x={cx} y={cy + tg.gift.dy} kicker="РОЗЫГРЫШ" text={`Сертификат ${n === 10 ? '1 500 ₽' : '3 000 ₽'}`} bg="#e31e24" color="#fff8e8" w={tg.gift.w} fs={tg.gift.fs} />);
     if (!isGift && state === 'current') labels.push(<Label key={`l${n}`} x={cx} y={cy + tg.here.dy} text="Вы здесь" bg="#e31e24" color="#fff8e8" w={tg.here.w} fs={tg.here.fs} />);
     return (
       <g key={n} className={`ball ball--${state}${tip?.n === n ? ' is-active' : ''}${moving && n === step ? ' ball--arrive' : ''}${moving && n === step - 1 ? ' ball--lit' : ''}`} tabIndex={0} role="button" data-step={n} aria-label={`Шаг ${n}${state === 'done' ? ', пройден' : state === 'current' ? ', вы здесь' : ', ещё не открыт'}`}>

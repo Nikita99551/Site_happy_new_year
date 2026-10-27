@@ -13,7 +13,7 @@ export interface Progress {
   leftRub: string;
   /** Номинал сертификата на вехе, если это 10 или 20 */
   certRub: string;
-  /** «сертификата Аникс» или «билета на розыгрыш» (родительный падеж) */
+  /** «розыгрыша сертификата» или «билета на розыгрыш» (родительный падеж) */
   goalGen: string;
   /** «каждый 30‑й получает сертификат Аникс на 1 500 ₽» или «билет на розыгрыш призов» */
   goalText: string;
@@ -31,7 +31,7 @@ export function getProgress(step: number): Progress {
     leftText: `${left} ${plural(left, 'шаг', 'шага', 'шагов')}`,
     leftRub: formatRub(left * CAMPAIGN.stepRub),
     certRub,
-    goalGen: next === 30 ? 'билета на розыгрыш' : 'сертификата Аникс',
+    goalGen: next === 30 ? 'билета на розыгрыш' : 'розыгрыша сертификата',
     goalText: next === 30 ? 'билет на розыгрыш призов' : `каждый ${every}‑й получает сертификат Аникс на ${certRub}`,
   };
 }

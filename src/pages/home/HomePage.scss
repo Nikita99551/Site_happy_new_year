@@ -76,8 +76,9 @@
 .how__card:nth-child(1) { rotate: 3deg; }
 .how__card:nth-child(2) { rotate: -2deg; }
 .how__card:nth-child(3) { rotate: 2deg; }
-.how__peek { position: absolute; left: calc(66.66% + 120px); top: -50px; width: 230px; z-index: -1; }
-.how__cards-wrap { position: relative; isolation: isolate; padding-top: 150px; }
+/* Коза выглядывает из-за третьей карточки на уровне заголовка: карточки сразу под текстом, без пустого места (правка 27.10) */
+.how__peek { position: absolute; left: calc(66.66% + 185px); top: -190px; width: 230px; z-index: -1; }
+.how__cards-wrap { position: relative; isolation: isolate; padding-top: 0; }
 .how__more { margin-top: 56px; font-size: 21px; }
 /* Акция в цифрах */
 .numbers { display: grid; grid-template-columns: 1fr 600px; gap: 64px; align-items: start; }
@@ -132,6 +133,7 @@
 .final-strip .star-shape { width: 40px; height: 40px; flex: none; }
 .final-strip p { flex: 1; font-size: 17px; min-width: 240px; line-height: 1.4; }
 .final-strip p b { display: block; font-size: 20px; font-weight: 800; }
+.final-strip__prize { color: var(--go); font-weight: 800; white-space: nowrap; }
 /* Победители: записки */
 /* Победители: 6 карточек сеткой 3×2 (на телефоне карусель). Вместо фото — рисунок приза на «полароиде» с номером билета (правка 24.10) */
 .winners__grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 72px 32px; margin-top: 64px; }

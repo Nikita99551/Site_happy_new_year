@@ -57,7 +57,7 @@ export const DESKTOP_TREE: TreeGeo = {
   start: { x: 110, y: 1105, w: 130, fs: 20 },
   trunk: { x: 387, y: 1100, w: 86, h: 80 },
   snow: { cx: 430, cy: 1195, rx: 280, ry: 27 },
-  gift: { fs: 20, w: 220, dy: 62 },
+  gift: { fs: 20, w: 220, dy: 72 },
   here: { fs: 14, w: 96, dy: 62 },
 };
 
@@ -73,7 +73,7 @@ function buildMobileTree(): TreeGeo {
   const glints: { x: number; y: number; d: string }[] = [];
   let n = 1;
   for (let t = 0; t < 6; t++) {
-    // Между рядами яруса 190: под подарком помещается подпись «Сертификат …», не задевая шары ниже
+    // Между рядами яруса 190: под подарком помещается подпись «Розыгрыш · Сертификат …», не задевая шары ниже
     const yL = 520 + (5 - t) * 370;
     const yU = yL - 190;
     const s = 200 - 12 * t;
@@ -109,7 +109,7 @@ function buildMobileTree(): TreeGeo {
     start: { x: 140, y: 2500, w: 190, fs: 30 },
     trunk: { x: 378, y: 2450, w: 104, h: 100 },
     snow: { cx, cy: 2570, rx: 310, ry: 32 },
-    gift: { fs: 27, w: 284, dy: 86 },
+    gift: { fs: 22, w: 252, dy: 93 },
     here: { fs: 24, w: 160, dy: 80 },
   };
 }

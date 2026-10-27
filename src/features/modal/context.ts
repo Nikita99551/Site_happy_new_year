@@ -1,16 +1,15 @@
 import { createContext, useContext } from 'react';
-import type { ReceiptResult } from '@/shared/api';
-
 /** Имена окон сайта. Одновременно открыто не больше одного. */
-export type ModalName = 'auth' | 'login' | 'register' | 'receipt' | 'processing' | 'success' | 'store';
+export type ModalName = 'auth' | 'login' | 'register' | 'registered' | 'receipt' | 'processing' | 'store';
 
 export interface ModalPayloads {
   auth: undefined;
   login: undefined;
   register: undefined;
+  /** Кабинет создан — окно «Вы зарегистрированы» */
+  registered: undefined;
   receipt: undefined;
   processing: undefined;
-  success: Extract<ReceiptResult, { status: 'done' }>;
   /** Куда вернуться после выбора магазина (например, в регистрацию) */
   store: { returnTo?: ModalName } | undefined;
 }
