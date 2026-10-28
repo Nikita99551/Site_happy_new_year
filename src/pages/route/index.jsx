@@ -6,12 +6,13 @@ import { launchConfetti } from '@/shared/lib/confetti';
 import { useReducedMotion } from '@/shared/lib/hooks';
 import { circleName, plural } from '@/shared/lib/text';
 import { Button } from '@/shared/ui/button/Button';
-import { IconCrate, IconGift, IconStar } from '@/shared/ui/icons/Icons';
+import { IconCoupon, IconCrate, IconGift, IconStar } from '@/shared/ui/icons/Icons';
 import { StepGarland, StepRow, useGarlandSway } from '@/shared/ui/lights';
 import { Snow } from '@/shared/ui/snow/Snow';
 import { CtaBanner } from '@/widgets/cta-banner/CtaBanner';
 import { PageLayout } from '@/widgets/page-layout/PageLayout';
 import { RouteTree } from '@/widgets/route-tree/RouteTree';
+import { PromoCodes } from './ui/PromoCodes';
 import { ReceiptHistory } from './ui/ReceiptHistory';
 import './RoutePage.scss';
 
@@ -85,7 +86,7 @@ export default function RoutePage() {
       {/* ===== Карта пути: ёлка ===== */}
       <section className="section section--cream tree-sec" id="map">
         <div className="container tree-grid">
-          <RouteTree from={start} to={target} paused={!ready || !!modal} partnerStops={shown.partnerStops} />
+          <RouteTree from={start} to={target} paused={!ready || !!modal} partnerStops={shown.partnerStops} guest={guest} />
           <aside className="tree-panel reveal" style={d(120)}>
             <h2>Карта вашего пути</h2>
             <p className="lead tree-panel__lead">Идите по&nbsp;гирлянде снизу вверх: от&nbsp;первого шара у&nbsp;подножия ёлки к&nbsp;звезде. На&nbsp;10‑м и&nbsp;20‑м шагах&nbsp;— розыгрыши сертификатов Аникс. Пройдёте все шаги&nbsp;— и&nbsp;звезда на&nbsp;верхушке зажжётся: это финиш и&nbsp;билет на&nbsp;розыгрыш призов.</p>
@@ -104,12 +105,16 @@ export default function RoutePage() {
                 <li><i className="i-dim" />Прозрачный шар&nbsp;— откроется после новых чеков</li>
                 <li><i className="i-gift"><IconGift /></i>Подарок&nbsp;— розыгрыш сертификата Аникс</li>
                 <li><i className="i-box"><IconCrate /></i>Коробка&nbsp;— площадка партнёра: видео и&nbsp;отзывы</li>
+                <li><i className="i-coupon"><IconCoupon /></i>Купон&nbsp;— промокод на&nbsp;доставку «Торнадо», каждому</li>
                 <li><i className="i-star"><IconStar /></i>Звезда&nbsp;— финиш и&nbsp;билет на&nbsp;розыгрыш</li>
               </ul>
             </div>
           </aside>
         </div>
       </section>
+
+      {/* ===== Промокоды доставки «Торнадо» за чётные шаги ===== */}
+      <PromoCodes step={shown.step} circle={shown.circle} guest={guest} onLogin={() => open('auth')} />
 
       {/* ===== Розыгрыши и история чеков ===== */}
       <section className="section section--green torn-top activity on-dark">

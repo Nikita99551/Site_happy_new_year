@@ -1,4 +1,5 @@
 import { useEffect, useRef } from 'react';
+import { Link } from 'react-router-dom';
 import { PrizeCard, WEEKLY_PRIZES } from '@/entities/prize';
 import { getProgress, useSeenStart, useSession, useStepAnimation } from '@/entities/user';
 import { OpenModalButton, useModal } from '@/features/modal';
@@ -138,7 +139,7 @@ export function HomePage() {
               <p className="lead reveal" style={d(160)} {...HERO_LIFT}>Покупайте в&nbsp;Аникс и&nbsp;проходите новогодний маршрут из&nbsp;30&nbsp;шагов вместе с&nbsp;нашей Козой.</p>
               <div className="hero__actions reveal" style={d(240)} {...HERO_LIFT}>
                 <OpenModalButton modal="receipt">Зарегистрировать чек</OpenModalButton>
-                <SoonLink className="link">Условия акции</SoonLink>
+                <Link className="link" to="/conditions">Условия акции</Link>
               </div>
               <span className="hero__year reveal" style={d(320)} aria-label="2027 год" data-speed={-0.15}>2027</span>
             </div>
@@ -167,7 +168,7 @@ export function HomePage() {
               <img className="how__peek reveal" src="/img/goat-peek.webp" alt="" width={230} height={266} />
               <HowCards />
             </div>
-            <p className="how__more reveal"><SoonLink className="link">Подробно о&nbsp;том, как начисляются шаги&nbsp;→</SoonLink></p>
+            <p className="how__more reveal"><Link className="link" to="/conditions#calc">Подробно о&nbsp;том, как начисляются шаги&nbsp;→</Link></p>
           </div>
         </section>
       </div>

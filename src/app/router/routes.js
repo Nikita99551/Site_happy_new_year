@@ -2,4 +2,5 @@
 export const ROUTES = {
   home: '/',
   route: '/route',
+  conditions: '/conditions',
 };

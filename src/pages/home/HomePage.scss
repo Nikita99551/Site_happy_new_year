@@ -46,32 +46,32 @@
 .hero__goat { position: relative; justify-self: end; align-self: end; width: min(100%, 520px); margin-bottom: -4px; transform-origin: 50% 100%; }
 .hero__goat img { width: 100%; }
 /* Короткая строка шагов */
-.steps-strip { display: grid; grid-template-columns: auto repeat(3, 1fr); gap: 32px; align-items: start; margin-bottom: clamp(56px, 7vw, 96px); }
-.steps-strip__ticket { display: flex; align-items: center; gap: 14px; padding: 22px 46px; }
-.steps-strip__ticket .num { font-size: 64px; }
-.steps-strip__ticket b { font-size: 24px; font-weight: 800; }
+.steps-strip { display: grid; grid-template-columns: auto repeat(3, 1fr); gap: 32px; align-items: start; margin-bottom: clamp(32px, 4.5vh, 52px); }
+.steps-strip__ticket { display: flex; align-items: center; gap: 14px; padding: 18px 40px; }
+.steps-strip__ticket .num { font-size: 56px; }
+.steps-strip__ticket b { font-size: 22px; font-weight: 800; }
 .milestone { display: flex; align-items: flex-start; gap: 18px; }
 .milestone > div { padding-top: 10px; }
-.milestone b { display: block; font-size: 22px; font-weight: 800; text-align: left; }
-.milestone p { font-size: 18px; color: var(--mu); line-height: 1.4; text-align: left; }
+.milestone b { display: block; font-size: 20px; font-weight: 800; text-align: left; }
+.milestone p { font-size: 16px; color: var(--mu); line-height: 1.4; text-align: left; }
 /* Как участвовать: волнистые карточки */
 .how { text-align: center; }
 .how .section-head { margin-inline: auto; }
-.how__cards { position: relative; display: grid; grid-template-columns: repeat(3, 1fr); gap: 40px; text-align: left; margin-top: 40px; }
+.how__cards { position: relative; display: grid; grid-template-columns: repeat(3, 1fr); gap: 40px; text-align: left; margin-top: 24px; }
 .wavy {
-  position: relative; min-height: 430px; padding: 44px 48px 48px 58px;
+  position: relative; min-height: 300px; padding: 36px 40px 40px 50px;
   clip-path: url(#clip-wavy);
   background: var(--rd); color: var(--cr);
 }
 .wavy--green { background: var(--g); }
 .wavy--gold { background: var(--go); color: var(--g); }
-.wavy__n { font-family: var(--font-num); font-weight: 900; font-size: 120px; line-height: 0.9; opacity: 0.95; }
-.wavy__icon { position: absolute; right: 48px; top: 44px; width: 84px; height: 84px; }
+.wavy__n { font-family: var(--font-num); font-weight: 900; font-size: 96px; line-height: 0.9; opacity: 0.95; }
+.wavy__icon { position: absolute; right: 40px; top: 36px; width: 72px; height: 72px; }
 .wavy::after { content: ''; position: absolute; inset: 0; pointer-events: none; background: url('/img/wavy-stitch-cream.svg') center/100% 100% no-repeat; }
 .wavy--gold::after { background-image: url('/img/wavy-stitch-green.svg'); }
 .wavy__icon svg { width: 100%; height: 100%; }
-.wavy h3 { margin-top: 22px; font-family: var(--font-text); font-size: 32px; font-weight: 800; color: inherit; line-height: 1.2; }
-.wavy p { margin-top: 14px; font-size: 21px; line-height: 1.45; opacity: 0.95; }
+.wavy h3 { margin-top: 14px; font-family: var(--font-text); font-size: 27px; font-weight: 800; color: inherit; line-height: 1.2; }
+.wavy p { margin-top: 10px; font-size: 18px; line-height: 1.45; opacity: 0.95; }
 .how__card { filter: drop-shadow(0 12px 26px rgba(5, 20, 12, 0.18)); }
 .how__card:nth-child(1) { rotate: 3deg; }
 .how__card:nth-child(2) { rotate: -2deg; }
@@ -79,21 +79,21 @@
 /* Коза выглядывает из-за третьей карточки на уровне заголовка: карточки сразу под текстом, без пустого места (правка 27.10) */
 .how__peek { position: absolute; left: calc(66.66% + 185px); top: -190px; width: 230px; z-index: -1; }
 .how__cards-wrap { position: relative; isolation: isolate; padding-top: 0; }
-.how__more { margin-top: 56px; font-size: 21px; }
+.how__more { margin-top: 24px; font-size: 18px; }
 /* Акция в цифрах */
 .numbers { display: grid; grid-template-columns: 1fr 600px; gap: 64px; align-items: start; }
-.numbers__rows { margin-top: 36px; border-top: 1px solid rgba(255, 248, 232, 0.35); }
-.numbers__row { display: grid; grid-template-columns: 1fr auto; align-items: center; gap: 24px; padding: 22px 0; border-bottom: 1px solid rgba(255, 248, 232, 0.35); }
-.numbers__row b { display: block; font-size: 22px; font-weight: 800; }
-.numbers__row p { font-size: 17px; opacity: 0.85; max-width: 330px; }
+.numbers__rows { margin-top: 24px; border-top: 1px solid rgba(255, 248, 232, 0.35); }
+.numbers__row { display: grid; grid-template-columns: 1fr auto; align-items: center; gap: 24px; padding: 14px 0; border-bottom: 1px solid rgba(255, 248, 232, 0.35); }
+.numbers__row b { display: block; font-size: 20px; font-weight: 800; }
+.numbers__row p { font-size: 16px; opacity: 0.85; max-width: 330px; }
 .numbers__val { display: flex; align-items: baseline; gap: 10px; color: var(--go); }
-.numbers__val .num { font-size: 96px; }
-.numbers__val small { font-family: var(--font-num); font-weight: 700; font-size: 28px; }
-.chart-card { position: relative; padding: 48px 44px 40px; rotate: -1.5deg; color: var(--ink); }
-.chart-card h3, .section--green .chart-card h3 { font-size: 42px; line-height: 1.1; color: var(--g); }
+.numbers__val .num { font-size: 76px; }
+.numbers__val small { font-family: var(--font-num); font-weight: 700; font-size: 24px; }
+.chart-card { position: relative; padding: 36px 36px 30px; rotate: -1.5deg; color: var(--ink); }
+.chart-card h3, .section--green .chart-card h3 { font-size: 34px; line-height: 1.1; color: var(--g); }
 .chart-card h3 .num { font-size: 1.1em; color: var(--rd); }
-.chart-card__sub { margin-top: 16px; font-weight: 700; color: var(--mu); font-size: 17px; }
-.chart { display: grid; grid-template-columns: repeat(8, 1fr); gap: 14px; align-items: end; height: 300px; margin-top: 36px; padding-bottom: 2px; border-bottom: 2px solid rgba(23, 63, 42, 0.6); }
+.chart-card__sub { margin-top: 10px; font-weight: 700; color: var(--mu); font-size: 17px; }
+.chart { display: grid; grid-template-columns: repeat(8, 1fr); gap: 14px; align-items: end; height: 230px; margin-top: 24px; padding-bottom: 2px; border-bottom: 2px solid rgba(23, 63, 42, 0.6); }
 .chart__bar { position: relative; display: flex; flex-direction: column; justify-content: flex-end; height: 100%; }
 .chart__fill { background: var(--g); height: var(--h, 0%); align-self: stretch; }
 .chart__bar--now .chart__fill { background: var(--rd); }
@@ -103,33 +103,34 @@
 .chart__labels { display: grid; grid-template-columns: repeat(8, 1fr); gap: 14px; margin-top: 12px; text-align: center; font-family: var(--font-num); font-weight: 900; font-size: 24px; }
 .chart__labels span { color: var(--kr); } .chart__labels .is-past { color: var(--g); } .chart__labels .is-now { color: var(--rd); }
 .chart__labels small { display: block; font-family: var(--font-text); font-weight: 800; font-size: 15px; }
-.chart-card__note { margin-top: 28px; font-size: 15px; color: var(--mu); }
+.chart-card__note { margin-top: 18px; font-size: 15px; color: var(--mu); }
 .chart-card__clip { position: absolute; left: -52px; top: -74px; width: 110px; rotate: 12deg; }
 /* Путь к подаркам: открытка */
 .postcard-sec { display: grid; grid-template-columns: 1fr 1fr; gap: 64px; align-items: center; }
-.postcard-sec .btn { margin-top: 36px; }
-.postcard-stack { position: relative; padding-top: 130px; }
-#path { padding-bottom: 210px; }
+.postcard-sec .btn { margin-top: 28px; }
+.postcard-stack { position: relative; padding-top: 110px; }
+#path { padding-bottom: 170px; }
 .postcard-stack__red { position: absolute; left: 36%; top: 0; width: 72%; height: 62%; background: var(--rd) url('/img/paper-red.webp') center/cover; rotate: 7deg; box-shadow: var(--shadow-card); }
 .postcard-stack__stamp { position: absolute; right: -2%; top: -30px; width: 150px; rotate: -8deg; }
 .postcard { position: relative; width: 100%; padding: 44px 48px; background: linear-gradient(rgba(23, 63, 42, 0.18), rgba(23, 63, 42, 0.18)), var(--g) url('/img/paper-green.webp') center/cover; color: var(--cr); box-shadow: 0 18px 36px rgba(5, 20, 12, 0.3); rotate: -2.5deg; }
+@media (min-width: 901px) { .postcard { padding: 36px 44px; } .postcard__label { display: block; padding-left: 104px; } }
 /* Пунктирная строчка по краю открытки (раньше картинкой dash-rect.svg, теперь inline-SVG, чтобы её можно было «прошить» при прокрутке) */
 .postcard__stitch { position: absolute; left: 17.5px; top: 17.5px; width: calc(100% - 35px); height: calc(100% - 35px); overflow: visible; pointer-events: none; }
 .postcard__stitch-line { fill: none; stroke: var(--go); stroke-opacity: 0.85; stroke-width: 3; stroke-dasharray: 14 10; }
 .postcard__stitch-draw { fill: none; stroke: #fff; stroke-width: 12; stroke-linecap: square; stroke-dasharray: 1 2; }
 .postcard__label { font-weight: 800; font-size: 19px; color: var(--go); }
 .postcard__big { display: flex; align-items: flex-end; gap: 18px; margin-top: 4px; }
-.postcard__big .num { font-size: 170px; color: var(--go); }
-.postcard__big b { font-size: 34px; font-weight: 800; padding-bottom: 36px; }
+.postcard__big .num { font-size: 140px; color: var(--go); }
+.postcard__big b { font-size: 30px; font-weight: 800; padding-bottom: 28px; }
 .postcard__next { margin-top: -18px; font-weight: 700; font-size: 20px; }
 .postcard__next em { font-style: normal; color: var(--go); }
 .postcard__lights { margin-top: 28px; padding-right: 70px; }
 .postcard__seal { position: absolute; z-index: 4; right: -20px; bottom: -30px; width: 124px; }
 .postcard-stack__tag { position: absolute; z-index: 3; left: -6%; top: 10px; width: 150px; rotate: -12deg; }
 .postcard-stack__tag span { position: absolute; left: 50%; top: 56%; transform: translate(-50%, -50%) rotate(4deg); width: 80%; text-align: center; font-family: var(--font-display); font-style: italic; font-size: 17px; line-height: 1.1; color: var(--rdd); }
-.postcard-stack__branch { position: absolute; z-index: 3; right: -70px; bottom: -190px; width: 250px; rotate: 0deg; }
+.postcard-stack__branch { position: absolute; z-index: 3; right: -70px; bottom: -160px; width: 230px; rotate: 0deg; }
 
-.final-strip { display: flex; flex-wrap: wrap; align-items: center; gap: 20px 32px; margin-top: 44px; padding: 22px 28px; background: var(--g); color: var(--cr); border-radius: 14px; }
+.final-strip { display: flex; flex-wrap: wrap; align-items: center; gap: 16px 32px; margin-top: 20px; padding: 14px 28px; background: var(--g); color: var(--cr); border-radius: 14px; }
 .final-strip .star-shape { width: 40px; height: 40px; flex: none; }
 .final-strip p { flex: 1; font-size: 17px; min-width: 240px; line-height: 1.4; }
 .final-strip p b { display: block; font-size: 20px; font-weight: 800; }
@@ -154,14 +155,36 @@
 .winners .carousel__track { margin: 8px 0 0; padding: 60px 10px 24px; }
 .winners .carousel__track .note-card { flex: 0 0 84%; scroll-snap-align: center; }
 .winners__goat { position: absolute; z-index: 2; right: var(--gutter); top: 0; width: 200px; }
+/* Компьютер и планшет боком: полароид слева, текст справа, печать «приз получен» на углу фото — карточка вдвое ниже,
+   обе строки победителей помещаются в экран (правка 27.10). На телефоне и планшете стоя — прежняя карусель */
+@media (min-width: 901px) {
+  /* Отступ сверху под скрепку и печать: они выступают над карточкой на 40 px и не должны задевать подзаголовок */
+  .winners__grid { margin-top: 48px; }
+  .note-card { min-height: 214px; padding: 28px 22px 34px calc(36% + 34px); }
+  .note-card__photo { left: 20px; top: -12px; width: 36%; padding: 8px 8px 34px; }
+  .note-card__photo span { bottom: 7px; font-size: 16px; }
+  .note-card__badge { left: calc(36% - 54px); right: auto; top: -26px; width: 70px; height: 70px; font-size: 11px; }
+  .note-card h3 { font-size: 20px; }
+  .note-card__city { margin-top: 4px; font-size: 16px; }
+  .note-card__prize { margin-top: 12px; padding-top: 10px; font-size: 20px; }
+}
+/* Коза с подарками выглядывает из-за верхней правой карточки, как коза в «Три шага», а не стоит поверх неё */
+@media (min-width: 901px) {
+  .winners__goat { z-index: 0; }
+  .winners__grid { position: relative; z-index: 1; }
+}
+@media (min-width: 1201px) {
+  .winners__goat { right: calc(var(--gutter) + 24px); top: clamp(24px, 4vh, 48px); width: 176px; }
+  #winners .section-head { max-width: min(1040px, calc(100% - 260px)); }
+}
 /* Партнёры */
-.partners { padding-block: 64px 96px; }
+.partners { padding-block: clamp(40px, 6vh, 64px) clamp(56px, 8vh, 88px); }
 .partners__paper { position: relative; padding: 46px 56px 36px; background: linear-gradient(rgba(255, 248, 232, 0.45), rgba(255, 248, 232, 0.45)), var(--cr) url('/img/paper-cream.webp') center/cover; clip-path: url(#clip-torn-both); }
 .partners__paper-wrap { filter: drop-shadow(0 12px 28px rgba(5, 20, 12, 0.3)); }
 .partners__paper h2 { font-size: clamp(32px, 4vw, 54px); }
 .partners__paper .lead { margin-top: 14px; max-width: 900px; }
 /* Логотипы крупно: по 4 в ряд, последний ряд по центру (правка 24.10: на заглушке тоже должны быть заметны) */
-.partners__logos { --cols: 4; --gap: 32px; display: flex; flex-wrap: wrap; justify-content: flex-start; gap: 24px var(--gap); margin-top: 40px; }
+.partners__logos { --cols: 4; --gap: 32px; display: flex; flex-wrap: wrap; justify-content: flex-start; gap: 20px var(--gap); margin-top: 28px; }
 .partners__logos a { flex: 0 0 calc((100% - (var(--cols) - 1) * var(--gap)) / var(--cols)); max-width: 260px; display: block; border-radius: 10px; transition: transform var(--dur-fast) var(--ease-out); }
 .partners__logos a:active { transform: scale(0.96); }
 @media (hover: hover) { .partners__logos a:hover { transform: translateY(-3px); } }
@@ -171,7 +194,7 @@
   .how__peek { display: none; }
   .numbers { grid-template-columns: 1fr; }
   .chart-card { max-width: 640px; }
-  .winners__grid { grid-template-columns: repeat(2, 1fr); gap: 72px 24px; }
+  .winners__grid { grid-template-columns: repeat(2, 1fr); gap: 48px 24px; }
 }
 
 @include below-md {
@@ -186,7 +209,13 @@
   .how__cards-wrap { padding-top: 0; }
   .how__cards { margin-top: 16px; }
   .how__peek { display: none; }
-  .wavy { min-height: 0; }
+  /* Телефон (правка 27.10): карточки «Три шага» ниже, текст той же крупности */
+  .wavy { min-height: 0; padding: 28px 30px 32px 40px; }
+  .wavy__n { font-size: 72px; }
+  .wavy__icon { top: 28px; right: 32px; width: 56px; height: 56px; }
+  .wavy h3 { margin-top: 8px; font-size: 24px; }
+  .wavy p { font-size: 17px; }
+  .how__cards { gap: 22px; }
   .postcard-sec { grid-template-columns: 1fr; }
   .postcard-stack { padding: 100px 0 80px; }
   #path { padding-bottom: 40px; }
@@ -251,20 +280,21 @@
   .hero__inner { padding-top: 128px; gap: 40px; }
   .hero__goat { width: min(100%, 600px); }
   .hero .lead { max-width: 620px; }
-  .steps-strip__ticket .num { font-size: 72px; }
-  .milestone b { font-size: 24px; }
-  .milestone p { font-size: 19px; }
+  .steps-strip__ticket .num { font-size: 60px; }
+  .milestone b { font-size: 21px; }
+  .milestone p { font-size: 17px; }
   .how__cards { gap: 48px; }
-  .wavy { min-height: 470px; padding: 52px 56px 56px 66px; }
-  .wavy h3 { font-size: 36px; }
-  .wavy p { font-size: 23px; }
-  .numbers { grid-template-columns: 1fr 680px; gap: 80px; }
+  .wavy { min-height: 300px; padding: 34px 48px 38px 58px; }
+  .wavy__n { font-size: 88px; }
+  .wavy h3 { font-size: 29px; }
+  .wavy p { font-size: 19px; }
+  .numbers { grid-template-columns: 1fr 620px; gap: 80px; }
   .numbers__row p { max-width: 400px; }
   .postcard-sec { gap: 96px; }
-  .winners__grid { gap: 80px 40px; }
+  .winners__grid { gap: 48px 40px; }
   .partners__logos { --gap: 48px; }
-  .partners__logos a { max-width: 300px; }
-  .partners__paper { padding: 56px 72px 44px; }
+  .partners__logos a { max-width: 250px; }
+  .partners__paper { padding: 44px 64px 34px; }
 }
 @include below-lg { .winners__goat { width: 200px; opacity: 0.9; } }
 @include tablet-land {
@@ -385,6 +415,21 @@
   .hero__actions { margin-top: min(32px, 3vh); }
   .hero__year { margin-top: clamp(20px, calc(7.1vh - 33px), 44px); font-size: min(clamp(120px, 24vw, 400px), max(160px, calc(50vh - 140px))); }
   .hero__goat { width: min(100%, 520px, calc(42.9vh + 57px)); }
+}
+/* Невысокие экраны ноутбуков (до 860 по высоте): карточки «Три шага», победители и призы плотнее — блок ближе к одному экрану (правка 27.10) */
+@media (min-width: 1201px) and (max-height: 860px) {
+  .wavy { min-height: 250px; padding: 28px 40px 32px 50px; }
+  .wavy__n { font-size: 76px; }
+  .wavy__icon { top: 28px; width: 60px; height: 60px; }
+  .wavy h3 { margin-top: 8px; font-size: 24px; }
+  .wavy p { font-size: 17px; }
+  .steps-strip__ticket { padding: 14px 32px; }
+  .steps-strip__ticket .num { font-size: 48px; }
+  .winners__grid { gap: 36px 32px; margin-top: 44px; }
+  .chart { height: 190px; }
+  .numbers__val .num { font-size: 64px; }
+  .postcard__big .num { font-size: 120px; }
+  #path { padding-bottom: 140px; }
 }
 @media (min-width: 1800px) {
   .hero__inner { padding-top: clamp(100px, calc(10vh + 20px), 128px); }

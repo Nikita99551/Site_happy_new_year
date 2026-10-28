@@ -1,8 +1,9 @@
 import { useEffect, useRef, useState } from 'react';
 import { useStepAnimation } from '@/entities/user';
-import { CAMPAIGN, nextMilestone } from '@/shared/config/campaign';
+import { CAMPAIGN, nextMilestone, promoForStep } from '@/shared/config/campaign';
 import { useInView, useReducedMotion } from '@/shared/lib/hooks';
-import { plural } from '@/shared/lib/text';
+import { formatRub, plural } from '@/shared/lib/text';
+import { CouponMark, IconCoupon, IconCrate, IconGift } from '@/shared/ui/icons/Icons';
 import { FONT_NUM, FONT_TEXT } from '@/shared/ui/lights/geometry';
 import { PartnerBox } from '@/shared/ui/lights';
 import { DESKTOP_TREE, MOBILE_TREE } from './geometry';
@@ -42,23 +43,49 @@ function starPoints(cx, cy, r) {
   return pts.join(' ');
 }
 
-function tooltipText(n, step, partner) {
-  let body;
-  if (n === 10 || n === 20) body = `Розыгрыш сертификата Аникс на ${n === 10 ? '1 500' : '3 000'} ₽: его получает каждый ${CAMPAIGN.milestoneEvery[n]}‑й, кто дошёл до этого шага за неделю. Это шанс, а не подарок каждому.`;
-  else if (n < step) body = 'Пройден. Спасибо за покупки!';
-  else if (n === step) {
-    const dl = nextMilestone(n) - n;
-    body = `Вы здесь. До следующей вехи — ${dl} ${plural(dl, 'шаг', 'шага', 'шагов')}.`;
-  } else body = 'Откроется после новых чеков: каждые 600 ₽ — один шаг.';
-  if (partner.includes(n)) body += ' Здесь площадка партнёра: видео, рассказ о компании и отзывы.';
-  return body;
+const STATE_NAME = { done: 'Пройден', current: 'Вы здесь', locked: 'Впереди' };
+
+/**
+ * Подсказка шара по пунктам (правка 28.10, раньше был сплошной текст): сверху «Шаг N» и метка состояния,
+ * ниже — что есть на шаге, каждое отдельным пунктом со значком: розыгрыш, промокод «Торнадо», площадка партнёра.
+ */
+function TipContent({ n, step, partner, codesOpen }) {
+  const state = n < step ? 'done' : n === step ? 'current' : 'locked';
+  let note;
+  if (state === 'done') note = 'Спасибо за покупки!';
+  else if (state === 'current') {
+    const next = nextMilestone(n);
+    const dl = next - n;
+    note = `До ${next === 30 ? 'финиша' : `розыгрыша на ${next}‑м шаге`} — ${dl} ${plural(dl, 'шаг', 'шага', 'шагов')}`;
+  } else note = `Откроется после новых чеков: ${formatRub(CAMPAIGN.stepRub)} в чеке — 1 шаг`;
+
+  const items = [];
+  // Сертификат — шанс, а не подарок каждому: его получает каждый N‑й участник недели
+  if (n === 10 || n === 20) items.push({ key: 'gift', icon: <IconGift />, kicker: 'Розыгрыш', title: `Сертификат «Аникс» на ${formatRub(CAMPAIGN.milestones[n])}`, text: `Получает каждый ${CAMPAIGN.milestoneEvery[n]}‑й участник недели, дошедший до шага` });
+  // Промокод доставки — гарантированно каждому (правка 27.10): пройденный шаг отсылает к коду ниже, будущий — обещает
+  const promo = promoForStep(n);
+  if (promo) items.push({ key: 'promo', icon: <IconCoupon />, kicker: 'Промокод «Торнадо»', title: `−${formatRub(promo.discount)} на доставку`, text: codesOpen ? `На заказ от ${formatRub(promo.minOrder)}. Код ваш — ниже, в блоке «Ваши промокоды»` : `На заказ от ${formatRub(promo.minOrder)} — каждому, кто дойдёт до шага` });
+  if (partner.includes(n)) items.push({ key: 'box', icon: <IconCrate />, kicker: 'Площадка партнёра', title: 'Видео, рассказ о компании и отзывы' });
+
+  return (
+    <>
+      <div className="tip__head"><b>Шаг {n}</b><span className={`tip__state tip__state--${state}`}>{STATE_NAME[state]}</span></div>
+      <p className="tip__note">{note}</p>
+      {items.map((it) => (
+        <div key={it.key} className="tip__item">
+          <span className="tip__ic" aria-hidden="true">{it.icon}</span>
+          <div><small>{it.kicker}</small><strong>{it.title}</strong>{it.text && <p>{it.text}</p>}</div>
+        </div>
+      ))}
+    </>
+  );
 }
 
 /**
  * Карта пути «ёлка» из 30 шагов (на компьютере — геометрия макета 860×1260, на телефоне — вытянутая ёлка). Путь идёт снизу вверх: шаг 1 у подножия, 30 — звезда.
  * Клик или фокус на шаре показывает подсказку.
  */
-export function RouteTree({ from, to, paused = false, partnerStops }) {
+export function RouteTree({ from, to, paused = false, partnerStops, guest = false }) {
   const host = useRef(null);
   // Анимация шагов начинается, когда ёлка видна на экране
   const inView = useInView(host);
@@ -78,6 +105,11 @@ export function RouteTree({ from, to, paused = false, partnerStops }) {
   // Подсказка, открытая кликом, не закрывается, когда мышь уходит с шара
   const pinned = useRef(false);
   const reduced = useReducedMotion();
+  // Пока подсказка гаснет, в ней остаются прежние текст и место. Раньше они сбрасывались сразу,
+  // и пустая рамка на миг мелькала в верхнем углу ёлки, над звездой (правка 28.10)
+  const [view, setView] = useState(null);
+  // Подсказка-пример у текущего шара: показывается сама один раз, когда шар виден, — так понятно, что шары «говорят»
+  const demo = useRef({ done: false, open: false });
 
   // Шары появляются по очереди
   useEffect(() => {
@@ -100,11 +132,16 @@ export function RouteTree({ from, to, paused = false, partnerStops }) {
     const n = Number(g.dataset.step);
     const r = g.getBoundingClientRect();
     const h = host.current.getBoundingClientRect();
-    setTip({ n, left: Math.max(8, Math.min(h.width - 278, r.left - h.left + r.width / 2 - 130)), top: r.top - h.top + r.height + 10 });
+    // Ширина подсказки 300 px (на узком экране — по ширине ёлки), по центру шара и не за краями
+    const w = Math.min(300, h.width - 16);
+    const next = { n, left: Math.max(8, Math.min(h.width - w - 8, r.left - h.left + r.width / 2 - w / 2)), top: r.top - h.top + r.height + 10 };
+    setTip(next);
+    setView(next);
   };
   const onClick = (e) => {
     const g = e.target.closest('.ball');
     pinned.current = !!g;
+    demo.current.open = false;
     if (g) show(g);
     else setTip(null);
   };
@@ -112,11 +149,48 @@ export function RouteTree({ from, to, paused = false, partnerStops }) {
   const onOver = (e) => {
     if (!window.matchMedia('(hover: hover)').matches) return;
     const g = e.target.closest('.ball');
-    if (g && Number(g.dataset.step) !== tip?.n) {
+    if (g && (Number(g.dataset.step) !== tip?.n || demo.current.open)) {
       pinned.current = false;
+      demo.current.open = false;
       show(g);
     }
   };
+
+  // Подсказка-пример: когда анимация шагов закончилась и текущий шар целиком на экране — открыть его подсказку
+  // на 4,5 с. Один раз за посещение страницы; если человек сам навёл или нажал на шар — пример не мешает
+  useEffect(() => {
+    const d = demo.current;
+    if (d.done || moving || paused) return;
+    const ball = host.current?.querySelector(`.ball[data-step="${Math.max(1, step)}"]`);
+    if (!ball) return;
+    let t1 = 0;
+    let t2 = 0;
+    const io = new IntersectionObserver(([e]) => {
+      if (!e.isIntersecting) return;
+      io.disconnect();
+      // «Показано» отмечаем только в момент показа: если тут же началась анимация новых шагов, пример покажется после неё
+      t1 = window.setTimeout(() => {
+        d.done = true;
+        if (ball.closest('.tree-host')?.querySelector('.tooltip.is-open')) return;
+        d.open = true;
+        show(ball);
+        t2 = window.setTimeout(() => {
+          if (d.open) setTip(null);
+          d.open = false;
+        }, 4500);
+      }, 700);
+    }, { threshold: 1, rootMargin: '-15% 0px -15% 0px' });
+    io.observe(ball);
+    return () => {
+      io.disconnect();
+      window.clearTimeout(t1);
+      window.clearTimeout(t2);
+      if (d.open) {
+        d.open = false;
+        setTip(null);
+      }
+    };
+  }, [moving, paused, step]);
   const onOut = (e) => {
     const to = e.relatedTarget;
     if (!pinned.current && e.target.closest('.ball') && !to?.closest?.('.ball')) setTip(null);
@@ -166,13 +240,20 @@ export function RouteTree({ from, to, paused = false, partnerStops }) {
     );
   });
   const boxes = tg.balls.filter(([n]) => partnerStops.includes(n)).map(([n, cx, cy]) => <PartnerBox key={`b${n}`} x={cx + 26 * k} y={cy + 26 * k} s={40 * k} />);
+  // Купоны промокодов доставки на чётных шагах: у шара — слева снизу (справа снизу висит коробка партнёра), у подарка — слева сверху, у звезды — слева
+  const coupons = tg.balls.filter(([n]) => promoForStep(n)).map(([n, cx, cy]) => (n === 10 || n === 20
+    ? <CouponMark key={`c${n}`} x={cx - 44 * k} y={cy - 24 * k} s={46 * k} />
+    : <CouponMark key={`c${n}`} x={cx - 32 * k} y={cy + 28 * k} s={46 * k} />));
+  coupons.push(<CouponMark key="c30" x={tg.star.x - tg.star.r * 1.1} y={tg.star.y + tg.star.r * 0.6} s={46 * k} rot={-18} />);
   const lit = step >= 30;
 
   return (
     <div ref={host} className="tree-host reveal" style={{ position: 'relative' }}>
+      {/* Компьютер — «наведите», телефон — «нажмите» (правка 28.10); плашка красная, чтобы её заметили */}
       <p className="tree-hint">
-        <svg viewBox="0 0 24 24" aria-hidden="true"><rect x={10} y={1} width={4} height={4} rx={1} fill="#b98a2e" /><circle cx={12} cy={14} r={9} fill="currentColor" /><circle cx={9} cy={11} r={2} fill="#fff" opacity={0.6} /></svg>
-        Нажмите на&nbsp;шар, чтобы узнать о&nbsp;шаге
+        <span className="tree-hint__ic" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x={10} y={1} width={4} height={4} rx={1} fill="#b98a2e" /><circle cx={12} cy={14} r={9} fill="currentColor" /><circle cx={9} cy={11} r={2} fill="#fff" opacity={0.6} /></svg></span>
+        <span className="tree-hint__hover">Наведите на&nbsp;шар&nbsp;— узнаете, что на&nbsp;шаге</span>
+        <span className="tree-hint__touch">Нажмите на&nbsp;шар&nbsp;— узнаете, что на&nbsp;шаге</span>
       </p>
       <svg viewBox={`0 0 ${tg.w} ${tg.h}`} className={`tree${narrow ? ' tree--tall' : ''}`} role="img" aria-label={`Карта пути: ёлка из 30 шагов, вы на шаге ${step}`} onClick={onClick} onMouseOver={onOver} onMouseOut={onOut} onFocus={onFocus} onBlur={() => setTip(null)} onKeyDown={onKey}>
         <defs>
@@ -202,9 +283,10 @@ export function RouteTree({ from, to, paused = false, partnerStops }) {
         {balls}
         {labels}
         {boxes}
+        {coupons}
       </svg>
-      <div className={`tooltip${tip ? ' is-open' : ''}`} role="tooltip" style={tip ? { left: tip.left, top: tip.top } : undefined}>
-        {tip && <><b>Шаг {tip.n}</b>{tooltipText(tip.n, step, partnerStops)}</>}
+      <div className={`tooltip${tip ? ' is-open' : ''}`} role="tooltip" style={view ? { left: view.left, top: view.top } : undefined}>
+        {view && <TipContent n={view.n} step={step} partner={partnerStops} codesOpen={!guest && (view.n <= step || pos.circle > 1)} />}
       </div>
     </div>
   );

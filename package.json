@@ -7,7 +7,7 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "build:pages": "vite build --base=/Site_happy_new_year/ && node -e \"for (const f of ['route.html', '404.html']) require('fs').copyFileSync('dist/index.html', 'dist/' + f)\"",
+    "build:pages": "vite build --base=/Site_happy_new_year/ && node -e \"for (const f of ['route.html', 'conditions.html', '404.html']) require('fs').copyFileSync('dist/index.html', 'dist/' + f)\"",
     "preview": "vite preview",
     "lint": "oxlint src"
   },

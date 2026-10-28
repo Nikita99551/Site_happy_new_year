@@ -10,7 +10,7 @@
 .cta h2 { max-width: 760px; }
 .cta .lead { margin-top: 22px; max-width: 600px; }
 .cta__actions { display: flex; flex-wrap: wrap; align-items: center; gap: 16px 24px; margin-top: 36px; }
-.cta__goat { width: auto; height: min(440px, 30vw); margin-bottom: -40px; }
+.cta__goat { width: auto; height: min(440px, 30vw, 52vh); margin-bottom: -40px; }
 .cta--cream { color: var(--ink); }
 .cta--route { padding-bottom: 8px; }
 .cta--route h2 { max-width: 860px; font-size: clamp(40px, 4.5vw, 64px); line-height: 1.05; }
@@ -41,12 +41,20 @@
 }
 
 @include below-md {
-  .cta h2 { font-size: clamp(32px, 8.5vw, 44px); }
+  .cta h2, .main-prize h2 { font-size: clamp(32px, 8.5vw, 44px); }
 }
 
 // ---- Адаптив: Full HD и планшеты (правка 23.10.2026) ----
+/* Масштаб (правка 27.10): гирлянда меньше заходит на блок выше, а у этого блока снизу запас — ветки не закрывают его текст
+   (на «Подарках» закрывали ссылку «Полные правила») */
+@media (min-width: 901px) {
+  .cta { padding-top: 156px; }
+  .cta__garland { top: -72px; height: 216px; }
+  .section:has(+ .cta) { padding-bottom: max(96px, 11vh); }
+}
+@include below-md { .section:has(+ .cta) { padding-bottom: 84px; } }
 @include above-xl {
-  .cta__goat { height: min(520px, 28vw); }
+  .cta__goat { height: min(480px, 26vw, 50vh); }
   .cta h2 { max-width: 900px; }
 }
 @include tablet-port {

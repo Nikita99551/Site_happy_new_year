@@ -8,7 +8,7 @@ import { usePauseOffscreen } from '@/shared/ui/reveal/usePauseOffscreen';
 const NOINDEX_ALL = import.meta.env.VITE_NOINDEX === '1';
 
 /** Общий каркас страницы: шапка, контент, подвал, заголовок вкладки, появление блоков. */
-export function PageLayout({ title, hero, noindex, children, revealDeps = [] }) {
+export function PageLayout({ title, hero, compactFooter, noindex, children, revealDeps = [] }) {
   useEffect(() => {
     document.title = title;
     let meta = document.querySelector('meta[name="robots"]');
@@ -30,7 +30,7 @@ export function PageLayout({ title, hero, noindex, children, revealDeps = [] }) 
     <>
       <Header hero={hero} />
       <main>{children}</main>
-      <Footer />
+      <Footer compact={compactFooter} />
     </>
   );
 }

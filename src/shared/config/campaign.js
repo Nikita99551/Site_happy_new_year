@@ -23,6 +23,24 @@ export const CAMPAIGN = {
   finalDraw: '12.01.2027',
 };
 
+/**
+ * Промокоды доставки «Торнадо» за чётные шаги (правка 27.10): не розыгрыш — каждому, кто дошёл до шага.
+ * Код показывается на «Моём маршруте», когда шаг пройден; вводится в приложении «Торнадо».
+ * ЗАПОЛНИТЬ: срок действия кодов и сколько раз действует один код (уточнить у «Торнадо»).
+ */
+export const DELIVERY_PROMOS = [
+  { code: 'ЕЛКА', discount: 300, minOrder: 2000, steps: [2, 4, 6, 8, 10] },
+  { code: '27ГОД', discount: 500, minOrder: 3000, steps: [12, 14, 16, 18, 20, 22] },
+  { code: 'БАРАШКА', discount: 750, minOrder: 5000, steps: [24, 26, 28, 30] },
+];
+/** Приложение доставки «Торнадо»: там вводится промокод */
+export const TORNADO_APP_URL = 'https://clck.ru/3ExQW2';
+
+/** Промокод за шаг круга или undefined */
+export function promoForStep(n) {
+  return DELIVERY_PROMOS.find((p) => p.steps.includes(n));
+}
+
 /** Следующая веха после текущего шага: 10, 20 или 30 */
 export function nextMilestone(step) {
   return step < 10 ? 10 : step < 20 ? 20 : 30;

@@ -4,17 +4,17 @@
 .carousel { position: relative; }
 .carousel__head { display: flex; align-items: flex-end; justify-content: space-between; gap: 24px; }
 .carousel__arrows { display: flex; gap: 12px; flex: none; }
-.arrow { width: 60px; height: 60px; border: 2px solid currentColor; border-radius: 50%; background: transparent; color: inherit; display: grid; place-items: center; transition: transform var(--dur-fast) var(--ease-out), background-color var(--dur-fast) ease; }
+.arrow { width: 56px; height: 56px; border: 2px solid currentColor; border-radius: 50%; background: transparent; color: inherit; display: grid; place-items: center; transition: transform var(--dur-fast) var(--ease-out), background-color var(--dur-fast) ease; }
 .arrow:active { transform: scale(0.94); background: var(--g); border-color: var(--g); color: var(--cr); }
 @media (hover: hover) { .arrow:hover { background: currentColor; } .arrow:hover svg { color: var(--rd); } .section--green .arrow:hover svg, .section--red .arrow:hover svg { color: var(--g); } .section--red .arrow:hover svg { color: var(--rd); } }
 .arrow svg { width: 22px; height: 22px; }
-/* Поля вокруг карточек: тень карточки не должна обрезаться дорожкой */
+/* Поля вокруг карточек: наклонённая карточка (useTilt) чуть выходит за свой прямоугольник и не должна обрезаться дорожкой */
 /* Прокрутка свободная, без привязки к карточкам: где отпустили, там лента и осталась (правка 27.10) */
-.carousel__track { display: flex; gap: 24px; margin: 28px -6px 0; padding: 12px 6px 16px; overflow-x: auto; overscroll-behavior-x: contain; scrollbar-width: none; cursor: grab; user-select: none; }
+.carousel__track { display: flex; gap: 24px; margin: 20px -6px 0; padding: 12px 6px 16px; overflow-x: auto; overscroll-behavior-x: contain; scrollbar-width: none; cursor: grab; user-select: none; }
 .carousel__track img { -webkit-user-drag: none; }
 .carousel__track::-webkit-scrollbar { display: none; }
 
-.carousel__dots { display: flex; gap: 8px; margin-top: 24px; }
+.carousel__dots { display: flex; gap: 8px; margin-top: 14px; }
 .carousel__dots span { width: 10px; height: 10px; border-radius: 999px; background: currentColor; opacity: 0.45; transition: width var(--dur) var(--ease-out), opacity var(--dur) ease; }
 .carousel__dots span.is-active { width: 36px; opacity: 1; }
 

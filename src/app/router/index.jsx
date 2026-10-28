@@ -27,18 +27,19 @@ function withReload(importer) {
     );
 }
 
-// «Мой маршрут» грузится по требованию
+// Остальные показанные страницы грузятся по требованию
 const RoutePage = lazy(withReload(() => import('@/pages/route')));
+const ConditionsPage = lazy(withReload(() => import('@/pages/conditions')));
 
 /**
- * Когда текущая страница загрузилась и браузер свободен, в фоне подгружаем «Мой маршрут»:
+ * Когда текущая страница загрузилась и браузер свободен, в фоне подгружаем остальные страницы:
  * переходы по меню становятся мгновенными, а на медленном интернете не висит старая страница.
  */
 function usePrefetchPages() {
   useEffect(() => {
     const run = () => {
       // Фоновая подгрузка: если файлов уже нет (вышла новая версия) — молча пропускаем, перезагрузка будет при переходе
-      import('@/pages/route').catch(() => {});
+      for (const f of [() => import('@/pages/route'), () => import('@/pages/conditions')]) f().catch(() => {});
     };
     const idle = window.requestIdleCallback ?? ((cb) => window.setTimeout(cb, 2000));
     const cancel = window.cancelIdleCallback ?? window.clearTimeout;
@@ -60,7 +61,8 @@ export function AppRouter() {
       <Routes>
         <Route path={ROUTES.home} element={<HomePage />} />
         <Route path={ROUTES.route} element={<RoutePage />} />
-        {/* В показе только две страницы: любой другой адрес ведёт на главную */}
+        <Route path={ROUTES.conditions} element={<ConditionsPage />} />
+        {/* В показе только готовые страницы: любой другой адрес ведёт на главную */}
         <Route path="*" element={<Navigate to={ROUTES.home} replace />} />
       </Routes>
     </Suspense>

@@ -1,12 +1,12 @@
 import { useState } from 'react';
 import { useSession } from '@/entities/user';
 import { useModal } from '@/features/modal';
+import { SoonLink } from '@/shared/ui/soon-link/SoonLink';
 import { formatPhone, isValidPhone, normalizePhone } from '@/shared/lib/phone';
 import { Button } from '@/shared/ui/button/Button';
 import { Check, Field } from '@/shared/ui/field/Field';
 import { IconPin } from '@/shared/ui/icons/Icons';
 import { Modal } from '@/shared/ui/modal/Modal';
-import { SoonLink } from '@/shared/ui/soon-link/SoonLink';
 
 /** Окно 06: регистрация. Два обязательных согласия — тексты из документа юристов. */
 export function RegisterModal({ open }) {

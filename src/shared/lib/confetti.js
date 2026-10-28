@@ -14,12 +14,16 @@ export function launchConfetti() {
   const H = (cv.height = innerHeight);
   const ps = Array.from({ length: 120 }, (_, i) => ({ x: Math.random() * W, y: -20 - Math.random() * H * 0.5, w: 6 + Math.random() * 8, h: 4 + Math.random() * 6, c: COLORS[i % 4], v: 2 + Math.random() * 3, r: Math.random() * 6.28, s: (Math.random() - 0.5) * 0.2 }));
   const t0 = performance.now();
+  let last = t0;
   const tick = (now) => {
+    // Движение по времени, в «кадрах 60 Гц»: на экранах 120–240 Гц конфетти падает с той же скоростью (правка 28.10)
+    const k = Math.min((now - last) / (1000 / 60), 4);
+    last = now;
     ctx.clearRect(0, 0, W, H);
     for (const p of ps) {
-      p.y += p.v;
-      p.r += p.s;
-      p.x += Math.sin(p.r) * 0.6;
+      p.y += p.v * k;
+      p.r += p.s * k;
+      p.x += Math.sin(p.r) * 0.6 * k;
       ctx.save();
       ctx.translate(p.x, p.y);
       ctx.rotate(p.r);

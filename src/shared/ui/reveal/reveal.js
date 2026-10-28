@@ -18,7 +18,7 @@ export function observeReveal(root = document) {
         }
       }
     },
-    // Порог 0: очень высокий блок иначе мог бы никогда не набрать 5 % видимости
+    // Порог 0: очень высокий блок (лист правил на телефоне выше 15 000 px) иначе никогда не набрал бы 5 % видимости
     { rootMargin: '0px 0px -8% 0px', threshold: 0 },
   );
   items.forEach((el) => io.observe(el));

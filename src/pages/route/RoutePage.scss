@@ -42,8 +42,15 @@ html.no-anim .tree .ball--current { animation: none; }
 .tree .ball--lit { animation: step-lit 480ms var(--ease-out); }
 .tree__star--pop { transform-box: fill-box; transform-origin: center; animation: step-arrive 900ms var(--ease-out); }
 @media (hover: hover) { .tree .ball:hover { transform: scale(1.12); animation: none; } .tree .ball:hover .ball__ring { opacity: 1; } }
-.tree-hint { position: relative; z-index: 2; width: fit-content; margin-bottom: 12px; display: flex; align-items: center; gap: 10px; padding: 10px 18px; background: #fff; color: var(--g); border-radius: 999px; box-shadow: var(--shadow-card); font-weight: 700; font-size: 16px; line-height: 1.3; pointer-events: none; }
-.tree-hint svg { flex: none; width: 22px; height: 22px; color: var(--rd); }
+/* Плашка над ёлкой (правка 28.10): красная и крупнее — раньше белую не замечали; «наведите» на компьютере, «нажмите» на телефоне.
+   Значок шара трижды покачивается, когда ёлка появляется на экране: глаз цепляется за движение */
+.tree-hint { position: relative; z-index: 2; width: fit-content; margin-bottom: 12px; display: flex; align-items: center; gap: 12px; padding: 8px 20px 8px 8px; background: var(--rd); color: var(--cr); border-radius: 999px; box-shadow: 0 10px 24px rgba(227, 30, 36, 0.28); font-weight: 800; font-size: 17px; line-height: 1.3; pointer-events: none; }
+.tree-hint__ic { flex: none; display: grid; place-items: center; width: 36px; height: 36px; border-radius: 50%; background: var(--cr); color: var(--rd); }
+.tree-hint__ic svg { width: 22px; height: 22px; }
+.tree-hint__touch { display: none; }
+@media (hover: none) { .tree-hint__hover { display: none; } .tree-hint__touch { display: inline; } }
+@media (prefers-reduced-motion: no-preference) { .tree-host.is-in .tree-hint__ic { animation: hint-nudge 1.4s var(--ease-in-out) 0.6s 3; } }
+@keyframes hint-nudge { 0%, 80%, 100% { transform: none; } 20% { transform: rotate(-16deg) scale(1.08); } 40% { transform: rotate(12deg) scale(1.12); } 60% { transform: rotate(-6deg); } }
 .tree .ball:focus-visible { outline: 3px solid var(--rd); outline-offset: 4px; border-radius: 50%; }
 .tree .ball--current circle { filter: drop-shadow(0 0 10px rgba(227, 30, 36, 0.9)); }
 .tree .ball--locked { opacity: 0.55; }
@@ -63,11 +70,24 @@ html.no-anim .tree .ball--current { animation: none; }
 .legend ul { list-style: none; margin: 0; padding: 0; }
 .legend i { flex: none; width: 24px; height: 24px; border-radius: 50%; }
 .legend .i-gold { background: var(--go); } .legend .i-red { background: var(--rd); } .legend .i-dim { background: #cfd9d1; opacity: 0.7; }
-.legend .i-gift, .legend .i-box, .legend .i-star { border-radius: 0; background: none; display: grid; place-items: center; }
+.legend .i-gift, .legend .i-box, .legend .i-star, .legend .i-coupon { border-radius: 0; background: none; display: grid; place-items: center; }
 .legend svg { width: 24px; height: 24px; }
-.tooltip { position: absolute; z-index: 30; max-width: 260px; padding: 14px 16px; background: var(--gd); color: var(--cr); border-radius: 10px; font-size: 15px; line-height: 1.4; box-shadow: var(--shadow-card); opacity: 0; transform: translateY(6px) scale(0.97); transition: opacity 150ms var(--ease-out), transform 150ms var(--ease-out); pointer-events: none; }
-.tooltip.is-open { opacity: 1; transform: none; }
-.tooltip b { display: block; font-size: 17px; margin-bottom: 4px; }
+/* Подсказка шара. Закрытая — невидима целиком (visibility после угасания), чтобы пустая рамка нигде не мелькала */
+.tooltip { position: absolute; z-index: 30; width: 300px; max-width: calc(100% - 16px); padding: 14px 16px; background: var(--gd); color: var(--cr); border-radius: 12px; font-size: 15px; line-height: 1.4; box-shadow: var(--shadow-card); opacity: 0; visibility: hidden; transform: translateY(6px) scale(0.97); transition: opacity 150ms var(--ease-out), transform 150ms var(--ease-out), visibility 0s linear 150ms; pointer-events: none; }
+.tooltip.is-open { opacity: 1; visibility: visible; transform: none; transition-delay: 0s; }
+/* Подсказка по пунктам: «Шаг N» и метка состояния, короткая строка, ниже пункты со значками через пунктир */
+.tip__head { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.tip__head b { font-size: 19px; line-height: 1.2; }
+.tip__state { flex: none; padding: 3px 10px; border-radius: 999px; font-weight: 800; font-size: 13px; line-height: 1.35; }
+.tip__state--done { background: var(--go); color: var(--g); }
+.tip__state--current { background: var(--rd); color: var(--cr); }
+.tip__state--locked { background: rgba(255, 248, 232, 0.16); color: var(--cr); }
+.tip__note { margin: 6px 0 0; font-size: 15px; line-height: 1.4; color: rgba(255, 248, 232, 0.82); }
+.tip__item { display: grid; grid-template-columns: 30px minmax(0, 1fr); gap: 12px; align-items: start; margin-top: 12px; padding-top: 12px; border-top: 1px dashed rgba(255, 248, 232, 0.3); }
+.tip__ic svg { display: block; width: 30px; height: 30px; }
+.tip__item small { display: block; font-weight: 800; font-size: 12px; line-height: 1.3; letter-spacing: 0.06em; text-transform: uppercase; color: var(--go); }
+.tip__item strong { display: block; margin-top: 2px; font-weight: 800; font-size: 16px; line-height: 1.3; }
+.tip__item p { margin: 3px 0 0; font-size: 14px; line-height: 1.4; color: rgba(255, 248, 232, 0.82); }
 .activity { padding-block: 72px 80px; }
 .activity .section-head { margin-bottom: 28px; }
 .activity .section-head .ribbon { margin-bottom: 16px; }
@@ -104,6 +124,8 @@ html.no-anim .tree .ball--current { animation: none; }
 .receipt__list::-webkit-scrollbar-track { background: rgba(217, 185, 140, 0.45); border-radius: 3px; }
 .receipt__list::-webkit-scrollbar-thumb { background: var(--g); border-radius: 3px; }
 .receipt__scroll::after { content: ''; position: absolute; left: 0; right: 20px; bottom: 0; height: 56px; background: linear-gradient(rgba(250, 247, 240, 0), #faf7f0); pointer-events: none; }
+.receipt__total { margin-top: 14px; text-align: center; font-weight: 700; font-size: 17px; color: var(--mu); }
+.receipt__total[hidden] { display: none; }
 .receipt__circle { display: flex; align-items: center; gap: 12px; margin: 0; padding: 14px 0; border-bottom: 1.5px dashed var(--kr); font-weight: 800; font-size: 17px; color: var(--g); }
 .receipt__circle span { padding: 6px 14px; background: var(--go); border-radius: 14px; line-height: 1.3; }
 .receipt__row b { white-space: nowrap; }
@@ -149,7 +171,8 @@ html.no-anim .tree .ball--current { animation: none; }
 
 @include below-md {
   .tree-panel h2 { font-size: 34px; }
-  .tree-hint { font-size: 15px; padding: 9px 16px; }
+  .tree-hint { font-size: 15px; padding: 7px 16px 7px 7px; }
+  .tree-hint__ic { width: 32px; height: 32px; }
   .receipt h2 { font-size: 34px; }
   .route-hero h1 { font-size: clamp(34px, 8.5vw, 44px); }
   .route-hero__progress .num { font-size: 110px; }
@@ -197,4 +220,140 @@ html.no-anim .tree .ball--current { animation: none; }
   .ticket-card { grid-template-columns: 100px 1fr; gap: 40px; padding: 30px; }
   .ticket-card__divider { display: block; }
   .receipt { padding: 40px 32px 44px; }
+}
+
+/* ---- Масштаб на компьютере (правка 27.10): ёлка по высоте окна — целиком в экране вместе с подсказкой,
+   колонка ёлки по центру; билеты и история чеков плотнее ---- */
+@media (min-width: 1201px) {
+  .tree-grid { grid-template-columns: minmax(0, 1fr) minmax(0, 480px); gap: 48px; align-items: start; }
+  .tree-host { display: flex; flex-direction: column; align-items: center; }
+  .tree-host .tree-hint { align-self: flex-start; }
+  /* Ёлка крупная на любом экране (правка Никиты 28.10: «маленькая, не всё разглядишь»): по ширине колонки, до 880 px.
+     Панель с легендой справа едет вместе с прокруткой, пока ёлка не кончится */
+  .tree { width: min(100%, 880px); max-width: none; height: auto; }
+}
+/* От 1440 слева от верхушки ёлки пусто: подсказка встаёт туда */
+@media (min-width: 1440px) {
+  .tree-host .tree-hint { position: absolute; left: 0; top: 0; }
+}
+@media (min-width: 1201px) {
+  /* Липкая панель целиком в окне под шапкой на любой высоте экрана (правка 28.10): размеры от высоты окна (vh) */
+  .tree-panel { position: sticky; top: 104px; padding-top: 0; }
+  .tree-panel h2 { font-size: clamp(30px, 4.4vh, 46px); line-height: 1.12; }
+  .tree-panel__lead { margin-top: clamp(6px, 1.3vh, 14px); font-size: clamp(15px, 2.05vh, 18px); line-height: 1.45; }
+  .tree-panel__next { margin-top: clamp(10px, 1.7vh, 18px); padding: clamp(14px, 2vh, 20px) 22px; }
+  .tree-panel__next b { font-size: clamp(18px, 2.2vh, 22px); line-height: 1.3; }
+  .tree-panel__next p { margin-top: clamp(4px, 0.7vh, 8px); font-size: clamp(15px, 1.95vh, 17px); line-height: 1.45; }
+  .tree-panel__next .btn { margin-top: clamp(8px, 1vh, 10px); min-height: clamp(44px, 5.8vh, 60px); }
+  .tree-panel .legend { margin-top: clamp(10px, 1.5vh, 16px); padding: clamp(8px, 1.3vh, 14px) 20px; }
+  .tree-panel .legend li { gap: 12px; padding: clamp(2px, 0.4vh, 4px) 0; font-size: clamp(15px, 1.9vh, 16px); line-height: 1.35; }
+  .tree-panel .legend i, .tree-panel .legend svg { width: clamp(20px, 2.8vh, 30px); height: clamp(20px, 2.8vh, 30px); }
+
+  .activity { padding-block: clamp(52px, 7vh, 72px); }
+  .activity h2 { font-size: clamp(34px, 5.4vh, 48px); }
+  .ticket-card { grid-template-columns: 84px 1fr; gap: 44px; margin-bottom: 14px; padding: 24px 30px; }
+  .ticket-card__divider { left: 142px; }
+  .ticket-card__seal { width: 84px; height: 84px; }
+  .ticket-card b { font-size: 22px; }
+  .ticket-card p { margin-top: 6px; font-size: 16px; }
+  .ticket-card .btn { margin-top: 16px; }
+  .share-tag { min-height: 0; margin-top: 14px; padding: 24px 36px 26px 90px; }
+  .share-tag b { font-size: 22px; }
+  .share-tag p { font-size: 16px; }
+  .receipt { padding: 36px 36px 40px; }
+  .receipt h2 { font-size: clamp(34px, 5vh, 42px); }
+  .receipt__row { padding: 16px 0; }
+  .receipt__list { max-height: min(340px, 40vh); }
+}
+@include above-xl {
+  .tree-grid { grid-template-columns: minmax(0, 1fr) minmax(0, 520px); }
+}
+/* Невысокие экраны ноутбуков: билеты и метка «Поделитесь» плотнее (правка 27.10) */
+@media (min-width: 1201px) and (max-height: 860px) {
+  .ticket-card { gap: 36px; padding: 18px 26px; margin-bottom: 12px; }
+  .ticket-card__divider { left: 126px; }
+  .ticket-card__seal { width: 72px; height: 72px; }
+  .ticket-card { grid-template-columns: 72px 1fr; }
+  .share-tag { padding: 18px 30px 20px 84px; }
+  .receipt__list { max-height: min(300px, 36vh); }
+}
+/* Телефон (правка 27.10): печать билета слева от текста, а не над ним — карточки вдвое ниже */
+@include below-md {
+  .ticket-card { grid-template-columns: 60px 1fr; gap: 18px; padding: 22px 20px; margin-bottom: 14px; }
+  .ticket-card__seal { width: 60px; height: 60px; }
+  .ticket-card b { font-size: 20px; }
+  .ticket-card p { font-size: 16px; }
+  .ticket-card .btn { margin-top: 14px; }
+}
+@include below-md {
+  .ticket-card > div { min-width: 0; }
+  .ticket-card .btn { width: 100%; padding-inline: 12px; white-space: normal; line-height: 1.2; }
+}
+
+/* ---- Промокоды доставки «Торнадо» (правка 27.10): купоны с отрывным корешком на красном картоне ---- */
+.promos { padding-block: clamp(56px, 8vh, 88px); }
+.promos .section-head { max-width: 980px; }
+.promos .lead { color: rgba(255, 248, 232, 0.92); }
+.promos__list { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 28px; }
+/* Тень на обёртке: маска с вырезами у бумаги обрезала бы её */
+.coupon { container-type: inline-size; filter: drop-shadow(0 14px 22px rgba(60, 4, 6, 0.35)); }
+.coupon:nth-child(1) { rotate: -1.2deg; } .coupon:nth-child(2) { rotate: 0.8deg; } .coupon:nth-child(3) { rotate: -0.6deg; }
+/* Полукруглые вырезы сверху и снизу на линии отрыва корешка */
+.coupon__paper {
+  display: grid; grid-template-columns: 40% 60%; min-height: 214px; border-radius: 14px; overflow: hidden;
+  background: linear-gradient(rgba(255, 248, 232, 0.6), rgba(255, 248, 232, 0.6)), var(--cr) url('/img/paper-cream.webp') center/cover; color: var(--g);
+  -webkit-mask: radial-gradient(circle 13px at 40% 0, #0000 12.5px, #000 13px), radial-gradient(circle 13px at 40% 100%, #0000 12.5px, #000 13px);
+  -webkit-mask-composite: source-in;
+  mask: radial-gradient(circle 13px at 40% 0, #0000 12.5px, #000 13px), radial-gradient(circle 13px at 40% 100%, #0000 12.5px, #000 13px);
+  mask-composite: intersect;
+}
+.coupon__stub { display: flex; flex-direction: column; justify-content: center; gap: 6px; padding: 22px 18px 22px 24px; background: #ffd109; border-right: 2.5px dashed rgba(23, 63, 42, 0.45); }
+/* Сумма по ширине купона (cqi), а не окна: на 1707 (2K с масштабом 150 %) «−500 ₽» вылезала за корешок (правка 28.10) */
+.coupon__sum { font-size: clamp(30px, 10.2cqi, 56px); color: var(--rd); white-space: nowrap; }
+.coupon__stub small { font-weight: 800; font-size: 15px; line-height: 1.25; color: var(--g); }
+.coupon__body { display: flex; flex-direction: column; align-items: flex-start; padding: 22px 22px 22px 24px; }
+.coupon__label { font-weight: 800; font-size: 12px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--mu); }
+.coupon__code { margin-top: 2px; font-family: var(--font-num); font-weight: 900; font-size: clamp(28px, 8.4cqi, 42px); line-height: 1.1; letter-spacing: 0.05em; color: var(--g); }
+.coupon__code--hidden { letter-spacing: 0.12em; color: #c3b9a3; }
+.coupon__steps { margin-top: 6px; font-size: 15px; line-height: 1.35; color: var(--mu); }
+.coupon__copy { margin-top: auto; padding: 9px 16px; border: 2px solid var(--g); border-radius: 999px; background: transparent; font-weight: 800; font-size: 15px; color: var(--g); transition: background-color var(--dur-fast) ease, color var(--dur-fast) ease, transform var(--dur-fast) var(--ease-out); }
+.coupon__copy:active { transform: scale(0.96); }
+@media (hover: hover) { .coupon__copy:hover { background: var(--g); color: var(--cr); } }
+.coupon__when { margin-top: auto; padding-top: 10px; font-weight: 700; font-size: 15px; color: var(--rd); }
+.coupon__when .link { padding: 0; border: 0; background: none; font: inherit; }
+.coupon--locked .coupon__stub { background: #f3dd7a; }
+/* Три шага — одним рядом из трёх колонок (правка 28.10: переносились на вторую строку) */
+.promos__how { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; align-items: center; gap: 18px 28px; margin-top: 32px; padding: 18px 24px; background: rgba(15, 45, 30, 0.92); color: var(--cr); border-radius: 14px; }
+.promos__how-icon { flex: none; width: 52px; height: 38px; }
+.promos__how ol { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px 24px; margin: 0; padding: 0; list-style: none; font-weight: 700; font-size: 17px; line-height: 1.3; }
+.promos__how li { display: flex; align-items: center; gap: 10px; }
+.promos__how li b { flex: none; display: grid; place-items: center; width: 30px; height: 30px; border-radius: 50%; background: var(--go); color: var(--g); font-family: var(--font-num); font-size: 18px; }
+@include tablet-land { .promos__list { grid-template-columns: 1fr 1fr; } }
+/* Планшеты: шаги столбиком под значком, кнопка во всю ширину */
+@media (max-width: $bp-lg) {
+  .promos__how { grid-template-columns: auto minmax(0, 1fr); }
+  .promos__how ol { grid-template-columns: minmax(0, 1fr); }
+  .promos__how .btn { grid-column: 1 / -1; }
+}
+@include below-md {
+  .promos__list { grid-template-columns: minmax(0, 1fr); gap: 20px; }
+  .coupon__paper { grid-template-columns: 38% 62%; min-height: 0; }
+  .coupon__stub { padding: 18px 12px 18px 16px; }
+  /* Сумма по ширине купона: на 375 «−500 ₽» вылезала за корешок на 5 px (28.10) */
+  .coupon__sum { font-size: clamp(24px, 9.4cqi, 36px); }
+  .coupon__stub small { font-size: 14px; }
+  .coupon__body { padding: 16px 16px 18px 18px; }
+  .coupon__code { font-size: 32px; }
+  .coupon__copy { margin-top: 12px; }
+  .promos__how { grid-template-columns: minmax(0, 1fr); padding: 18px 20px; }
+  .promos__how ol { gap: 10px; font-size: 16px; }
+  .promos__how .btn { width: 100%; }
+}
+
+/* Компьютер (правка 28.10): первый блок на весь экран под шапкой, содержимое по центру высоты.
+   Коза стоит в той же ячейке сетки, что и содержимое, — поэтому сдвигается вместе с ним (было top: 34px от верха блока при отступе 32px) */
+@media (min-width: 1201px) {
+  .route-hero { display: grid; align-content: center; min-height: calc(100svh - var(--header-h, 164px)); }
+  .route-hero > .container, .route-hero__goat { grid-area: 1 / 1; }
+  .route-hero__goat { top: 2px; }
 }

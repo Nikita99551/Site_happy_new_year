@@ -11,7 +11,7 @@ import './Header.scss';
 const NAV = [
   { to: '/', label: 'Главная' },
   { to: '/route', label: 'Мой маршрут' },
-  { label: 'Условия' },
+  { to: '/conditions', label: 'Условия' },
   { label: 'Подарки' },
   { to: '/#partners', label: 'Партнёры' },
 ];
@@ -58,18 +58,26 @@ export function Header({ hero = false }) {
   };
   const maskedPhone = user ? `+7 ${user.phone.slice(0, 3)} •••‑••‑${user.phone.slice(8)}` : '';
 
-  // Липкая шапка: верхняя строка уезжает, панель остаётся (--header-offset = высота строки)
+  // Липкая шапка: верхняя строка уезжает, панель остаётся (--header-offset = высота строки).
+  // --header-h — полная высота шапки: по ней первый блок страницы занимает ровно экран под шапкой (правка 28.10)
   useEffect(() => {
     const header = headerRef.current;
     const wrap = wrapRef.current;
     if (!header || !wrap) return;
-    const setOffset = () => header.style.setProperty('--header-offset', `${wrap.offsetTop}px`);
+    const setOffset = () => {
+      header.style.setProperty('--header-offset', `${wrap.offsetTop}px`);
+      document.documentElement.style.setProperty('--header-h', `${header.offsetHeight}px`);
+    };
     const onScroll = () => document.documentElement.classList.toggle('is-scrolled', wrap.getBoundingClientRect().top <= 1);
     setOffset();
     onScroll();
+    // Высота меняется и без изменения окна: подгрузились шрифты, перенеслась верхняя строка
+    const ro = new ResizeObserver(setOffset);
+    ro.observe(header);
     window.addEventListener('resize', setOffset);
     window.addEventListener('scroll', onScroll, { passive: true });
     return () => {
+      ro.disconnect();
       window.removeEventListener('resize', setOffset);
       window.removeEventListener('scroll', onScroll);
     };
