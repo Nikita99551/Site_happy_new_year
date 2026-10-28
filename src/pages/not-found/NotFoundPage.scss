@@ -1,0 +1,45 @@
+@use '@/shared/styles/tokens' as *;
+
+/* Страница 404 (28.10): на компьютере блок на весь экран под шапкой, текст слева, коза с фонариком стоит на нижнем краю справа */
+.nf { display: flex; align-items: center; min-height: calc(100svh - var(--header-h, 164px)); padding-block: clamp(32px, 5vh, 88px); overflow: clip; }
+.nf__text { position: relative; z-index: 2; max-width: min(920px, 100% - 32vw); }
+.nf h1 { margin-top: clamp(18px, 3vh, 30px); font-size: clamp(44px, min(5vw, 8vh), 80px); line-height: 1.02; }
+.nf .lead { margin-top: 16px; max-width: 600px; color: rgba(255, 248, 232, 0.92); }
+.nf__actions { display: flex; flex-wrap: wrap; align-items: center; gap: 16px 24px; margin-top: clamp(20px, 3.2vh, 32px); }
+.nf__more { font-weight: 600; font-size: 17px; color: rgba(255, 248, 232, 0.85); }
+.nf__more .link { color: var(--go); }
+/* Коза по ширине окна, но не выше блока под шапкой: на невысоких ноутбуках не упирается рогами в шапку */
+.nf__goat { position: absolute; z-index: 1; right: var(--gutter); bottom: 0; width: min(30vw, 500px, (100svh - var(--header-h, 164px) - 24px) * 0.672); max-width: none; height: auto; }
+
+/* «4 0 4» на верёвке: бирка качается вокруг нитки (угол --sway пишет useGarlandSway), средняя — золотая.
+   Размер бирок от высоты окна: на ноутбуке 1366×768 блок целиком помещается в экран */
+.nf__tags { --tag-w: clamp(92px, 11.5vh, 128px); position: relative; display: flex; gap: 22px; width: fit-content; margin-top: clamp(18px, 3vh, 30px); padding: 34px 22px 0; }
+.nf__wire { position: absolute; left: 0; top: 0; width: 100%; height: 40px; }
+.nf-tag { position: relative; display: grid; place-items: center; width: var(--tag-w); height: calc(var(--tag-w) * 1.28); padding-top: 22px; border-radius: 4px; background: var(--cr) url('/img/paper-cream.webp') center/cover; color: var(--rd); filter: drop-shadow(0 10px 18px rgba(0, 10, 4, 0.4)); transform-origin: 50% -26px; transform: rotate(calc(var(--tilt) + var(--sway, 0deg))); }
+.nf-tag::before { content: ''; position: absolute; left: 50%; top: -26px; height: 26px; border-left: 2px solid rgba(255, 248, 232, 0.8); }
+.nf-tag:nth-child(2) { --tilt: -4deg; }
+.nf-tag:nth-child(3) { --tilt: 3deg; margin-top: 12px; background-color: var(--go); background-blend-mode: multiply; color: var(--g); }
+.nf-tag:nth-child(4) { --tilt: -2deg; }
+.nf-tag__hole { position: absolute; left: 50%; top: 14px; width: 14px; height: 14px; margin-left: -7px; border-radius: 50%; background: var(--g); }
+.nf-tag .num { font-size: calc(var(--tag-w) * 0.875); line-height: 1; }
+
+@include below-lg {
+  .nf__goat { width: clamp(200px, 30vw, 300px); }
+  .nf__tags { --tag-w: 104px; }
+}
+
+/* Телефон: бирки мельче, текст во всю ширину, коза под кнопками справа и стоит на нижнем краю блока */
+@include below-md {
+  .nf { min-height: 0; padding-block: 48px; }
+  .nf__text { max-width: none; }
+  .nf__tags { gap: 14px; margin-top: 24px; padding: 28px 14px 0; }
+  .nf__tags { --tag-w: 76px; }
+  .nf-tag { padding-top: 16px; transform-origin: 50% -20px; }
+  .nf-tag::before { top: -20px; height: 20px; }
+  .nf-tag:nth-child(3) { margin-top: 8px; }
+  .nf-tag__hole { top: 10px; width: 10px; height: 10px; margin-left: -5px; }
+  .nf h1 { margin-top: 24px; font-size: clamp(34px, 9vw, 44px); }
+  .nf__actions .btn { flex: 1 1 100%; }
+  .nf__more { flex: 1 1 100%; }
+  .nf__goat { position: static; display: block; width: 170px; margin: 20px 0 -48px auto; }
+}

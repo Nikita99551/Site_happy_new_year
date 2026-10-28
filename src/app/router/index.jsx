@@ -1,5 +1,5 @@
 import { lazy, Suspense, useEffect } from 'react';
-import { Navigate, Route, Routes } from 'react-router-dom';
+import { Route, Routes } from 'react-router-dom';
 import { HomePage } from '@/pages/home';
 import { PageLoader } from '@/shared/ui/page-loader/PageLoader';
 import { ROUTES } from './routes';
@@ -30,6 +30,7 @@ function withReload(importer) {
 // Остальные показанные страницы грузятся по требованию
 const RoutePage = lazy(withReload(() => import('@/pages/route')));
 const ConditionsPage = lazy(withReload(() => import('@/pages/conditions')));
+const NotFoundPage = lazy(withReload(() => import('@/pages/not-found')));
 
 /**
  * Когда текущая страница загрузилась и браузер свободен, в фоне подгружаем остальные страницы:
@@ -62,8 +63,8 @@ export function AppRouter() {
         <Route path={ROUTES.home} element={<HomePage />} />
         <Route path={ROUTES.route} element={<RoutePage />} />
         <Route path={ROUTES.conditions} element={<ConditionsPage />} />
-        {/* В показе только готовые страницы: любой другой адрес ведёт на главную */}
-        <Route path="*" element={<Navigate to={ROUTES.home} replace />} />
+        {/* Другие адреса (и ещё не показанные страницы) — своя страница 404 */}
+        <Route path="*" element={<NotFoundPage />} />
       </Routes>
     </Suspense>
   );
