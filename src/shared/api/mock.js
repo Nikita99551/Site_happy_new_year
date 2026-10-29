@@ -140,7 +140,10 @@ function profileOf(s) {
   return (s.profiles[s.phone] ??= {});
 }
 
+
+
 export const mockApi = {
+
   stores: STORES,
   participants: PARTICIPANTS,
 
@@ -234,18 +237,25 @@ export const mockApi = {
   },
 
   async selectStore(storeId) {
+    const store = STORES.find((s) => s.id === storeId);
     const s = load();
     if (s.phone) {
       const p = profileOf(s);
       p.user = { ...p.user, storeId };
     }
     s.selectedStore = storeId;
+    s.selectedStoreObject = store || null;
     save(s);
   },
 
   selectedStore() {
     const s = load();
     return s.selectedStore ?? (s.phone ? s.profiles?.[s.phone]?.user?.storeId : undefined) ?? null;
+  },
+
+  selectedStoreObject() {
+    const s = load();
+    return s.selectedStoreObject ?? null;
   },
 
   cookieConsent(value) {

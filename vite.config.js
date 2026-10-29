@@ -53,7 +53,29 @@ export default defineConfig({
   resolve: {
     alias: { '@': fileURLToPath(new URL('./src', import.meta.url)) },
   },
-  server: { port: 5194, strictPort: true, host: '127.0.0.1' },
+  /*server: { port: 5194, strictPort: true, host: '127.0.0.1' },*/
+  server: {
+    port: 8033,
+    proxy: {
+      // 1. Добавляем ПЕРЕД общим '/api'
+      '/api/add_code_from_qr': {
+        target: 'http://localhost:8033',
+        changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/api\/add_code_from_qr/, '/'), // Переписываем путь на корень
+      },
+
+      // 2. Твой основной прокси (для остальных запросов)
+      '/api': {
+        target: 'https://promo.tdanix.ru',
+        changeOrigin: true,
+        secure: false,
+        cookieDomainRewrite: '',
+      },
+    },
+  },
+  define: {
+    global: 'globalThis',
+  },
   preview: { port: 5194, strictPort: true, host: '127.0.0.1' },
   css: {
     preprocessorOptions: {

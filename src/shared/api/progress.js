@@ -24,7 +24,8 @@ export function progressFromSteps(total) {
 
 /** Ответ сервера (профиль + все чеки) → данные для интерфейса */
 export function toUser(me) {
-  const receipts = [...me.receipts].sort((a, b) => Date.parse(b.at) - Date.parse(a.at));
+  if (!me) return null;
+  const receipts = (me.receipts ?? []).slice().sort((a, b) => Date.parse(b.at) - Date.parse(a.at));
   const total = totalSteps(receipts);
   return { ...me, receipts, totalSteps: total, receiptsTotal: receipts.length, ...progressFromSteps(total) };
 }

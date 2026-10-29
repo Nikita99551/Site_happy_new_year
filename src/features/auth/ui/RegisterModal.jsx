@@ -38,13 +38,16 @@ export function RegisterModal({ open }) {
     if (Object.keys(next).length) return;
     setBusy(true);
     try {
-      await register({ fullName: fullName.trim(), phone: normalizePhone(phone), storeId: selectedStoreId, consents: { pd: true, rules: true } });
-      // Форма чистая для следующего человека (общий компьютер в магазине)
+      // Формируем данные строго по контракту сервера!
+      await register({
+        fio: fullName.trim(),
+        phone_number: formatPhone(phone),
+        shops_id: Number(selectedStoreId), // Сервер ждет число (0), передаем Number()
+      });
       setFullName('');
       setPhone('');
       setRules(false);
       setPd(false);
-      // Окно «Вы зарегистрированы»: видно, что всё получилось; оттуда — к чеку или на маршрут (правка 27.10)
       openModal('registered');
     } catch (err) {
       setErrors({ phone: err instanceof Error ? err.message : 'Не удалось зарегистрироваться' });
@@ -74,7 +77,9 @@ export function RegisterModal({ open }) {
           <span className="field__label">Ваш магазин <a className="link" href="#" onClick={(e) => { e.preventDefault(); openModal('store', { returnTo: 'register' }); }}>Изменить</a></span>
           <button className="field__box" type="button" style={{ width: '100%', textAlign: 'left' }} onClick={() => openModal('store', { returnTo: 'register' })}>
             <IconPin />
-            <span style={{ fontWeight: 600, fontSize: 20 }}>{selectedStore ? `${selectedStore.name.replace('Аникс ', '')} · ${selectedStore.address}` : 'Выберите магазин'}</span>
+            <span style={{ fontWeight: 600, fontSize: 20 }}>
+              {selectedStore?.name ? `${selectedStore.name.replace('Аникс ', '')} · ${selectedStore.address}` : 'Выберите магазин'}
+            </span>
           </button>
           <span className="field__hint field__hint--optional">Магазин нужен, чтобы показывать его новости и&nbsp;сообщество.</span>
           <span className="field__error" aria-live="polite">{errors.store}</span>

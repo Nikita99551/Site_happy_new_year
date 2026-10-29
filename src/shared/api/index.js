@@ -7,10 +7,18 @@ import { mockApi } from './mock';
 
 export const API_MODE = import.meta.env.VITE_API_MODE === 'http' ? 'http' : 'mock';
 
+console.log("API_MODE",API_MODE)
+console.log("import.meta.env.VITE_API_MODE", import.meta.env.VITE_API_MODE)
+
 export const api = API_MODE === 'http' ? httpApi : mockApi;
+
+console.log("api",api)
 
 /** В режиме http подгружает справочники (магазины, статистику); в mock ничего не делает. */
 export async function bootstrapApi() {
+
+  console.log(" mock ничего не делает")
+
   if (API_MODE === 'http') await loadDictionaries();
   else resetDemoFromUrl();
 }
