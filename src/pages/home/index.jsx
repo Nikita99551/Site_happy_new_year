@@ -258,6 +258,7 @@ export function HomePage() {
       {/* ===== 5 призов каждую неделю ===== */}
       <section className="section section--red torn-top" id="weekly">
         <Carousel
+          label="Еженедельные призы"
           head={
             <div className="section-head reveal" style={{ marginBottom: 0 }}>
               <span className="ribbon ribbon--cream">Еженедельные призы</span>
@@ -275,7 +276,7 @@ export function HomePage() {
       <section className="section section--cream torn-top winners" id="winners">
         <img className="winners__goat reveal" src="/img/goat-gifts.webp" alt="" width={220} height={427} />
         {mobile ? (
-          <Carousel head={winnersHead}>{winnerCards}</Carousel>
+          <Carousel label="Победители прошлых акций" head={winnersHead}>{winnerCards}</Carousel>
         ) : (
           <div className="container">
             {winnersHead}

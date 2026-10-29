@@ -16,13 +16,25 @@
 @media (max-height: 700px) { .store-list { max-height: none; overflow: visible; } }
 
 @include below-md {
-  /* Телефон: прокручивается всё окно, вложенной прокрутки списка нет (неудобно пальцем) */
-  .store-list { max-height: none; overflow: visible; padding-right: 0; }
-  /* Телефон: название во всю ширину, две кнопки в один ряд — карточка вдвое ниже */
-  .store { grid-template-columns: 1fr 1fr; gap: 12px 10px; padding: 16px; }
+  /* Телефон (правка 29.10): список листается внутри своего окошка, как история чеков на маршруте, — видно около трёх
+     магазинов, окно целиком на экране. Высота от экрана: на 844 — почти три, на высоких — три с краешком четвёртого.
+     Низ списка растворяется: видно, что дальше есть ещё */
+  /* Окно не выше экрана, список занимает остаток высоты (но не больше трёх с половиной карточек) */
+  #m-store .modal__box { display: flex; flex-direction: column; max-height: calc(100dvh - 96px - 12px); }
+  #m-store .modal__box h2 + .lead { margin-top: 6px; font-size: 15px; line-height: 1.4; }
+  .store-search { margin-top: 12px; }
+  .store-list {
+    flex: 1 1 auto; min-height: 220px; max-height: 450px; overflow-y: auto; padding: 0 2px 22px 0; gap: 10px;
+    mask-image: linear-gradient(to bottom, #000 calc(100% - 26px), transparent);
+  }
+  /* Коза над окном магазинов чуть меньше — списку больше места */
+  dialog#m-store { padding-top: 96px; }
+  dialog#m-store .modal__goat--peek { width: 140px; }
+  /* Название во всю ширину, две кнопки в один ряд — карточка компактная */
+  .store { grid-template-columns: 1fr 1fr; gap: 10px; padding: 14px 16px; }
   .store__pin { display: none; }
   .store > div { grid-column: 1 / -1; }
-  .store b { font-size: 19px; }
-  .store small { font-size: 15px; }
-  .store .btn--small { min-width: 0; padding-inline: 8px; }
+  .store b { font-size: 18px; line-height: 1.25; }
+  .store small { font-size: 14px; }
+  .store .btn--small { min-width: 0; min-height: 44px; padding-inline: 8px; }
 }

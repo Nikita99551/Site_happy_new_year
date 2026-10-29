@@ -7,7 +7,7 @@ import './Carousel.scss';
  * Горизонтальная карусель карточек: свободная прокрутка (без привязки к карточкам — где отпустил, там и осталась),
  * перетаскивание мышью с плавным докатом, стрелки к соседней карточке, точки (правка 27.10).
  */
-export function Carousel({ head, children, after }) {
+export function Carousel({ head, children, after, label = 'Лента карточек' }) {
   const track = useRef(null);
   const [active, setActive] = useState(0);
   const reduced = useReducedMotion();
@@ -105,7 +105,8 @@ export function Carousel({ head, children, after }) {
           <button className="arrow arrow--primary" type="button" aria-label="Вперёд" onClick={() => scrollBy(1)}><IconArrowRight /></button>
         </div>
       </div>
-      <div className="carousel__track reveal" ref={track}>{children}</div>
+      {/* Лента в фокусе листается стрелками клавиатуры; label — название ленты для экранного диктора */}
+      <div className="carousel__track reveal" ref={track} tabIndex={0} role="region" aria-label={label}>{children}</div>
       <div className="carousel__dots" aria-hidden="true">
         {Array.from({ length: count }, (_, i) => <span key={i} className={i === active ? 'is-active' : undefined} />)}
       </div>

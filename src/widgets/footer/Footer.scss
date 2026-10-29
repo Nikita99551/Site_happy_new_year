@@ -9,3 +9,10 @@
 .footer__bottom { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 12px 32px; margin-top: 40px; padding-top: 24px; border-top: 1.5px solid #e4dccb; font-size: 15px; color: var(--mu); }
 .footer__bottom a { text-decoration: none; }
 @media (hover: hover) { .footer a:hover, .link:hover { text-decoration-thickness: 2px; } }
+/* Телефон: ссылки подвала высотой 44 px — по ним легко попасть пальцем (были 23–24 px) */
+@include below-md {
+  .footer__nav { gap: 0 24px; }
+  .footer__nav a, .footer__bottom a { display: inline-flex; align-items: center; min-height: 44px; }
+  .footer__bottom { gap: 0 32px; }
+  .footer__bottom span { padding-block: 12px; }
+}

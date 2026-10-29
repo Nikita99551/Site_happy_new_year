@@ -23,7 +23,6 @@
 .route-hero__goat { position: absolute; top: 34px; left: min(100% - 44px - 311px, 50% - min(50% - var(--gutter), var(--container) / 2) + 1010px + 24px); width: 311px; height: 430px; overflow: hidden; z-index: 0; }
 .route-hero__goat img { width: 104.72%; max-width: none; margin: -8.37% 0 0 -4.72%; }
 .route-hero__lights { margin-top: 36px; }
-.route-hero__rows { display: none; }
 .route-hero__actions { display: flex; flex-wrap: wrap; gap: 16px; margin-top: 28px; }
 .route-hero__note { margin-top: 18px; font-size: 16px; color: rgba(255, 248, 232, 0.75); }
 .tree-sec { padding-block: 36px 24px; }
@@ -154,8 +153,6 @@ html.no-anim .tree .ball--current { animation: none; }
   .route-hero__lights { overflow-x: auto; margin-inline: calc(-1 * var(--gutter)); padding-inline: var(--gutter); scrollbar-width: none; }
   .route-hero__lights .lights { min-width: 760px; }
   .route-hero__lights { display: none; }
-  .route-hero__rows { display: grid; gap: 6px; margin-top: 28px; }
-  .route-hero__rows .lights { display: block; width: 100%; height: auto; }
   .route-hero__goat { display: none; }
   .counters { flex-wrap: wrap; margin-top: 24px; }
   .activity h2 { white-space: normal; font-size: clamp(32px, 9vw, 44px); }
@@ -212,7 +209,6 @@ html.no-anim .tree .ball--current { animation: none; }
 }
 @include tablet-port {
   .route-hero__lights { display: block; }
-  .route-hero__rows { display: none; }
   .route-hero__goat { display: block; width: 220px; height: 304px; right: var(--gutter); top: 40px; opacity: 0.9; }
   .route-hero__greet, .route-hero h1 { max-width: calc(100% - 250px); }
   .route-hero__progress { padding-right: 240px; }

@@ -7,7 +7,7 @@ import { useReducedMotion } from '@/shared/lib/hooks';
 import { circleName, plural } from '@/shared/lib/text';
 import { Button } from '@/shared/ui/button/Button';
 import { IconCoupon, IconCrate, IconGift, IconStar } from '@/shared/ui/icons/Icons';
-import { StepGarland, StepRow, useGarlandSway } from '@/shared/ui/lights';
+import { StepGarland, useGarlandSway } from '@/shared/ui/lights';
 import { Snow } from '@/shared/ui/snow/Snow';
 import { CtaBanner } from '@/widgets/cta-banner/CtaBanner';
 import { PageLayout } from '@/widgets/page-layout/PageLayout';
@@ -68,11 +68,8 @@ export default function RoutePage() {
               <div className="ticket ticket--cream counter counter--red"><span key={chances} className={`num${tick}`}>{chances}</span><small>{plural(chances, 'билет', 'билета', 'билетов')}<br />на розыгрыш</small></div>
             </div>
           </div>
+          {/* Гирлянда шагов — на компьютере и планшете. На телефоне её нет (правка 29.10): ниже ёлка с теми же шагами */}
           <div className="route-hero__lights reveal" style={d(260)}><StepGarland step={pos.step} here labels moving={moving} /></div>
-          {/* Телефон: гирлянда тремя рядами по 10 шагов, чтобы была видна целиком (правка 24.10) */}
-          <div className="route-hero__rows reveal" style={d(260)}>
-            {[0, 1, 2].map((i) => <StepRow key={i} row={i} step={pos.step} here labels moving={moving} />)}
-          </div>
           <div className="route-hero__actions reveal" style={d(320)}>
             <OpenModalButton modal="receipt">Зарегистрировать чек</OpenModalButton>
             <Button variant="light" to="/">На главную</Button>
@@ -87,7 +84,7 @@ export default function RoutePage() {
       <section className="section section--cream tree-sec" id="map">
         <div className="container tree-grid">
           <RouteTree from={start} to={target} paused={!ready || !!modal} partnerStops={shown.partnerStops} guest={guest} />
-          <aside className="tree-panel reveal" style={d(120)}>
+          <div className="tree-panel reveal" style={d(120)}>
             <h2>Карта вашего пути</h2>
             <p className="lead tree-panel__lead">Идите по&nbsp;гирлянде снизу вверх: от&nbsp;первого шара у&nbsp;подножия ёлки к&nbsp;звезде. На&nbsp;10‑м и&nbsp;20‑м шагах&nbsp;— розыгрыши сертификатов Аникс. Пройдёте все шаги&nbsp;— и&nbsp;звезда на&nbsp;верхушке зажжётся: это финиш и&nbsp;билет на&nbsp;розыгрыш призов.</p>
             <div className="tree-panel__next">
@@ -109,7 +106,7 @@ export default function RoutePage() {
                 <li><i className="i-star"><IconStar /></i>Звезда&nbsp;— финиш и&nbsp;билет на&nbsp;розыгрыш</li>
               </ul>
             </div>
-          </aside>
+          </div>
         </div>
       </section>
 

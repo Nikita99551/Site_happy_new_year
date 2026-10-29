@@ -113,7 +113,7 @@ export function Header({ hero = false }) {
           <div className="header__bar">
             <Link className="header__logo" to="/" aria-label="Аникс — на главную"><img src="/img/logo.svg" alt="Аникс" width={136} height={36} /></Link>
             <button className="burger" type="button" aria-label="Открыть меню" aria-expanded={menuOpen} onClick={() => setMenuOpen(!menuOpen)}><span /><span /><span /></button>
-            <nav className="nav" aria-label="Разделы сайта">
+            <nav className="nav" aria-label="Главное меню">
               {NAV.map((item) => {
                 if (!item.to) return <SoonLink key={item.label}>{item.label}</SoonLink>;
                 const active = item.to === '/#partners' ? isPartners : location.pathname === item.to && !isPartners;

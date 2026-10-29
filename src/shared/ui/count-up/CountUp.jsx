@@ -41,8 +41,10 @@ export function CountUp({ value, className = 'num', duration = 1100 }) {
   }, [value, duration]);
 
   return (
-    <span ref={ref} className={className} aria-label={formatNumber(value)}>
+    <span ref={ref} className={className}>
       <span ref={digits} aria-hidden="true" />
+      {/* Диктор читает итоговое число скрытым текстом, а не бегущие цифры (aria-label на простом span стандарт не разрешает) */}
+      <span className="sr-only">{formatNumber(value)}</span>
     </span>
   );
 }

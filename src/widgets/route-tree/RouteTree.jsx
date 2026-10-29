@@ -255,7 +255,7 @@ export function RouteTree({ from, to, paused = false, partnerStops, guest = fals
         <span className="tree-hint__hover">Наведите на&nbsp;шар&nbsp;— узнаете, что на&nbsp;шаге</span>
         <span className="tree-hint__touch">Нажмите на&nbsp;шар&nbsp;— узнаете, что на&nbsp;шаге</span>
       </p>
-      <svg viewBox={`0 0 ${tg.w} ${tg.h}`} className={`tree${narrow ? ' tree--tall' : ''}`} role="img" aria-label={`Карта пути: ёлка из 30 шагов, вы на шаге ${step}`} onClick={onClick} onMouseOver={onOver} onMouseOut={onOut} onFocus={onFocus} onBlur={() => setTip(null)} onKeyDown={onKey}>
+      <svg viewBox={`0 0 ${tg.w} ${tg.h}`} className={`tree${narrow ? ' tree--tall' : ''}`} role="group" aria-label={`Карта пути: ёлка из 30 шагов, вы на шаге ${step}`} onClick={onClick} onMouseOver={onOver} onMouseOut={onOut} onFocus={onFocus} onBlur={() => setTip(null)} onKeyDown={onKey}>
         <defs>
           <filter id="tree-glow" x="-50%" y="-50%" width="200%" height="200%">
             <feGaussianBlur stdDeviation={6} result="b" />
