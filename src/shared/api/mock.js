@@ -20,6 +20,7 @@ let memory = null;
  * @typedef {Object} DemoReceipt
  * @property {number} [pendingSteps] — Сколько шагов даст чек после обработки
  * @property {string} [readyAt] — Когда обработка закончится, ISO
+ * @property {string} [qr] — Номер из QR-кода: второй раз тот же чек не регистрируется
  */
 
 /**
@@ -96,13 +97,15 @@ function save(state) {
 }
 const delay = (ms) => new Promise((r) => setTimeout(r, ms));
 const PHONE_RE = /^9\d{9}$/;
+/** Номер чека из QR-кода: латиница и цифры (пример: 7Y8KYAIALAL507L2cd) */
+const QR_RE = /^[0-9A-Za-z_-]{4,64}$/;
 
 /** Номер примера-участника: в демо им можно войти сразу, без регистрации */
 const isDemoPhone = (phone) => phone === DEMO_ME.phone;
 
 /** Демо-чек в том виде, в каком его отдал бы сервер: обработанный — зачислен, служебные поля убраны */
 function settle(r, now) {
-  const { pendingSteps, readyAt, ...rest } = r;
+  const { pendingSteps, readyAt, qr: _qr, ...rest } = r;
   // Чеки из старых демо-версий хранили готовую подпись вместо даты — показываем их как сегодняшние
   const base = { ...rest, at: rest.at ?? new Date(now).toISOString() };
   if (base.status === 'processing' && readyAt && Date.parse(readyAt) <= now) return { ...base, status: 'done', steps: pendingSteps ?? 0 };
@@ -204,6 +207,27 @@ export const mockApi = {
     delete p.extraSteps;
     save(s);
     return processing ? { status: 'processing' } : { status: 'done', steps };
+  },
+
+  async registerReceiptQr(qr) {
+    await delay(900);
+    const code = String(qr).trim();
+    if (!QR_RE.test(code)) throw new Error('Не получилось прочитать QR-код. Введите номер чека вручную');
+    const s = load();
+    if (!s.phone) throw new Error('Сначала войдите или зарегистрируйтесь');
+    // Один чек — один раз, даже если его отсканирует другой участник
+    const taken = Object.values(s.profiles ?? {}).some((p) => (p.extraReceipts ?? []).some((r) => r.qr === code));
+    if (taken) throw new Error('Этот чек уже зарегистрирован');
+    const p = profileOf(s);
+    const now = Date.now();
+    // Чек по QR всегда сначала «в обработке» (данные из кассы приходят не сразу), через 2 минуты — 2 шага
+    const receipt = {
+      id: `q${now}`, last4: code.slice(-4).toUpperCase(), at: new Date(now).toISOString(), steps: 0, status: 'processing', channel: 'store',
+      qr: code, pendingSteps: 2, readyAt: new Date(now + 2 * 60000).toISOString(),
+    };
+    p.extraReceipts = [receipt, ...(p.extraReceipts ?? [])];
+    save(s);
+    return { status: 'processing' };
   },
 
   async selectStore(storeId) {

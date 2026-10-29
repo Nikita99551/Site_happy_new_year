@@ -3,8 +3,12 @@ import { createRoot } from 'react-dom/client';
 // Глобальные стили подключаются ДО компонентов, чтобы стили виджетов и страниц перекрывали базовые
 // (в сборке их первыми в <head> ставит плагин globalCssFirst в vite.config.js)
 import './styles/index.scss';
+import { captureQrFromUrl } from '@/features/receipt-qr';
 import { App } from './App';
 import { ErrorBoundary } from './ErrorBoundary';
+
+// Ссылка из QR-кода на чеке (/api/add_code_from_qr?qr=НОМЕР): номер запоминаем и убираем из адреса ДО запуска роутера
+captureQrFromUrl();
 
 // Защита от показа во фрейме (заголовок frame-ancestors настраивается на хостинге, это запасной вариант)
 if (window.top !== window.self) {

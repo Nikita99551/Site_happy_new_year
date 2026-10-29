@@ -1,0 +1,15 @@
+@use '@/shared/styles/tokens' as *;
+
+/* Номер чека из QR-кода под заголовком окна: длинный номер переносится, а не вылезает за окно */
+.qr-receipt__code { margin: 6px 0 0; font-size: 18px; color: var(--mu); overflow-wrap: anywhere; }
+.qr-receipt__code b { color: var(--g); font-weight: 800; letter-spacing: 0.04em; }
+
+/* Плашка с итогом чека в окне «Вы зарегистрированы» (окно по центру, текст плашки — слева) */
+.qr-note { text-align: left; }
+.qr-note .num { font-size: 40px; }
+.qr-note__retry { margin-top: 8px; padding: 0; border: 0; background: none; font-size: 17px; color: var(--cr); }
+
+@include below-md {
+  .qr-receipt__code { font-size: 16px; }
+  .qr-note .num { font-size: 30px; }
+}

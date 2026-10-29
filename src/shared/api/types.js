@@ -13,7 +13,7 @@
 /**
  * @typedef {Object} Receipt
  * @property {string} id
- * @property {string} last4 — Последние 4 цифры номера чека для показа в истории
+ * @property {string} last4 — Последние 4 цифры номера чека для показа в истории (у чека по QR-коду могут быть и буквы)
  * @property {string} at — Когда чек зарегистрирован, ISO 8601 («2026-12-20T18:42:00+07:00»). Подпись («Только что», «5 минут назад», «Сегодня · 14:05», «20 декабря · 18:42») сайт считает сам и обновляет каждую минуту
  * @property {number} steps
  * @property {ReceiptStatus} status
@@ -76,6 +76,7 @@
  * @property {(input: RegisterInput) => Promise<User>} register — Регистрация. POST /auth/register
  * @property {() => Promise<void>} logout — Выход. POST /auth/logout
  * @property {(number: string, channel: ReceiptChannel) => Promise<ReceiptResult>} registerReceipt — Регистрация чека или заказа доставки. POST /receipts { number, channel }
+ * @property {(qr: string) => Promise<ReceiptResult>} registerReceiptQr — Регистрация чека по QR-коду с чека (номер из ссылки …/api/add_code_from_qr?qr=…). POST /add_code_from_qr?qr=…; 401 — не вошёл
  * @property {(storeId: string) => Promise<void>} selectStore — Выбор магазина (и до входа тоже). PATCH /me { storeId }
  * @property {() => string | null} selectedStore — Выбранный магазин: из профиля или сохранённый локально до входа
  * @property {(value?: boolean) => boolean | undefined} cookieConsent — Согласие на cookie: undefined — ещё не отвечал

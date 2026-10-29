@@ -1,7 +1,7 @@
 import { createContext, useContext } from 'react';
 /**
  * Имена окон сайта. Одновременно открыто не больше одного.
- * @typedef {'auth' | 'login' | 'register' | 'registered' | 'receipt' | 'processing' | 'store'} ModalName
+ * @typedef {'auth' | 'login' | 'register' | 'registered' | 'receipt' | 'qr' | 'processing' | 'store'} ModalName
  */
 
 export const ModalContext = createContext(null);

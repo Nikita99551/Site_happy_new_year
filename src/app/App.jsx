@@ -1,6 +1,7 @@
 import { BrowserRouter } from 'react-router-dom';
 import { SessionProvider } from '@/entities/user';
 import { ModalProvider } from '@/features/modal';
+import { QrReceiptProvider } from '@/features/receipt-qr';
 import { SvgShapes } from '@/shared/ui/svg-shapes/SvgShapes';
 import { ToastProvider } from '@/shared/ui/toast/ToastProvider';
 import { CookieBanner } from '@/widgets/cookie-banner/CookieBanner';
@@ -17,11 +18,13 @@ export function App() {
       <SessionProvider>
         <ToastProvider>
           <ModalProvider>
-            <SvgShapes />
-            <ScrollManager />
-            <AppRouter />
-            <ModalHost />
-            <CookieBanner />
+            <QrReceiptProvider>
+              <SvgShapes />
+              <ScrollManager />
+              <AppRouter />
+              <ModalHost />
+              <CookieBanner />
+            </QrReceiptProvider>
           </ModalProvider>
         </ToastProvider>
       </SessionProvider>

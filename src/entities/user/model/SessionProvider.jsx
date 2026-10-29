@@ -59,6 +59,12 @@ export function SessionProvider({ children }) {
     return res;
   }, [refresh]);
 
+  const registerReceiptQr = useCallback(async (qr) => {
+    const res = await api.registerReceiptQr(qr);
+    await refresh();
+    return res;
+  }, [refresh]);
+
   const selectStore = useCallback(async (storeId) => {
     await api.selectStore(storeId);
     setSelectedStoreId(storeId);
@@ -68,8 +74,8 @@ export function SessionProvider({ children }) {
   const value = useMemo(() => ({
     user, ready, stores, participants, selectedStoreId,
     selectedStore: stores.find((s) => s.id === selectedStoreId) ?? null,
-    login, register, logout, registerReceipt, selectStore, refresh,
-  }), [user, ready, stores, participants, selectedStoreId, login, register, logout, registerReceipt, selectStore, refresh]);
+    login, register, logout, registerReceipt, registerReceiptQr, selectStore, refresh,
+  }), [user, ready, stores, participants, selectedStoreId, login, register, logout, registerReceipt, registerReceiptQr, selectStore, refresh]);
 
   return <SessionContext.Provider value={value}>{children}</SessionContext.Provider>;
 }

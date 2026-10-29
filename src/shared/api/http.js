@@ -106,6 +106,11 @@ export const httpApi = {
     return request('/receipts', { method: 'POST', body: JSON.stringify({ number, channel }) });
   },
 
+  // ЗАГЛУШКА (согласовать с бэкендом): тот же адрес, что в QR-коде на чеке, но POST — GET этого адреса открывает сайт (README, «Чек по QR-коду»)
+  registerReceiptQr(qr) {
+    return request(`/add_code_from_qr?qr=${encodeURIComponent(qr)}`, { method: 'POST' });
+  },
+
   async selectStore(storeId) {
     writeLocal(LOCAL_STORE_KEY, storeId);
     try {
