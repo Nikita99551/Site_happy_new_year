@@ -191,16 +191,19 @@ export const mockApi = {
 
   async registerReceipt(number, channel) {
     await delay(900);
-    const digits = String(number).replace(/\D/g, '');
-    if (digits.length < 4) throw new Error('Введите номер чека полностью');
+    // Код с чека — латиница и цифры (правка 29.10), номер заказа доставки — цифры
+    const code = String(number).replace(/[^0-9A-Za-z]/g, '');
+    if (code.length < 4) throw new Error('Введите номер чека полностью');
     const s = load();
     if (!s.phone) throw new Error('Сначала войдите или зарегистрируйтесь');
     const p = profileOf(s);
-    const last = parseInt(digits[digits.length - 1] ?? '0', 10);
+    // Демо: шаги по последнему знаку — цифра как раньше (4 → 2 шага), буква — по её коду
+    const end = code[code.length - 1];
+    const last = /\d/.test(end) ? Number(end) : end.charCodeAt(0) % 10;
     const processing = last % 3 === 0; // демо: каждый третий чек «в обработке»
     const steps = processing ? 0 : 1 + (last % 3);
     const now = Date.now();
-    const receipt = { id: `x${now}`, last4: digits.slice(-4), at: new Date(now).toISOString(), steps, status: processing ? 'processing' : 'done', channel };
+    const receipt = { id: `x${now}`, last4: code.slice(-4).toUpperCase(), at: new Date(now).toISOString(), steps, status: processing ? 'processing' : 'done', channel };
     // Чек «в обработке» через 2 минуты зачисляется на 2 шага — видно после обновления страницы
     if (processing) Object.assign(receipt, { pendingSteps: 2, readyAt: new Date(now + 2 * 60000).toISOString() });
     p.extraReceipts = [receipt, ...(p.extraReceipts ?? [])];

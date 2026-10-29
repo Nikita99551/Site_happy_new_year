@@ -6,11 +6,27 @@ import { Button } from '@/shared/ui/button/Button';
 import { Field } from '@/shared/ui/field/Field';
 import { Modal } from '@/shared/ui/modal/Modal';
 import { useToast } from '@/shared/ui/toast/context';
+import { DeliveryHint } from './DeliveryHint';
 import { ReceiptHint } from './ReceiptHint';
 
+/** Русские буквы, похожие на латинские: в коде с чека меняем их на латиницу (на телефоне часто включена русская раскладка) */
+const LOOKALIKE = { А: 'A', В: 'B', Е: 'E', К: 'K', М: 'M', Н: 'H', О: 'O', Р: 'P', С: 'C', Т: 'T', У: 'Y', Х: 'X', а: 'a', е: 'e', к: 'k', м: 'm', о: 'o', р: 'p', с: 'c', т: 't', у: 'y', х: 'x' };
+
+/**
+ * Каналы покупки (правка 29.10). В магазине вводят «Код для регистрации» с чека — латиница и цифры, тот же номер, что в QR-коде
+ * (features/receipt-qr: 4–64 знака, «-» и «_»); в доставке — номер заказа из приложения «Торнадо», только цифры
+ */
 const CHANNELS = {
-  store: { tab: 'Покупка в магазине', short: 'В магазине', label: 'Номер чека', hint: 'Дата и сумма покупки подтянутся автоматически.', placeholder: 'Цифры с бумажного или e‑чека' },
-  delivery: { tab: 'Заказ доставки', short: 'Доставка', label: 'Номер заказа доставки', hint: 'Заказ проверят после доставки: шаги появятся, когда покупка подтвердится.', placeholder: 'Номер из приложения или SMS' },
+  store: {
+    tab: 'Покупка в магазине', short: 'В магазине', label: 'Код для регистрации с чека', hint: 'Дата и сумма покупки подтянутся автоматически.',
+    placeholder: 'Буквы и цифры под QR‑кодом', inputMode: 'text', min: 4, error: 'Введите код с чека полностью — буквы и цифры под QR‑кодом',
+    clean: (v) => v.replace(/[А-Яа-я]/g, (ch) => LOOKALIKE[ch] ?? '').replace(/[^0-9A-Za-z_-]/g, ''),
+  },
+  delivery: {
+    tab: 'Заказ доставки', short: 'Доставка', label: 'Номер заказа доставки', hint: 'Заказ проверят после доставки: шаги появятся, когда покупка подтвердится.',
+    placeholder: 'Например, 1234567', inputMode: 'numeric', min: 4, error: 'Введите номер заказа полностью',
+    clean: (v) => v.replace(/\D/g, ''),
+  },
 };
 
 /** Окно 08: регистрация чека или заказа доставки */
@@ -33,8 +49,8 @@ export function ReceiptModal({ open }) {
 
   const submit = async (e) => {
     e.preventDefault();
-    if (number.replace(/\D/g, '').length < 4) {
-      setError('Введите номер чека полностью');
+    if (number.length < c.min) {
+      setError(c.error);
       return;
     }
     if (!user) {
@@ -72,16 +88,16 @@ export function ReceiptModal({ open }) {
     >
       <div className="tabs" role="tablist">
         {(Object.keys(CHANNELS)).map((key) => (
-          <button key={key} type="button" role="tab" aria-selected={channel === key} onClick={() => setChannel(key)}><span className="tabs__full">{CHANNELS[key].tab}</span><span className="tabs__short">{CHANNELS[key].short}</span></button>
+          <button key={key} type="button" role="tab" aria-selected={channel === key} onClick={() => { if (key !== channel) { setChannel(key); setNumber(''); setError(''); } }}><span className="tabs__full">{CHANNELS[key].tab}</span><span className="tabs__short">{CHANNELS[key].short}</span></button>
         ))}
       </div>
       <div className="ticket ticket--green modal__ticket">
         <span className="num">600&nbsp;₽</span>
         <div><b>= 1&nbsp;шаг</b><p>Чек от&nbsp;600&nbsp;₽, до&nbsp;5&nbsp;чеков в&nbsp;день, 5&nbsp;товаров партнёров&nbsp;— ещё шаг. Чек храните до&nbsp;24&nbsp;января&nbsp;2027.</p></div>
       </div>
-      {channel === 'store' && <ReceiptHint />}
+      {channel === 'store' ? <ReceiptHint /> : <DeliveryHint />}
       <form className="modal__form" noValidate onSubmit={submit} style={{ marginTop: 0 }}>
-        <Field label={c.label} hint={c.hint} type="text" name="number" inputMode="numeric" autoComplete="off" placeholder={c.placeholder} maxLength={30} required value={number} onChange={(e) => setNumber(e.target.value.replace(/[^\d\-/ ]/g, ''))} error={error} />
+        <Field label={c.label} hint={c.hint} type="text" name="number" inputMode={c.inputMode} autoComplete="off" autoCapitalize={channel === 'store' ? 'characters' : 'off'} autoCorrect="off" spellCheck={false} placeholder={c.placeholder} maxLength={64} required value={number} onChange={(e) => setNumber(c.clean(e.target.value))} error={error} />
         <div className="modal__actions" style={{ marginTop: 26 }}><Button block type="submit" disabled={busy}>{busy ? 'Секунду…' : 'Зарегистрировать'}</Button></div>
         <p className="modal__foot"><Link className="link link--green" to="/route" onClick={close}>Назад к&nbsp;маршруту</Link></p>
       </form>

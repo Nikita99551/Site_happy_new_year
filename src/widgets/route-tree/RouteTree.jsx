@@ -64,7 +64,7 @@ function TipContent({ n, step, partner, codesOpen }) {
   if (n === 10 || n === 20) items.push({ key: 'gift', icon: <IconGift />, kicker: 'Розыгрыш', title: `Сертификат «Аникс» на ${formatRub(CAMPAIGN.milestones[n])}`, text: `Получает каждый ${CAMPAIGN.milestoneEvery[n]}‑й участник недели, дошедший до шага` });
   // Промокод доставки — гарантированно каждому (правка 27.10): пройденный шаг отсылает к коду ниже, будущий — обещает
   const promo = promoForStep(n);
-  if (promo) items.push({ key: 'promo', icon: <IconCoupon />, kicker: 'Промокод «Торнадо»', title: `−${formatRub(promo.discount)} на доставку`, text: codesOpen ? `На заказ от ${formatRub(promo.minOrder)}. Код ваш — ниже, в блоке «Ваши промокоды»` : `На заказ от ${formatRub(promo.minOrder)} — каждому, кто дойдёт до шага` });
+  if (promo) items.push({ key: 'promo', icon: <IconCoupon />, kicker: 'Промокод «Торнадо»', title: `−${formatRub(promo.discount)} на доставку`, text: codesOpen ? `На заказ от ${formatRub(promo.minOrder)}. Код за этот шаг — ниже, в «Ваших промокодах»` : `На заказ от ${formatRub(promo.minOrder)} — каждому, кто дойдёт до шага` });
   if (partner.includes(n)) items.push({ key: 'box', icon: <IconCrate />, kicker: 'Площадка партнёра', title: 'Видео, рассказ о компании и отзывы' });
 
   return (
