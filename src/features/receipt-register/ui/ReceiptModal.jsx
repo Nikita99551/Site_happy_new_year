@@ -47,6 +47,7 @@ export function ReceiptModal({ open }) {
     if (open) setError('');
   }
 
+  // Внутри функции submit в ReceiptModal.jsx
   const submit = async (e) => {
     e.preventDefault();
     if (number.length < c.min) {
@@ -54,7 +55,6 @@ export function ReceiptModal({ open }) {
       return;
     }
     if (!user) {
-      // Окно чека для гостя откроет вход, а после входа вернёт сюда — номер чека сохранится
       openModal('receipt');
       toast('Сначала войдите или зарегистрируйтесь');
       return;
@@ -62,9 +62,11 @@ export function ReceiptModal({ open }) {
     setError('');
     setBusy(true);
     try {
-      await registerReceipt(number.trim(), channel);
+      const isTornado = channel === 'delivery';
+
+      await registerReceipt(number.trim(), isTornado);
+
       setNumber('');
-      // Всегда «Чек обрабатывается»: шаги могут начислиться сразу или чуть позже — человек увидит их на маршруте (правка 27.10)
       openModal('processing');
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Не удалось зарегистрировать чек');

@@ -11,10 +11,12 @@ const cap = (s) => s.charAt(0).toUpperCase() + s.slice(1);
  * Гость видит приглашение войти.
  */
 export function ReceiptHistory({ user }) {
+
   const receipts = useMemo(() => user?.receipts ?? [], [user]);
   const marks = useMemo(() => circleMarks(receipts), [receipts]);
   const now = useNow();
   const pending = receipts.filter((r) => r.status === 'processing').length;
+
   return (
     <div className="receipt">
       <h2>История чеков</h2>

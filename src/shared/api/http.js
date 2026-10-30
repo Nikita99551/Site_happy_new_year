@@ -67,13 +67,13 @@ export async function loadDictionaries() {
   try {
     const [stores, statsRes] = await Promise.all([
       httpApi.getShops(),
-      request('/stats').catch((err) => {
+      request('/users/count').catch((err) => {
         console.warn('Эндпоинт /stats недоступен:', err);
         return { participants: [] };
       }),
     ]);
 
-    const participants = statsRes?.data?.participants || statsRes?.participants || [];
+    const participants = statsRes?.data || [];
 
     httpApi.stores = stores;
     httpApi.participants = participants;
@@ -144,6 +144,7 @@ export const httpApi = {
   },
 
   async logout() {
+    localStorage.clear();
     await request('/auth/logout', { method: 'POST' });
   },
 
@@ -166,8 +167,12 @@ export const httpApi = {
     }
   },
 
-  registerReceipt(number, channel) {
-    return request('/receipts', { method: 'POST', body: JSON.stringify({ number, channel }) });
+  registerReceipt(code, is_tornado=false) {
+    if (is_tornado === false){
+      return request('/checks/me', { method: 'POST', body: JSON.stringify({ code }) });
+    }else{
+      return request('/tornado/me', { method: 'POST', body: JSON.stringify({ orders_id:Number(code) }) });
+    }
   },
 
   // ЗАГЛУШКА (согласовать с бэкендом): тот же адрес, что в QR-коде на чеке, но POST — GET этого адреса открывает сайт (README, «Чек по QR-коду»)

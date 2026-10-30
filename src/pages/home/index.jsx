@@ -118,8 +118,11 @@ export function HomePage() {
   const step = pos.step;
   const progress = getProgress(step);
   const weeksTotal = 8;
-  const now = participants.length;
-  const max = Math.max(...participants, 1);
+  let now = participants.length;
+  while (now > 0 && participants[now - 1] === 0) {
+    now--;
+  }
+  const max = Math.max(...participants.filter(v => v > 0), 1);
 
   return (
     <PageLayout title="Год козы — лови призы · Новогодняя акция Аникс 2027" hero revealDeps={[user, mobile]}>
@@ -192,9 +195,10 @@ export function HomePage() {
             <h3>Уже <CountUp value={participants[now - 1] ?? 0} duration={1400} /> покупателей в&nbsp;пути</h3>
             <p className="chart-card__sub">Участников с&nbsp;начала акции, по&nbsp;неделям</p>
             <div className="chart" role="img" aria-label={`Участники по неделям: ${participants.map(formatNumber).join(', ')}; недели ${now + 1}–${weeksTotal} впереди`}>
+              {/*Вот тут рендер столбиков происходит*/}
               {Array.from({ length: weeksTotal }, (_, i) => {
                 const value = participants[i];
-                if (value === undefined) return <div key={i} className="chart__bar chart__bar--future"><div className="chart__fill" /></div>;
+                if (value === undefined || value === 0) return <div key={i} className="chart__bar chart__bar--future"><div className="chart__fill" /></div>;
                 const h = `${Math.round((value / max) * 92)}%`;
                 return (
                   <div key={i} className={`chart__bar${i === now - 1 ? ' chart__bar--now' : ''}`} style={{ '--h': h, '--i': i }}>

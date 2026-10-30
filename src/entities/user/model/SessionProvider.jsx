@@ -53,11 +53,12 @@ export function SessionProvider({ children }) {
 
   const logout = useCallback(async () => {
     await api.logout();
-    await refresh();
-  }, [refresh]);
+    setSelectedStore(null);
+    setUser(null);
+  }, []);
 
-  const registerReceipt = useCallback(async (number, channel) => {
-    const res = await api.registerReceipt(number, channel);
+  const registerReceipt = useCallback(async (code, is_tornado = false) => {
+    const res = await api.registerReceipt(code, is_tornado);
     await refresh();
     return res;
   }, [refresh]);
