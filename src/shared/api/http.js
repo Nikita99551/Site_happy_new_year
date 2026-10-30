@@ -20,7 +20,7 @@ class ApiError extends Error {
 /** Сколько ждать ответа сервера, мс: дольше — кнопка не должна висеть в «Секунду…» */
 const TIMEOUT_MS = 20000;
 
-async function request(path, init = {}) {
+export async function request(path, init = {}) {
   const ctrl = new AbortController();
   const timer = window.setTimeout(() => ctrl.abort(), TIMEOUT_MS);
   let res;
