@@ -20,26 +20,33 @@ const d = (ms) => ({ '--d': `${ms}ms` });
 
 /** Личная страница «Мой маршрут». Гость видит пример маршрута и приглашение войти. */
 export default function RoutePage() {
+
   const { user, ready, selectedStore } = useSession();
+  console.log("RoutePage, user:", user);
   const { open, state: modal } = useModal();
   const reduced = useReducedMotion();
   const guest = !user;
   const shown = useMemo(() => user ?? { ...api.sample(), name: 'Гость' }, [user]);
+
   // Новые шаги зажигаются по очереди с того места, где человек был в прошлый раз; цифры считают вместе с гирляндой.
   // Пока открыто окно (например, «Чек зарегистрирован»), анимация ждёт, чтобы её было видно.
   const start = useSeenStart(user, 'route');
   const target = { circle: shown.circle, step: shown.step };
   const { pos, moving } = useStepAnimation({ from: start, to: target, run: ready && !modal, onFinish: () => { if (!reduced) launchConfetti(); } });
   const p = getProgress(pos.step);
+
   // Пока идёт переход на новый круг, пройденные круги и билеты показываем на момент кадра
   const behind = shown.circle - pos.circle;
   const circlesDone = shown.circlesDone - behind;
   const chances = shown.chances - behind;
   const tick = moving ? ' num--tick' : '';
+
   // 30‑й шаг: круг пройден, «осталось 0 шагов» не пишем
   const finished = pos.step >= 30;
+
   // Гирлянда шагов откликается на курсор, как на главной
   const heroRef = useRef(null);
+
   useGarlandSway(heroRef);
 
   return (

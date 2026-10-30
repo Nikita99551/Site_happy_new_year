@@ -106,20 +106,47 @@ export const httpApi = {
         phone: String(data.user?.phone_number || ''),
         shops_id: data.shop?.id ? String(data.shop.id) : null,
         partnerStops: [4, 8, 12, 16, 24, 28],
-        receipts: (data.receipts || []).map(r => ({
-          id: String(r.id || Math.random()),
-          last4: r.last4 || '0000',
-          at: r.created_at || new Date().toISOString(),
-          steps: r.steps || 0,
-          status: r.status === 'done' ? 'done' : 'processing'
-        })),
+
+        // Берем общее количество чеков из checks_count
+        receiptsTotal: data.checks_count || 0,
+
+        // Берем общее количество шагов из steps_count
+        totalSteps: data.steps_count || 0,
+
+        // Объединяем чеки из pending_checks и receipts (если receipts вдруг придут)
+        receipts: [
+          ...(data.pending_checks || []).map(r => ({
+            id: r.guid,
+            last4: r.raw_code_check ? r.raw_code_check.slice(-4) : '0000',
+            at: r.datetime_create,
+            steps: 0, // У чеков в обработке шагов нет
+            status: 'processing'
+          })),
+          ...(data.receipts || []).map(r => ({
+            id: r.guid,
+            last4: r.raw_code_check ? r.raw_code_check.slice(-4) : '0000',
+            at: r.datetime_create,
+            steps: r.steps_count || 0,
+            status: 'done'
+          }))
+        ],
       };
 
+      // Вызываем toUser, но переопределяем результаты
       const finalUser = toUser(mappedUser);
 
+      // Явно переопределяем totalSteps и receiptsTotal на данные от сервера
+      finalUser.totalSteps = data.steps_count || 0;
+      finalUser.receiptsTotal = data.checks_count || 0;
+
+      // Пересчитываем circle, step, circlesDone, chances на основе steps_count
+      const circleSteps = 30;
+      finalUser.circlesDone = Math.floor(finalUser.totalSteps / circleSteps);
+      finalUser.circle = finalUser.circlesDone + 1;
+      finalUser.step = finalUser.totalSteps % circleSteps;
+      finalUser.chances = finalUser.circlesDone;
+
       finalUser.token = data.token;
-      finalUser.steps_count = data.steps_count || 0;
-      finalUser.checks_count = data.checks_count || 0;
 
       return finalUser;
     } catch (e) {
