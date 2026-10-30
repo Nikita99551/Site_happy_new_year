@@ -8,6 +8,7 @@ import { Modal } from '@/shared/ui/modal/Modal';
 import { useToast } from '@/shared/ui/toast/context';
 import { DeliveryHint } from './DeliveryHint';
 import { ReceiptHint } from './ReceiptHint';
+import './ReceiptModal.scss';
 
 /** Русские буквы, похожие на латинские: в коде с чека меняем их на латиницу (на телефоне часто включена русская раскладка) */
 const LOOKALIKE = { А: 'A', В: 'B', Е: 'E', К: 'K', М: 'M', Н: 'H', О: 'O', Р: 'P', С: 'C', Т: 'T', У: 'Y', Х: 'X', а: 'a', е: 'e', к: 'k', м: 'm', о: 'o', р: 'p', с: 'c', т: 't', у: 'y', х: 'x' };
@@ -91,9 +92,9 @@ export function ReceiptModal({ open }) {
           <button key={key} type="button" role="tab" aria-selected={channel === key} onClick={() => { if (key !== channel) { setChannel(key); setNumber(''); setError(''); } }}><span className="tabs__full">{CHANNELS[key].tab}</span><span className="tabs__short">{CHANNELS[key].short}</span></button>
         ))}
       </div>
-      <div className="ticket ticket--green modal__ticket">
+      <div className={`ticket ticket--green modal__ticket modal__ticket--${channel}`}>
         <span className="num">600&nbsp;₽</span>
-        <div><b>= 1&nbsp;шаг</b><p>Чек от&nbsp;600&nbsp;₽, до&nbsp;5&nbsp;чеков в&nbsp;день, 5&nbsp;товаров партнёров&nbsp;— ещё шаг. Чек храните до&nbsp;24&nbsp;января&nbsp;2027.</p></div>
+        <div><b>= 1&nbsp;шаг</b><p>Чек от&nbsp;600&nbsp;₽, до&nbsp;5&nbsp;чеков в&nbsp;день<span className="modal__ticket-extra">, 5&nbsp;товаров партнёров&nbsp;— ещё шаг</span>. Чек храните до&nbsp;24&nbsp;января&nbsp;2027.</p></div>
       </div>
       {channel === 'store' ? <ReceiptHint /> : <DeliveryHint />}
       <form className="modal__form" noValidate onSubmit={submit} style={{ marginTop: 0 }}>

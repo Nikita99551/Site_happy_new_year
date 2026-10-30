@@ -81,6 +81,35 @@ function TipContent({ n, step, partner, codesOpen }) {
   );
 }
 
+/** Прямоугольник по центру и размерам: [лево, верх, право, низ] */
+const box = (x, y, w, h) => [x - w / 2, y - h / 2, x + w / 2, y + h / 2];
+const overlaps = (a, b, pad) => a[0] < b[2] + pad && b[0] < a[2] + pad && a[1] < b[3] + pad && b[1] < a[3] + pad;
+
+/**
+ * Где поставить купон у каждого шага с промокодом: первое свободное место у шара — слева снизу, справа снизу, сбоку чуть выше
+ * (справа, слева), слева сверху, справа сверху, сбоку посередине. Занято: коробки партнёров, подарки 10/20 с подписью «РОЗЫГРЫШ»,
+ * подписи «Старт» и «Вы здесь» (у текущего шага) и уже поставленные купоны.
+ * @returns {[number, number, number][]} [шаг, x, y] центра купона
+ */
+function placeCoupons(tg, k, partnerStops, step) {
+  const busy = [box(tg.start.x, tg.start.y, tg.start.w, tg.start.fs * 2.15)];
+  for (const [n, cx, cy] of tg.balls) {
+    if (n === step && n !== 10 && n !== 20) busy.push(box(cx, cy + tg.here.dy, tg.here.w, tg.here.fs * 2.15));
+    if (partnerStops.includes(n)) busy.push(box(cx + 26 * k, cy + 26 * k, 40 * k, 40 * k));
+    if (n === 10 || n === 20) busy.push(box(cx, cy + 4 * k, 76 * k, 76 * k), box(cx, cy + tg.gift.dy, tg.gift.w, tg.gift.fs * 2.95));
+  }
+  const spots = [[-32, 28], [32, 28], [36, 18], [-36, 18], [-40, -24], [40, -24], [54, -4], [-54, -4]];
+  const out = [];
+  for (const [n, cx, cy] of tg.balls) {
+    if (!promoForStep(n)) continue;
+    const at = spots.map(([dx, dy]) => [cx + dx * k, cy + dy * k]);
+    const free = at.find(([x, y]) => !busy.some((b) => overlaps(box(x, y, 46 * k, 34 * k), b, 2 * k))) ?? at[0];
+    busy.push(box(free[0], free[1], 46 * k, 34 * k));
+    out.push([n, free[0], free[1]]);
+  }
+  return out;
+}
+
 /**
  * Карта пути «ёлка» из 30 шагов (на компьютере — геометрия макета 860×1260, на телефоне — вытянутая ёлка). Путь идёт снизу вверх: шаг 1 у подножия, 30 — звезда.
  * Клик или фокус на шаре показывает подсказку.
@@ -240,11 +269,11 @@ export function RouteTree({ from, to, paused = false, partnerStops, guest = fals
     );
   });
   const boxes = tg.balls.filter(([n]) => partnerStops.includes(n)).map(([n, cx, cy]) => <PartnerBox key={`b${n}`} x={cx + 26 * k} y={cy + 26 * k} s={40 * k} />);
-  // Купоны промокодов доставки на чётных шагах: у шара — слева снизу (справа снизу висит коробка партнёра), у подарка — слева сверху, у звезды — слева
-  const coupons = tg.balls.filter(([n]) => promoForStep(n)).map(([n, cx, cy]) => (n === 10 || n === 20
-    ? <CouponMark key={`c${n}`} x={cx - 44 * k} y={cy - 24 * k} s={46 * k} />
-    : <CouponMark key={`c${n}`} x={cx - 32 * k} y={cy + 28 * k} s={46 * k} />));
-  coupons.push(<CouponMark key="c30" x={tg.star.x - tg.star.r * 1.1} y={tg.star.y + tg.star.r * 0.6} s={46 * k} rot={-18} />);
+  // Купоны промокодов доставки (шаги — DELIVERY_PROMOS): у шара в свободном углу (правка 30.10). Слева снизу у соседнего шара
+  // часто висит коробка партнёра или стоит подарок 10/20 с подписью «РОЗЫГРЫШ» — тогда купон справа снизу, иначе сверху
+  const coupons = placeCoupons(tg, k, partnerStops, step).map(([n, x, y]) => <CouponMark key={`c${n}`} x={x} y={y} s={46 * k} />);
+  // У звезды — только если на финише есть промокод (с 30.10 нет: промокоды на нечётных шагах, Никита просил не ставить его на 30-й)
+  if (promoForStep(CAMPAIGN.circleSteps)) coupons.push(<CouponMark key="c30" x={tg.star.x - tg.star.r * 1.1} y={tg.star.y + tg.star.r * 0.6} s={46 * k} rot={-18} />);
   const lit = step >= 30;
 
   return (
@@ -252,8 +281,9 @@ export function RouteTree({ from, to, paused = false, partnerStops, guest = fals
       {/* Компьютер — «наведите», телефон — «нажмите» (правка 28.10); плашка красная, чтобы её заметили */}
       <p className="tree-hint">
         <span className="tree-hint__ic" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x={10} y={1} width={4} height={4} rx={1} fill="#b98a2e" /><circle cx={12} cy={14} r={9} fill="currentColor" /><circle cx={9} cy={11} r={2} fill="#fff" opacity={0.6} /></svg></span>
-        <span className="tree-hint__hover">Наведите на&nbsp;шар&nbsp;— узнаете, что на&nbsp;шаге</span>
-        <span className="tree-hint__touch">Нажмите на&nbsp;шар&nbsp;— узнаете, что на&nbsp;шаге</span>
+        {/* «узнаете, что на шаге» одним куском: на телефоне переносится на вторую строку целиком (правка 30.10) */}
+        <span className="tree-hint__hover">Наведите на&nbsp;шар&nbsp;— <span className="tree-hint__nb">узнаете, что на&nbsp;шаге</span></span>
+        <span className="tree-hint__touch">Нажмите на&nbsp;шар&nbsp;— <span className="tree-hint__nb">узнаете, что на&nbsp;шаге</span></span>
       </p>
       <svg viewBox={`0 0 ${tg.w} ${tg.h}`} className={`tree${narrow ? ' tree--tall' : ''}`} role="group" aria-label={`Карта пути: ёлка из 30 шагов, вы на шаге ${step}`} onClick={onClick} onMouseOver={onOver} onMouseOut={onOut} onFocus={onFocus} onBlur={() => setTip(null)} onKeyDown={onKey}>
         <defs>

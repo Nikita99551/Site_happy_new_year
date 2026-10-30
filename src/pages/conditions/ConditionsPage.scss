@@ -466,13 +466,21 @@
   .no-sum__ex .num { font-size: 28px; }
   .rules-full h2 { font-size: 34px; }
 }
-/* Промокоды доставки «Торнадо» в «Одном круге» (правка 27.10): каждому, кто дошёл до чётного шага */
-.promo-strip { display: grid; grid-template-columns: 72px minmax(0, 1fr) auto; align-items: center; gap: 20px 28px; margin-top: 32px; padding: 24px 32px; background: #fff; border-left: 8px solid #ffd109; box-shadow: var(--shadow-card); }
+/* Промокоды доставки «Торнадо» в «Одном круге» (правка 27.10): каждому, кто дошёл до шага с промокодом.
+   Белая карточка, как «Кто получает сертификаты», без жёлтой полоски слева (правка 30.10: такой больше нигде нет) */
+.promo-strip { display: grid; grid-template-columns: 72px minmax(0, 1fr) auto; align-items: center; gap: 20px 28px; margin-top: 32px; padding: 24px 32px; background: #fff; box-shadow: var(--shadow-card); }
 .promo-strip__icon { width: 72px; height: 51px; }
 .promo-strip__text b { display: block; font-size: 24px; font-weight: 800; line-height: 1.25; color: var(--g); }
 .promo-strip__text p { margin-top: 6px; font-size: 17px; color: var(--mu); }
 .promo-strip__deals { display: flex; gap: 12px; margin: 0; padding: 0; list-style: none; }
-.promo-strip__deals li { padding: 12px 16px; background: #ffd109; border-radius: 10px; color: var(--g); }
+/* Скидки — билетики с вырезами по бокам, как «билет» рядом и купоны «Торнадо» на «Моём маршруте» */
+.promo-strip__deals li {
+  --cut: 10px;
+  padding: 12px 24px; background: #ffd109; color: var(--g);
+  -webkit-mask-image: radial-gradient(circle at 0 50%, transparent var(--cut), #000 calc(var(--cut) + 1px)), radial-gradient(circle at 100% 50%, transparent var(--cut), #000 calc(var(--cut) + 1px));
+  mask-image: radial-gradient(circle at 0 50%, transparent var(--cut), #000 calc(var(--cut) + 1px)), radial-gradient(circle at 100% 50%, transparent var(--cut), #000 calc(var(--cut) + 1px));
+  -webkit-mask-composite: source-in; mask-composite: intersect;
+}
 .promo-strip__deals .num { display: block; font-size: 34px; color: var(--rd); }
 .promo-strip__deals small { display: block; margin-top: 2px; font-weight: 700; font-size: 13px; line-height: 1.3; }
 @include below-lg {
@@ -481,12 +489,18 @@
   .promo-strip__deals { grid-column: 1 / -1; flex-wrap: wrap; }
 }
 @include below-md {
-  .promo-strip { grid-template-columns: minmax(0, 1fr); padding: 22px 20px; border-left-width: 6px; }
+  .promo-strip { grid-template-columns: minmax(0, 1fr); padding: 22px 20px; }
   .promo-strip__text b { font-size: 21px; }
   .promo-strip__text p { font-size: 16px; }
   .promo-strip__deals { grid-column: auto; flex-direction: column; }
-  .promo-strip__deals li { display: flex; align-items: center; gap: 14px; }
+  /* Вырезы меньше и поля уже: «шаги 12, 14, 16, 18, 20, 22» в одну строку, билеты одной высоты */
+  .promo-strip__deals li { --cut: 8px; display: flex; align-items: center; gap: 12px; padding-inline: 18px 14px; }
   .promo-strip__deals .num { font-size: 30px; }
+}
+/* Узкий телефон (360): поля карточки и билетов ещё уже — шаги по-прежнему в две строки */
+@include below-sm {
+  .promo-strip { padding-inline: 14px; }
+  .promo-strip__deals li { padding-inline: 16px 10px; }
 }
 /* «Шаги в одном чеке складываются» без значка «+» (правка Никиты 28.10): текст сверху, два примера под ним */
 .no-sum { grid-template-columns: minmax(0, 1fr) 276px 276px; }

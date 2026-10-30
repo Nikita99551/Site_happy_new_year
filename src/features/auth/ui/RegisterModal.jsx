@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { Link } from 'react-router-dom';
 import { useSession } from '@/entities/user';
 import { useModal } from '@/features/modal';
 import { SoonLink } from '@/shared/ui/soon-link/SoonLink';
@@ -80,7 +81,7 @@ export function RegisterModal({ open }) {
           <span className="field__error" aria-live="polite">{errors.store}</span>
         </div>
         <Check name="consentRules" required checked={rules} onChange={(e) => setRules(e.target.checked)} error={errors.rules}>
-          Я ознакомился(ась) и&nbsp;принимаю <SoonLink className="link">Правила акции</SoonLink> «Год Козы&nbsp;— лови призы»
+          Я ознакомился(ась) и&nbsp;принимаю <Link className="link" to="/rules" target="_blank" rel="noopener">Правила акции</Link> «Год Козы&nbsp;— лови призы»
         </Check>
         <Check name="consentPd" required checked={pd} onChange={(e) => setPd(e.target.checked)} error={errors.pd}>
           Я даю <SoonLink className="link">согласие на&nbsp;обработку моих персональных данных</SoonLink>

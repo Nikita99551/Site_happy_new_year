@@ -47,6 +47,7 @@ html.no-anim .tree .ball--current { animation: none; }
 .tree-hint__ic { flex: none; display: grid; place-items: center; width: 36px; height: 36px; border-radius: 50%; background: var(--cr); color: var(--rd); }
 .tree-hint__ic svg { width: 22px; height: 22px; }
 .tree-hint__touch { display: none; }
+.tree-hint__nb { white-space: nowrap; }
 @media (hover: none) { .tree-hint__hover { display: none; } .tree-hint__touch { display: inline; } }
 @media (prefers-reduced-motion: no-preference) { .tree-host.is-in .tree-hint__ic { animation: hint-nudge 1.4s var(--ease-in-out) 0.6s 3; } }
 @keyframes hint-nudge { 0%, 80%, 100% { transform: none; } 20% { transform: rotate(-16deg) scale(1.08); } 40% { transform: rotate(12deg) scale(1.12); } 60% { transform: rotate(-6deg); } }
@@ -311,10 +312,9 @@ html.no-anim .tree .ball--current { animation: none; }
 .coupon__stub small { font-weight: 800; font-size: 15px; line-height: 1.25; color: var(--g); }
 .coupon__body { display: flex; flex-direction: column; align-items: flex-start; padding: 22px 22px 22px 24px; }
 .coupon__label { font-weight: 800; font-size: 12px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--mu); }
-.coupon__code { margin-top: 2px; font-family: var(--font-num); font-weight: 900; font-size: clamp(28px, 8.4cqi, 42px); line-height: 1.1; letter-spacing: 0.05em; color: var(--g); }
+/* Один размер для всех кодов (по самому длинному — ВОЛШЕБСТВО) и в одну строку: при переключении шагов купон не скачет (правка 30.10) */
+.coupon__code { margin-top: 2px; font-family: var(--font-num); font-weight: 900; font-size: clamp(22px, 7cqi, 36px); line-height: 1.1; letter-spacing: 0.03em; white-space: nowrap; color: var(--g); }
 .coupon__code--hidden { letter-spacing: 0.12em; color: #c3b9a3; }
-/* Длинные коды (ВОЛШЕБСТВО, ВКУСНЯШКА) — мельче и плотнее, чтобы помещались в купон */
-.coupon__code--long { font-size: clamp(22px, 7cqi, 36px); letter-spacing: 0.02em; }
 /* Кнопки шагов в купоне (правка 29.10): за каждый шаг свой код — выбрал шаг, видишь и копируешь его код.
    Пройденный шаг — сплошная обводка, закрытый — пунктир и бледный номер, выбранный — зелёная заливка */
 .coupon__steps { display: flex; flex-wrap: wrap; gap: 3px; margin-top: 8px; }
@@ -326,10 +326,12 @@ html.no-anim .tree .ball--current { animation: none; }
 .coupon__step:focus-visible { outline: 3px solid var(--go); outline-offset: 2px; }
 @media (hover: hover) { .coupon__step:not(.is-active):hover { border-color: var(--g); } }
 .coupon__steps + .coupon__code { margin-top: 10px; }
-.coupon__copy { margin-top: auto; padding: 9px 16px; border: 2px solid var(--g); border-radius: 999px; background: transparent; font-weight: 800; font-size: 15px; color: var(--g); transition: background-color var(--dur-fast) ease, color var(--dur-fast) ease, transform var(--dur-fast) var(--ease-out); }
+.coupon__copy { padding: 9px 16px; border: 2px solid var(--g); border-radius: 999px; background: transparent; font-weight: 800; font-size: 15px; color: var(--g); transition: background-color var(--dur-fast) ease, color var(--dur-fast) ease, transform var(--dur-fast) var(--ease-out); }
 .coupon__copy:active { transform: scale(0.96); }
 @media (hover: hover) { .coupon__copy:hover { background: var(--g); color: var(--cr); } }
-.coupon__when { margin-top: auto; padding-top: 10px; font-weight: 700; font-size: 15px; color: var(--rd); }
+/* Место под кнопку или «Откроется на N-м шаге» одной высоты: открытый и закрытый шаг не меняют высоту купона */
+.coupon__action { display: flex; align-items: center; min-height: 46px; margin-top: auto; padding-top: 12px; box-sizing: content-box; }
+.coupon__when { font-weight: 700; font-size: 15px; color: var(--rd); }
 .coupon__when .link { padding: 0; border: 0; background: none; font: inherit; }
 .coupon--locked .coupon__stub { background: #f3dd7a; }
 /* Три шага — одним рядом из трёх колонок (правка 28.10: переносились на вторую строку) */
@@ -353,9 +355,7 @@ html.no-anim .tree .ball--current { animation: none; }
   .coupon__sum { font-size: clamp(24px, 9.4cqi, 36px); }
   .coupon__stub small { font-size: 14px; }
   .coupon__body { padding: 16px 16px 18px 18px; }
-  .coupon__code { font-size: 32px; }
-  .coupon__code--long { font-size: 25px; letter-spacing: 0.01em; }
-  .coupon__copy { margin-top: 12px; }
+  .coupon__code { font-size: 28px; }
   /* Телефон: кнопки шагов крупнее, под палец (ряд может перенестись) */
   .coupon__step { min-width: 38px; height: 38px; font-size: 17px; }
   .promos__how { grid-template-columns: minmax(0, 1fr); padding: 18px 20px; }

@@ -110,7 +110,7 @@ export default function RoutePage() {
         </div>
       </section>
 
-      {/* ===== Промокоды доставки «Торнадо» за чётные шаги ===== */}
+      {/* ===== Промокоды доставки «Торнадо» (шаги — DELIVERY_PROMOS) ===== */}
       <PromoCodes step={shown.step} circle={shown.circle} guest={guest} onLogin={() => open('auth')} />
 
       {/* ===== Розыгрыши и история чеков ===== */}

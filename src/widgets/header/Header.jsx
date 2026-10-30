@@ -121,6 +121,8 @@ export function Header({ hero = false }) {
               })}
               {/* Телефон: строки с магазином и входом нет, поэтому профиль и магазин — внизу меню */}
               <div className="nav__account">
+                {/* Главное действие акции — первым в меню (правка 30.10); гостю окно чека само предложит войти */}
+                <button className="btn nav__receipt" type="button" onClick={() => { setMenuOpen(false); open('receipt'); }}>Зарегистрировать чек</button>
                 <button className="nav__store" type="button" onClick={() => { setMenuOpen(false); open('store'); }}>
                   <IconPin stroke="currentColor" width={18} height={18} />
                   <span>{selectedStore ? selectedStore.name : 'Выбрать магазин'}</span>
@@ -131,7 +133,7 @@ export function Header({ hero = false }) {
                     <button className="btn btn--secondary btn--small" type="button" onClick={signOut}>Выйти</button>
                   </div>
                 ) : (
-                  <button className="btn btn--small" type="button" onClick={() => { setMenuOpen(false); open('auth'); }}>Войти или зарегистрироваться</button>
+                  <button className="btn btn--secondary btn--small" type="button" onClick={() => { setMenuOpen(false); open('auth'); }}>Войти или зарегистрироваться</button>
                 )}
               </div>
             </nav>

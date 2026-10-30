@@ -1,7 +1,6 @@
 import { Link } from 'react-router-dom';
-import { SoonLink } from '@/shared/ui/soon-link/SoonLink';
 import { OpenModalButton } from '@/features/modal';
-import { CAMPAIGN, DELIVERY_PROMOS } from '@/shared/config/campaign';
+import { CAMPAIGN, DELIVERY_PROMOS, PROMO_STEPS_TEXT } from '@/shared/config/campaign';
 import { formatRub, plural } from '@/shared/lib/text';
 import { IconBox, IconClose, IconCoupon, IconCrate } from '@/shared/ui/icons/Icons';
 import { StepGarland, StepRow } from '@/shared/ui/lights';
@@ -164,7 +163,7 @@ export default function ConditionsPage() {
             <IconCoupon className="promo-strip__icon" />
             <div className="promo-strip__text">
               <b>Промокоды на&nbsp;доставку «Торнадо»&nbsp;— каждому</b>
-              <p>Каждый второй шаг&nbsp;— промокод на&nbsp;заказ в&nbsp;приложении «Торнадо». Это не&nbsp;розыгрыш: дошли до&nbsp;шага&nbsp;— код ваш, он&nbsp;появится на&nbsp;странице <Link className="link" to="/route">«Мой маршрут»</Link>.</p>
+              <p>На&nbsp;каждом нечётном шаге&nbsp;— {PROMO_STEPS_TEXT}&nbsp;— промокод на&nbsp;заказ в&nbsp;приложении «Торнадо». Это не&nbsp;розыгрыш: дошли до&nbsp;шага&nbsp;— код ваш, он&nbsp;появится на&nbsp;странице <Link className="link" to="/route">«Мой маршрут»</Link>.</p>
             </div>
             <ul className="promo-strip__deals">
               {DELIVERY_PROMOS.map((p) => (
@@ -183,7 +182,7 @@ export default function ConditionsPage() {
         <div className="container reveal">
           <h2>Полные правила акции</h2>
           <p className="lead">Организатор&nbsp;— ООО&nbsp;«Торговая сеть Аникс». Покупки и&nbsp;регистрация чеков&nbsp;— с&nbsp;16&nbsp;ноября 2026 по&nbsp;10&nbsp;января 2027&nbsp;года, выдача призов&nbsp;— до&nbsp;24&nbsp;января.</p>
-          <p style={{ marginTop: 18 }}><SoonLink className="link">Читать полные правила&nbsp;→</SoonLink></p>
+          <p style={{ marginTop: 18 }}><Link className="link" to="/rules">Читать полные правила&nbsp;→</Link></p>
         </div>
       </section>
 

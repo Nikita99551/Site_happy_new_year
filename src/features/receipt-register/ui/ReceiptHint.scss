@@ -33,6 +33,13 @@
   .receipt-hint__text .receipt-hint__qr-tip { font-size: 14px; }
   /* Узкая колонка: подсветка переносится по словам, рамка — на каждой строке */
   .receipt-hint__text mark { white-space: normal; -webkit-box-decoration-break: clone; box-decoration-break: clone; }
+  /* «Ещё проще — камера» — строкой во всю ширину под рисунком: колонка текста рядом с чеком не выше самого чека,
+     окно чека короче на 60 px (правка 30.10) */
+  .receipt-hint { grid-template-columns: 116px minmax(0, 1fr); align-items: start; row-gap: 0; }
+  .receipt-hint__paper { grid-row: 1 / 3; align-self: center; }
+  .receipt-hint__text { display: contents; }
+  .receipt-hint__text > b, .receipt-hint__text > p:not(.receipt-hint__qr-tip) { grid-column: 2; }
+  .receipt-hint__text .receipt-hint__qr-tip { grid-column: 1 / -1; margin-top: 8px; text-align: center; }
 }
 
 /* Невысокие экраны ноутбуков: подсказка плотнее, а на совсем низких от чека остаются только «Код для регистрации» и код —
@@ -47,11 +54,14 @@
   .receipt-hint__lines { height: 8px; margin-top: 4px; }
   .receipt-hint__text p { font-size: 16px; line-height: 1.4; }
 }
+/* Невысокие ноутбуки: рисунок чека целиком, как на телефоне (правка 30.10: без QR-кода было непонятно, где искать код),
+   только мельче; место под него отдают отступы окна (ReceiptModal.scss) */
 @media (min-width: 601px) and (max-height: 800px) {
-  .receipt-hint { grid-template-columns: 156px 1fr; margin-bottom: 10px; }
+  .receipt-hint { grid-template-columns: 150px 1fr; margin-bottom: 10px; padding-block: 6px; }
   .receipt-hint__text > b { font-size: 17px; }
-  .receipt-hint__text p { font-size: 15px; }
+  .receipt-hint__text p { font-size: 15px; line-height: 1.38; }
   .receipt-hint__body { padding: 8px 6px 11px; }
-  .receipt-hint__title, .receipt-hint__qr, .receipt-hint__lines { display: none; }
-  .receipt-hint__text .receipt-hint__qr-tip { display: none; }
+  .receipt-hint__qr { width: 40px; height: 40px; margin-block: 2px 1px; }
+  .receipt-hint__lines { display: none; }
+  .receipt-hint__text .receipt-hint__qr-tip { margin-top: 4px; font-size: 14px; }
 }

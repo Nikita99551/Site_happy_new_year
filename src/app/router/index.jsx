@@ -30,6 +30,7 @@ function withReload(importer) {
 // Остальные показанные страницы грузятся по требованию
 const RoutePage = lazy(withReload(() => import('@/pages/route')));
 const ConditionsPage = lazy(withReload(() => import('@/pages/conditions')));
+const RulesPage = lazy(() => withReload(() => import('@/pages/document'))().then((m) => ({ default: m.RulesPage })));
 const NotFoundPage = lazy(withReload(() => import('@/pages/not-found')));
 
 /**
@@ -40,7 +41,7 @@ function usePrefetchPages() {
   useEffect(() => {
     const run = () => {
       // Фоновая подгрузка: если файлов уже нет (вышла новая версия) — молча пропускаем, перезагрузка будет при переходе
-      for (const f of [() => import('@/pages/route'), () => import('@/pages/conditions')]) f().catch(() => {});
+      for (const f of [() => import('@/pages/route'), () => import('@/pages/conditions'), () => import('@/pages/document')]) f().catch(() => {});
     };
     const idle = window.requestIdleCallback ?? ((cb) => window.setTimeout(cb, 2000));
     const cancel = window.cancelIdleCallback ?? window.clearTimeout;
@@ -63,6 +64,7 @@ export function AppRouter() {
         <Route path={ROUTES.home} element={<HomePage />} />
         <Route path={ROUTES.route} element={<RoutePage />} />
         <Route path={ROUTES.conditions} element={<ConditionsPage />} />
+        <Route path={ROUTES.rules} element={<RulesPage />} />
         {/* Другие адреса (и ещё не показанные страницы) — своя страница 404 */}
         <Route path="*" element={<NotFoundPage />} />
       </Routes>

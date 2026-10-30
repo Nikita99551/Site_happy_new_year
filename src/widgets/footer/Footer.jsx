@@ -20,7 +20,7 @@ export function Footer({ compact = false }) {
         )}
         <div className="footer__bottom">
           <span>© Аникс, 2026–2027</span>
-          <SoonLink>Правила акции</SoonLink>
+          <Link to="/rules">Правила акции</Link>
           <SoonLink>Обработка персональных данных</SoonLink>
         </div>
       </div>

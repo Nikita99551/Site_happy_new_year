@@ -73,6 +73,7 @@
   .nav__user b { display: block; font-size: 17px; color: var(--g); }
   .nav__user small { display: block; font-size: 14px; color: var(--mu); }
   .nav__account > .btn { width: 100%; white-space: normal; line-height: 1.2; padding-block: 10px; }
+  .nav__account > .nav__receipt { min-height: 56px; font-size: 18px; }
   .header__bar { position: relative; }
   // Открытое меню выше cookie-открытки (z-index 50), иначе она закрывает кнопку входа
   .header.menu-open { z-index: 60; }

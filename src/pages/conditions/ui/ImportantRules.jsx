@@ -1,4 +1,4 @@
-import { SoonLink } from '@/shared/ui/soon-link/SoonLink';
+import { Link } from 'react-router-dom';
 
 const d = (ms) => ({ '--d': `${ms}ms` });
 
@@ -30,7 +30,7 @@ export function ImportantRules() {
         <div className="section-head reveal">
           <span className="ribbon">Правила</span>
           <h2>Что важно знать</h2>
-          <p className="lead">Девять правил, которые стоит запомнить. Полный текст правил&nbsp;— <SoonLink className="link" style={{ color: '#e2b24a' }}>на&nbsp;отдельной странице</SoonLink>.</p>
+          <p className="lead">Девять правил, которые стоит запомнить. Полный текст правил&nbsp;— <Link className="link" style={{ color: '#e2b24a' }} to="/rules">на&nbsp;отдельной странице</Link>.</p>
         </div>
         {/* На компьютере правила в две колонки, чтобы блок помещался в экран (правка 27.10) */}
         <div className="rules__list">

@@ -37,6 +37,8 @@ dialog.modal--tall .modal__goat { display: none; }
   .modal__goat { width: 400px; } .modal__goat--right { right: -330px; } .modal__goat--left { left: -350px; }
 }
 @media (max-height: 700px) { dialog.modal { overflow-y: auto; } .modal__goat { display: none; } }
+/* Окно с прокруткой обрезает всё выше своего края: ветку ставим внутрь верхнего поля (правка 30.10, как на телефоне) */
+@media (min-width: 601px) and (max-height: 700px) { dialog.modal { padding-top: 34px; } dialog.modal .modal__clip { top: 6px; width: 64px; } }
 /* Пока открыто окно, страница под ним не прокручивается; ширина полосы прокрутки (--sbw, считает ui.js) добавляется отступом, чтобы страница не дёргалась */
 html.modal-open { overflow: hidden; padding-right: var(--sbw, 0px); }
 .modal__box::before { content: ''; position: absolute; inset: 14px; border: 1.5px dashed var(--kr); pointer-events: none; }
@@ -121,7 +123,9 @@ dialog.modal:has(.modal__goat--peek) .modal__goat--peek { top: 6px; }
   .modal--center .modal__box h2 { padding-inline: 44px; }
   .modal__box h2 + .lead { margin-top: 8px; font-size: 17px; }
   .modal__close { right: 16px; top: 16px; width: 40px; height: 40px; }
-  .modal__clip { left: 14px; top: -30px; width: 56px; }
+  /* Ветка держится за само окно (dialog), а не за бумагу: на телефоне окно с прокруткой обрезало всё выше своего края —
+     ставим её внутрь верхнего поля окна (34 px), над бумагой она выглядывает как раньше (правка 30.10) */
+  .modal__clip { left: 12px; top: 3px; width: 40px; }
   /* Марка в пределах окна: не уходит за край экрана слева и сверху */
   .modal__stamp { left: 4px; top: 0; width: 54px; rotate: -8deg; }
   .modal__form { margin-top: 18px; }
