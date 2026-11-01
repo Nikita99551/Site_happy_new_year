@@ -9,7 +9,11 @@
     <meta name="theme-color" content="#173f2a" />
     <link rel="icon" href="/img/favicon.svg" type="image/svg+xml" />
     <link rel="preload" href="/fonts/PlayfairDisplay-900-normal-cyrillic.woff2" as="font" type="font/woff2" crossorigin />
-    <link rel="preload" href="/fonts/Manrope-500-normal-cyrillic.woff2" as="font" type="font/woff2" crossorigin />
+    <!-- Основной текст сайта — Manrope 400 (500 есть лишь в паре подписей, правка 01.11) -->
+    <link rel="preload" href="/fonts/Manrope-400-normal-cyrillic.woff2" as="font" type="font/woff2" crossorigin />
+    <!-- Зелёная бумага — фон первого экрана главной, «Маршрута» и «Подарков» (самое крупное в первом экране):
+         браузер начинает качать её сразу, а не когда код сайта нарисует секцию (правка 01.11) -->
+    <link rel="preload" href="/img/paper-green.webp" as="image" type="image/webp" />
     <!--
       Загрузочный экран. Стили здесь, а не в SCSS: экран должен появиться раньше, чем загрузится код сайта.
       Та же разметка — в src/shared/ui/page-loader/PageLoader.jsx (пока грузится страница).

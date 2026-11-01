@@ -81,6 +81,27 @@ function TipContent({ n, step, partner, codesOpen }) {
   );
 }
 
+/** Сколько палец у шара на экране, мс (анимация tap-hand в RoutePage.scss той же длины) */
+const TAP_MS = 2800;
+/** Рука с вытянутым пальцем и дугой касания (значок touch_app, 24×24): кончик пальца — в точке (11.5, 6) */
+const HAND = 'M9 11.24V7.5C9 6.12 10.12 5 11.5 5S14 6.12 14 7.5v3.74c1.21-.81 2-2.18 2-3.74C16 5.01 13.99 3 11.5 3S7 5.01 7 7.5c0 1.56.79 2.93 2 3.74zm9.84 4.63l-4.54-2.26c-.17-.07-.35-.11-.54-.11H13v-6c0-.83-.67-1.5-1.5-1.5S10 6.67 10 7.5v10.74l-3.43-.72c-.08-.01-.15-.03-.24-.03-.31 0-.59.13-.79.33l-.79.8 4.94 4.94c.27.27.65.44 1.06.44h6.79c.75 0 1.33-.55 1.44-1.28l.75-5.27c.01-.07.02-.14.02-.2 0-.62-.38-1.16-.91-1.38z';
+
+/** Палец «нажмите на шар» у шара (x, y): подлетает снизу справа, дважды нажимает (от шара расходится кольцо) и исчезает */
+function TapHint({ x, y, k }) {
+  // Рука на компьютере крупнее (там шары меньше); кончик пальца — у правого нижнего края шара, цифра шага видна
+  const s = (k > 1 ? 3.4 : 4.2) * k;
+  return (
+    <g className="tap-hint" pointerEvents="none" aria-hidden="true">
+      <circle className="tap-hint__ring" cx={x} cy={y} r={34 * k} fill="none" stroke="#fff8e8" strokeWidth={4 * k} />
+      <g transform={`translate(${x + 14 * k - 11.5 * s} ${y + 14 * k - 6 * s})`}>
+        <g className="tap-hint__hand">
+          <path d={HAND} transform={`scale(${s})`} fill="#fff8e8" stroke="#173f2a" strokeWidth={0.9} strokeLinejoin="round" />
+        </g>
+      </g>
+    </g>
+  );
+}
+
 /** Прямоугольник по центру и размерам: [лево, верх, право, низ] */
 const box = (x, y, w, h) => [x - w / 2, y - h / 2, x + w / 2, y + h / 2];
 const overlaps = (a, b, pad) => a[0] < b[2] + pad && b[0] < a[2] + pad && a[1] < b[3] + pad && b[1] < a[3] + pad;
@@ -137,8 +158,10 @@ export function RouteTree({ from, to, paused = false, partnerStops, guest = fals
   // Пока подсказка гаснет, в ней остаются прежние текст и место. Раньше они сбрасывались сразу,
   // и пустая рамка на миг мелькала в верхнем углу ёлки, над звездой (правка 28.10)
   const [view, setView] = useState(null);
-  // Подсказка-пример у текущего шара: показывается сама один раз, когда шар виден, — так понятно, что шары «говорят»
-  const demo = useRef({ done: false, open: false });
+  // Палец у текущего шара (правка 30.10 вместо подсказки, которая открывалась сама): один раз за посещение, когда шар виден, —
+  // подлетает и дважды «нажимает», так понятно, что шар можно нажать или навести. poke — номер шага, пока палец на экране
+  const [poke, setPoke] = useState(null);
+  const pokeDone = useRef(false);
 
   // Шары появляются по очереди
   useEffect(() => {
@@ -170,7 +193,7 @@ export function RouteTree({ from, to, paused = false, partnerStops, guest = fals
   const onClick = (e) => {
     const g = e.target.closest('.ball');
     pinned.current = !!g;
-    demo.current.open = false;
+    setPoke(null);
     if (g) show(g);
     else setTip(null);
   };
@@ -178,35 +201,31 @@ export function RouteTree({ from, to, paused = false, partnerStops, guest = fals
   const onOver = (e) => {
     if (!window.matchMedia('(hover: hover)').matches) return;
     const g = e.target.closest('.ball');
-    if (g && (Number(g.dataset.step) !== tip?.n || demo.current.open)) {
+    if (g && Number(g.dataset.step) !== tip?.n) {
       pinned.current = false;
-      demo.current.open = false;
+      setPoke(null);
       show(g);
     }
   };
 
-  // Подсказка-пример: когда анимация шагов закончилась и текущий шар целиком на экране — открыть его подсказку
-  // на 4,5 с. Один раз за посещение страницы; если человек сам навёл или нажал на шар — пример не мешает
+  // Палец: когда анимация шагов закончилась и текущий шар целиком на экране — через 0,7 с, на TAP_MS. Один раз за посещение;
+  // при «уменьшить движение» не показывается. Если человек сам навёл или нажал на шар — палец сразу исчезает
   useEffect(() => {
-    const d = demo.current;
-    if (d.done || moving || paused) return;
-    const ball = host.current?.querySelector(`.ball[data-step="${Math.max(1, step)}"]`);
+    if (pokeDone.current || moving || paused || reduced) return;
+    const n = Math.max(1, step);
+    const ball = host.current?.querySelector(`.ball[data-step="${n}"]`);
     if (!ball) return;
     let t1 = 0;
     let t2 = 0;
     const io = new IntersectionObserver(([e]) => {
       if (!e.isIntersecting) return;
       io.disconnect();
-      // «Показано» отмечаем только в момент показа: если тут же началась анимация новых шагов, пример покажется после неё
+      // «Показано» отмечаем только в момент показа: если тут же началась анимация новых шагов, палец покажется после неё
       t1 = window.setTimeout(() => {
-        d.done = true;
-        if (ball.closest('.tree-host')?.querySelector('.tooltip.is-open')) return;
-        d.open = true;
-        show(ball);
-        t2 = window.setTimeout(() => {
-          if (d.open) setTip(null);
-          d.open = false;
-        }, 4500);
+        pokeDone.current = true;
+        if (host.current?.querySelector('.tooltip.is-open')) return;
+        setPoke(n);
+        t2 = window.setTimeout(() => setPoke(null), TAP_MS);
       }, 700);
     }, { threshold: 1, rootMargin: '-15% 0px -15% 0px' });
     io.observe(ball);
@@ -214,19 +233,18 @@ export function RouteTree({ from, to, paused = false, partnerStops, guest = fals
       io.disconnect();
       window.clearTimeout(t1);
       window.clearTimeout(t2);
-      if (d.open) {
-        d.open = false;
-        setTip(null);
-      }
     };
-  }, [moving, paused, step]);
+  }, [moving, paused, step, reduced]);
   const onOut = (e) => {
     const to = e.relatedTarget;
     if (!pinned.current && e.target.closest('.ball') && !to?.closest?.('.ball')) setTip(null);
   };
   const onFocus = (e) => {
     const g = e.target.closest('.ball');
-    if (g) show(g);
+    if (g) {
+      setPoke(null);
+      show(g);
+    }
   };
   const onKey = (e) => {
     if (e.key === 'Escape') setTip(null);
@@ -314,6 +332,10 @@ export function RouteTree({ from, to, paused = false, partnerStops, guest = fals
         {labels}
         {boxes}
         {coupons}
+        {poke && (() => {
+          const b = tg.balls.find(([n]) => n === poke);
+          return b ? <TapHint x={b[1]} y={b[2]} k={k} /> : null;
+        })()}
       </svg>
       <div className={`tooltip${tip ? ' is-open' : ''}`} role="tooltip" style={view ? { left: view.left, top: view.top } : undefined}>
         {view && <TipContent n={view.n} step={step} partner={partnerStops} codesOpen={!guest && (view.n <= step || pos.circle > 1)} />}

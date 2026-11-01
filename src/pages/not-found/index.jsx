@@ -31,7 +31,7 @@ export default function NotFoundPage() {
             <div className="nf__actions">
               <Button to="/">На главную</Button>
               <Button variant="light" to="/route">Мой маршрут</Button>
-              <span className="nf__more">Как участвовать&nbsp;— <Link className="link" to="/conditions">условия акции</Link></span>
+              <span className="nf__more">Как участвовать&nbsp;— <Link className="link tap-area" to="/conditions">условия акции</Link></span>
             </div>
           </div>
           <img className="nf__goat" src="/img/goat-lantern.webp" alt="" width={688} height={1024} />

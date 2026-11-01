@@ -38,7 +38,7 @@ export function DocumentPage({ doc, title }) {
         <img className="doc-hero__goat reveal" src="/img/goat-scroll.webp" alt="" width={330} height={690} />
         <img className="doc-hero__branch" src="/img/branch.webp" alt="" width={180} height={193} />
         <div className="container" style={{ position: 'relative', zIndex: 1 }}>
-          <Link className="doc-hero__back reveal" to="/">←&nbsp; На главную</Link>
+          <Link className="doc-hero__back reveal tap-area" to="/">←&nbsp; На главную</Link>
           <div><span className="ribbon reveal" style={{ '--d': '40ms' }}>Документ</span></div>
           <h1 className="reveal" style={{ '--d': '80ms' }}>{doc.title}</h1>
           <p className="lead reveal" style={{ '--d': '120ms' }}>{doc.lead}</p>

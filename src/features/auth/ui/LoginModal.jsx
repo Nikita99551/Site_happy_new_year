@@ -57,12 +57,12 @@ export function LoginModal({ open }) {
       ribbon="Вход"
       title={<>Вход в&nbsp;личный кабинет</>}
       lead={<>Введите номер: 10&nbsp;цифр, без&nbsp;8 и&nbsp;+7. Используйте телефон, указанный при&nbsp;регистрации.</>}
-      decor={<img className="modal__goat modal__goat--peek" src="/img/goat-peek.webp" alt="" width={230} height={266} />}
+      decor={<img className="modal__goat modal__goat--peek" src="/img/goat-peek.webp" alt="" width={230} height={266} loading="lazy" decoding="async" />}
     >
       <form className="modal__form" noValidate onSubmit={submit}>
         <Field label="Номер телефона" prefix="+7" type="tel" name="phone" inputMode="numeric" autoComplete="tel-national" placeholder="9XX XXX XX XX" required value={phone} onChange={(e) => setPhone(formatPhone(e.target.value))} error={error} />
         <div className="modal__actions"><Button block type="submit" disabled={busy}>{busy ? 'Секунду…' : 'Войти'}</Button></div>
-        <p className="modal__foot"><a className="link link--green" href="#" onClick={(e) => { e.preventDefault(); openModal('auth'); }}>Назад к&nbsp;выбору</a></p>
+        <p className="modal__foot"><button type="button" className="link link--green" onClick={() => openModal('auth')}>Назад к&nbsp;выбору</button></p>
       </form>
     </Modal>
   );

@@ -17,7 +17,7 @@ export function ProcessingModal({ open }) {
       title="Чек обрабатывается"
       lead={<>Шаги появятся в&nbsp;вашем маршруте, как только чек обработается: иногда сразу, иногда чуть позже.</>}
       before={<div className="seal modal__icon"><IconClock /></div>}
-      decor={<img className="modal__goat modal__goat--left" src="/img/goat-lantern.webp" alt="" width={460} height={636} />}
+      decor={<img className="modal__goat modal__goat--left" src="/img/goat-lantern.webp" alt="" width={460} height={636} loading="lazy" decoding="async" />}
     >
       <div className="modal__lights"><Lights count={10} lit={0} swags={1} offColor="#173f2a" wire="#173f2a" /></div>
       <div className="modal__actions" style={{ marginTop: 24 }}>

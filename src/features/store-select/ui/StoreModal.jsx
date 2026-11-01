@@ -19,6 +19,10 @@ export function StoreModal({ open, returnTo }) {
   const words = queryWords(q);
   const items = stores.filter((s) => matchStore(s, words));
   const listRef = useRef(null);
+  // Список (171 магазин — 1 700 узлов, 60 % всей страницы) строится при первом открытии окна, а не при загрузке
+  // каждой страницы (правка 01.11: на слабом телефоне это давало зависание при открытии сайта). Потом остаётся.
+  const [built, setBuilt] = useState(open);
+  if (open && !built) setBuilt(true);
 
   // Выбранный магазин виден сразу: список прокручивается к нему (только внутри списка, само окно не двигается)
   useEffect(() => {
@@ -49,12 +53,12 @@ export function StoreModal({ open, returnTo }) {
       width={960}
       title="Выберите магазин"
       lead={<>Выберите свой магазин или откройте его группу MAX. В&nbsp;нём вы получите приз и&nbsp;сможете вступить в&nbsp;чат.</>}
-      decor={<img className="modal__goat modal__goat--peek" src="/img/goat-peek.webp" alt="" width={230} height={266} style={{ right: 'auto', left: 90 }} />}
+      decor={<img className="modal__goat modal__goat--peek" src="/img/goat-peek.webp" alt="" width={230} height={266} loading="lazy" decoding="async" style={{ right: 'auto', left: 90 }} />}
     >
       <Field label="Название, город или адрес" icon={<IconSearch />} type="search" name="q" autoComplete="off" placeholder="Например, Славянский или Васильева 30" maxLength={60} value={q} onChange={(e) => setQ(e.target.value)} className="store-search" />
       <p className="muted" style={{ fontWeight: 700, fontSize: 16 }}>{!words.length ? `Всего ${items.length} ${plural(items.length, 'магазин', 'магазина', 'магазинов')}` : items.length ? `Нашли ${items.length} ${plural(items.length, 'магазин', 'магазина', 'магазинов')}` : 'Ничего не нашли, попробуйте другое слово'}</p>
       <div ref={listRef} className="store-list">
-        {items.map((s) => {
+        {built && items.map((s) => {
           const selected = s.id === selectedStoreId;
           return (
             <div key={s.id} className={`store${selected ? ' store--selected' : ''}`}>

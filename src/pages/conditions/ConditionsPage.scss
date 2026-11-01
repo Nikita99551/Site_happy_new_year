@@ -91,6 +91,8 @@
 .scale__labels > div:nth-child(2) { left: 66.67%; transform: translateX(-50%); }
 .scale__labels > div:nth-child(3) { right: 0; text-align: right; }
 .scale__labels b { display: block; font-size: 20px; font-weight: 800; }
+/* Значок вехи перед заголовком (правка 01.11): сертификат на 10 и 20, билет на 30 — как коробка в подписи «Каждый 4-й шаг» */
+.scale__ic { display: inline-block; width: 1.75em; height: 1.2em; margin-right: 0.4em; vertical-align: -0.24em; }
 .scale__labels p { margin-top: 4px; font-size: 17px; color: var(--mu); }
 .scale__rows { display: none; }
 .scale__legend { display: flex; align-items: center; gap: 14px; margin-top: 24px; font-weight: 700; font-size: 19px; }

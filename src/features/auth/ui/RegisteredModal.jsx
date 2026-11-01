@@ -44,7 +44,7 @@ export function RegisteredModal({ open }) {
       title="Вы зарегистрированы!"
       lead={<>{user ? `${user.name}, ваш кабинет создан.` : 'Кабинет создан.'} Теперь регистрируйте чеки от&nbsp;600&nbsp;₽: за&nbsp;каждые 600&nbsp;₽&nbsp;— шаг по&nbsp;новогоднему маршруту.</>}
       before={<div className="seal modal__icon"><IconCheck /></div>}
-      decor={<img className="modal__goat modal__goat--right" src="/img/goat-dance.webp" alt="" width={460} height={710} />}
+      decor={<img className="modal__goat modal__goat--right" src="/img/goat-dance.webp" alt="" width={460} height={710} loading="lazy" decoding="async" />}
     >
       {withQr ? (
         <>

@@ -68,18 +68,22 @@ export function Header({ hero = false }) {
       header.style.setProperty('--header-offset', `${wrap.offsetTop}px`);
       document.documentElement.style.setProperty('--header-h', `${header.offsetHeight}px`);
     };
-    const onScroll = () => document.documentElement.classList.toggle('is-scrolled', wrap.getBoundingClientRect().top <= 1);
+    // Полоса прилипла к верху (её верх выше 2 px) — html.is-scrolled. Следит IntersectionObserver, а не замер
+    // на каждое событие прокрутки: тот заставлял пересчитывать страницу каждый кадр (правка 01.11, рывки на телефоне)
+    const io = new IntersectionObserver(
+      ([e]) => document.documentElement.classList.toggle('is-scrolled', e.boundingClientRect.top <= 1),
+      { rootMargin: '-2px 0px 0px 0px', threshold: 1 },
+    );
     setOffset();
-    onScroll();
+    io.observe(wrap);
     // Высота меняется и без изменения окна: подгрузились шрифты, перенеслась верхняя строка
     const ro = new ResizeObserver(setOffset);
     ro.observe(header);
     window.addEventListener('resize', setOffset);
-    window.addEventListener('scroll', onScroll, { passive: true });
     return () => {
       ro.disconnect();
+      io.disconnect();
       window.removeEventListener('resize', setOffset);
-      window.removeEventListener('scroll', onScroll);
     };
   }, []);
 
@@ -111,7 +115,7 @@ export function Header({ hero = false }) {
         </div>
         <div className="header__bar-wrap" ref={wrapRef}>
           <div className="header__bar">
-            <Link className="header__logo" to="/" aria-label="Аникс — на главную"><img src="/img/logo.svg" alt="Аникс" width={136} height={36} /></Link>
+            <Link className="header__logo tap-area" to="/" aria-label="Аникс — на главную"><img src="/img/logo.svg" alt="Аникс" width={136} height={36} /></Link>
             <button className="burger" type="button" aria-label="Открыть меню" aria-expanded={menuOpen} onClick={() => setMenuOpen(!menuOpen)}><span /><span /><span /></button>
             <nav className="nav" aria-label="Главное меню">
               {NAV.map((item) => {

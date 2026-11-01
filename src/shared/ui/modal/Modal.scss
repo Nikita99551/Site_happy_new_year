@@ -13,7 +13,7 @@ dialog.modal::backdrop { background: rgba(9, 23, 15, 0.82); backdrop-filter: blu
 dialog.modal[open]::backdrop { opacity: 1; }
 @starting-style { dialog.modal[open]::backdrop { opacity: 0; } }
 /* Окно выше экрана (класс ставит Modal.jsx): прокручивается само окно, коза прячется */
-dialog.modal--tall { overflow-y: auto; scrollbar-width: thin; }
+dialog.modal--tall { overflow-y: auto; }
 dialog.modal--tall .modal__goat { display: none; }
 .modal__box { position: relative; padding: 70px 56px 52px; background: linear-gradient(rgba(255, 248, 232, 0.45), rgba(255, 248, 232, 0.45)), var(--cr) url('/img/paper-cream.webp') center/cover; box-shadow: var(--shadow-deep); }
 /* Если окно выше экрана — прокручиваем само окно, козу прячем */

@@ -44,7 +44,7 @@ export function QrReceiptModal({ open }) {
       before={failed
         ? <div className="seal seal--red modal__icon"><span className="num">!</span></div>
         : <div className="seal modal__icon"><IconClock /></div>}
-      decor={<img className="modal__goat modal__goat--left" src="/img/goat-lantern.webp" alt="" width={460} height={636} />}
+      decor={<img className="modal__goat modal__goat--left" src="/img/goat-lantern.webp" alt="" width={460} height={636} loading="lazy" decoding="async" />}
     >
       {code && <p className="qr-receipt__code">Чек №&nbsp;<b>{code}</b></p>}
       {failed ? (

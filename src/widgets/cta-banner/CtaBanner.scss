@@ -29,6 +29,10 @@
   100% { transform: translateY(0) rotate(-1deg); }
 }
 .cta__goat.is-in { animation: goat-hop-in 1100ms 150ms both, bob 6s ease-in-out 1250ms infinite; }
+/* После прыжка остаётся одно покачивание (класс ставит CtaBanner.jsx по animationend). Пока в списке анимаций висел
+   законченный прыжок, браузер считал покачивание сам, а не видеокартой: каждый кадр перерисовывал страницу,
+   на телефоне «Маршрут» подтормаживал (правка 01.11). Последний кадр прыжка = первый кадр bob — перехода не видно */
+.cta__goat.is-in.is-hopped { animation: bob 6s ease-in-out infinite; }
 .no-anim .cta__goat.is-in { animation: bob 6s ease-in-out infinite; }
 @media (prefers-reduced-motion: reduce) { .cta__goat.is-in { animation: none; } }
 

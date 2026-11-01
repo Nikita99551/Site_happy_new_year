@@ -84,7 +84,7 @@ export function ReceiptModal({ open }) {
       title="Зарегистрировать чек"
       decor={<>
         <img className="modal__clip" src="/img/paperclip.webp" alt="" width={80} height={123} />
-        <img className="modal__goat modal__goat--right" src="/img/goat-point.webp" alt="" width={460} height={798} />
+        <img className="modal__goat modal__goat--right" src="/img/goat-point.webp" alt="" width={460} height={798} loading="lazy" decoding="async" />
       </>}
     >
       <div className="tabs" role="tablist">

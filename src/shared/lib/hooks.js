@@ -1,4 +1,4 @@
-import { useEffect, useLayoutEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 
 /** Пользователь попросил меньше анимаций (системная настройка) */
 export function useReducedMotion() {
@@ -12,15 +12,19 @@ export function useReducedMotion() {
   return reduced;
 }
 
-/** Ширина элемента, обновляется при изменении размера */
-export function useElementWidth(ref) {
-  const [width, setWidth] = useState(0);
-  useLayoutEffect(() => {
+/**
+ * Ширина элемента, обновляется при изменении размера. guess — первая прикидка (например, ширина окна):
+ * настоящую ширину сообщит ResizeObserver сразу после первой раскладки. Раньше ширина читалась прямо при
+ * отрисовке React, и браузеру приходилось раскладывать всю страницу посреди неё — на слабом телефоне это
+ * склеивало загрузку в одну долгую задачу (правка 01.11).
+ */
+export function useElementWidth(ref, guess = 0) {
+  const [width, setWidth] = useState(guess);
+  useEffect(() => {
     const el = ref.current;
     if (!el) return;
-    const update = () => setWidth(el.clientWidth);
-    update();
-    const ro = new ResizeObserver(update);
+    // В колбэке ResizeObserver раскладка уже готова — clientWidth ничего не пересчитывает
+    const ro = new ResizeObserver(() => setWidth(el.clientWidth));
     ro.observe(el);
     return () => ro.disconnect();
   }, [ref]);

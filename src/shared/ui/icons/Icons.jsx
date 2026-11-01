@@ -58,3 +58,22 @@ export const CouponMark = ({ x, y, s, rot = -14 }) => (
 export const IconStar = (p) => (
   <svg viewBox="0 0 24 24" aria-hidden="true" {...p}><polygon points="12,2 14.9,8.6 22,9.3 16.6,14.1 18.2,21 12,17.3 5.8,21 7.4,14.1 2,9.3 9.1,8.6" fill="#e2b24a" /></svg>
 );
+/** Сертификат Аникс (вехи 10 и 20 на шкале условий, правка 01.11): зелёная карточка с золотой рамкой и красной лентой, как настоящий. Рисунок 32×22 */
+export const IconCert = (p) => (
+  <svg viewBox="0 0 32 22" aria-hidden="true" {...p}>
+    <rect width={32} height={22} rx={2.5} fill="#1d4a31" />
+    <rect x={2.4} y={2.4} width={27.2} height={17.2} rx={1.2} fill="none" stroke="#e2b24a" strokeWidth={0.8} />
+    <rect x={5.5} y={5.6} width={11} height={1.8} rx={0.6} fill="#e2b24a" />
+    <rect x={5.5} y={10} width={13} height={4.6} rx={1} fill="#fff8e8" />
+    <polygon points="25.5,4.6 26.3,6.4 28.2,6.6 26.8,7.9 27.2,9.8 25.5,8.8 23.8,9.8 24.2,7.9 22.8,6.6 24.7,6.4" fill="#e2b24a" />
+    <path d="M21 22 L32 11.5 V16 L25.6 22 Z" fill="#e31e24" />
+  </svg>
+);
+/** Билет на розыгрыш (финиш 30-го шага): золотой билет с вырезами и красной звездой. Рисунок 32×22 */
+export const IconTicket = (p) => (
+  <svg viewBox="0 0 32 22" aria-hidden="true" {...p}>
+    <path d="M2 0H30a2 2 0 0 1 2 2V8a3 3 0 0 0 0 6V20a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V14a3 3 0 0 0 0-6V2a2 2 0 0 1 2-2Z" fill="#e2b24a" />
+    <line x1={10} y1={2} x2={10} y2={20} stroke="#fff8e8" strokeWidth={1.1} strokeDasharray="1.8 1.6" />
+    <polygon points="21,4.5 22.7,8.4 26.9,8.8 23.7,11.6 24.7,15.7 21,13.5 17.3,15.7 18.3,11.6 15.1,8.8 19.3,8.4" fill="#e31e24" />
+  </svg>
+);
