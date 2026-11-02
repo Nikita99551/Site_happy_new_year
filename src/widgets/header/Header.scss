@@ -65,7 +65,7 @@
   .nav { position: absolute; left: 0; right: 0; top: calc(100% + 8px); flex-direction: column; gap: 4px; padding: 12px; background: #fff; border-radius: 16px; box-shadow: var(--shadow-deep); opacity: 0; transform: translateY(-8px) scale(0.98); pointer-events: none; transition: opacity var(--dur) var(--ease-out), transform var(--dur) var(--ease-out); }
   .menu-open .nav { opacity: 1; transform: none; pointer-events: auto; }
   // Телефон боком (высота ~375): меню выше экрана — прокручивается внутри, нижние пункты («Войти», магазин) достижимы
-  .nav { max-height: calc(100vh - 110px); max-height: calc(100dvh - 110px); overflow-y: auto; overscroll-behavior: contain; scrollbar-width: thin; }
+  .nav { max-height: calc(100vh - 110px); max-height: calc(100dvh - 110px); overflow-y: auto; overscroll-behavior: contain; }
   .nav a { min-height: 52px; font-size: 18px; }
   .nav__account { display: grid; gap: 12px; margin-top: 8px; padding: 14px 10px 4px; border-top: 1px solid rgba(23, 63, 42, 0.12); }
   .nav__store { display: flex; align-items: center; gap: 10px; min-height: 48px; padding: 0 12px; border: 1.5px solid var(--g); border-radius: 999px; background: transparent; font: inherit; font-weight: 700; font-size: 16px; color: var(--g); text-align: left; }
@@ -73,6 +73,7 @@
   .nav__user b { display: block; font-size: 17px; color: var(--g); }
   .nav__user small { display: block; font-size: 14px; color: var(--mu); }
   .nav__account > .btn { width: 100%; white-space: normal; line-height: 1.2; padding-block: 10px; }
+  .nav__account > .nav__receipt { min-height: 56px; font-size: 18px; }
   .header__bar { position: relative; }
   // Открытое меню выше cookie-открытки (z-index 50), иначе она закрывает кнопку входа
   .header.menu-open { z-index: 60; }

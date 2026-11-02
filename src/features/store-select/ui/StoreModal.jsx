@@ -11,6 +11,7 @@ import { matchStore, queryWords } from '../lib/search';
 import { api } from '@/shared/api'; // <-- Импортируем api, чтобы взять данные напрямую
 import './StoreModal.scss';
 
+/** Окно 10: выбор магазина. После выбора возвращает в окно, откуда пришли (returnTo). */
 export function StoreModal({ open, returnTo }) {
   const { open: openModal, close, back } = useModal();
   // Берем selectedStoreId и selectStore из сессии
@@ -26,6 +27,10 @@ export function StoreModal({ open, returnTo }) {
   const words = queryWords(q);
   const items = shops.filter((s) => matchStore(s, words));
   const listRef = useRef(null);
+  // Список (171 магазин — 1 700 узлов, 60 % всей страницы) строится при первом открытии окна, а не при загрузке
+  // каждой страницы (правка 01.11: на слабом телефоне это давало зависание при открытии сайта). Потом остаётся.
+  const [built, setBuilt] = useState(open);
+  if (open && !built) setBuilt(true);
 
   // Если при открытии окна магазинов нет (не успели загрузиться), запрашиваем их
   useEffect(() => {

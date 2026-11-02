@@ -142,7 +142,7 @@ export function HomePage() {
               <p className="lead reveal" style={d(160)} {...HERO_LIFT}>Покупайте в&nbsp;Аникс и&nbsp;проходите новогодний маршрут из&nbsp;30&nbsp;шагов вместе с&nbsp;нашей Козой.</p>
               <div className="hero__actions reveal" style={d(240)} {...HERO_LIFT}>
                 <OpenModalButton modal="receipt">Зарегистрировать чек</OpenModalButton>
-                <Link className="link" to="/conditions">Условия акции</Link>
+                <Link className="link tap-area" to="/conditions">Условия акции</Link>
               </div>
               <span className="hero__year reveal" style={d(320)} aria-label="2027 год" data-speed={-0.15}>2027</span>
             </div>
@@ -168,7 +168,7 @@ export function HomePage() {
             </div>
             <div className="how__cards-wrap">
               {/* Коза поднимается из-за карточки по мере прокрутки и выше задуманного места не выходит */}
-              <img className="how__peek reveal" src="/img/goat-peek.webp" alt="" width={230} height={266} />
+              <img className="how__peek reveal" src="/img/goat-peek.webp" alt="" width={230} height={266} loading="lazy" decoding="async" />
               <HowCards />
             </div>
             <p className="how__more reveal"><Link className="link" to="/conditions#calc">Подробно о&nbsp;том, как начисляются шаги&nbsp;→</Link></p>
@@ -231,7 +231,7 @@ export function HomePage() {
           {/* Коллаж разложен по слоям: красная бумага дальше открытки, марка, бирка, ветка и печать ближе — едут быстрее и сильнее следуют за курсором */}
           <div className="postcard-stack reveal" style={d(120)}>
             <div className="postcard-stack__red" aria-hidden="true" />
-            <img className="postcard-stack__stamp" src="/img/stamp.webp" alt="" width={150} height={190} />
+            <img className="postcard-stack__stamp" src="/img/stamp.webp" alt="" width={150} height={190} loading="lazy" decoding="async" />
             <div className="postcard-stack__tag"><img src="/img/tag.webp" alt="" width={150} height={196} /><span>С Новым годом!</span></div>
             <div className="postcard" ref={postcardRef}>
               {/* Пунктирная строчка по краю: прошивается при прокрутке (маска рисует линию, сама линия — пунктир) */}
@@ -253,7 +253,7 @@ export function HomePage() {
                 )}
               </div>
             </div>
-            <img className="postcard-stack__branch" src="/img/branch.webp" alt="" width={230} height={246} />
+            <img className="postcard-stack__branch" src="/img/branch.webp" alt="" width={230} height={246} loading="lazy" decoding="async" />
             <img className="postcard__seal" src="/img/seal.webp" alt="" width={120} height={131} />
           </div>
         </div>
@@ -270,7 +270,7 @@ export function HomePage() {
               <p className="lead" style={{ color: 'rgba(255,248,232,.92)' }}>Участвуют все, кто прошёл круг. Каждый круг&nbsp;— ещё один билет.</p>
             </div>
           }
-          after={<><p className="prize-note reveal">Изображения призов носят иллюстративный характер: внешний вид, цвет и&nbsp;комплектация призов могут отличаться.</p><div className="final-strip reveal"><span className="star-shape" /><p><b>А&nbsp;12&nbsp;января&nbsp;— финал</b>5&nbsp;суперпризов, главный&nbsp;— <span className="final-strip__prize">сертификат на&nbsp;250&nbsp;000&nbsp;₽</span> на&nbsp;отдых на&nbsp;курорте «Манжерок»</p><SoonLink className="btn">Посмотреть все призы</SoonLink></div></>}
+          after={<><p className="prize-note reveal">Изображения призов носят иллюстративный характер: внешний вид, цвет и&nbsp;комплектация призов могут отличаться.</p><div className="final-strip reveal"><span className="star-shape" /><p><b>А&nbsp;12&nbsp;января&nbsp;— финал</b>5&nbsp;суперпризов, главный&nbsp;— <span className="final-strip__prize">сертификат на&nbsp;250&nbsp;000&nbsp;₽</span> на&nbsp;отдых на&nbsp;курорте «Манжерок»</p><Button to="/prizes">Посмотреть все призы</Button></div></>}
         >
           {WEEKLY_PRIZES.map((p, i) => <PrizeCard key={p.id} prize={p} badge={`${i + 1} неделя`} />)}
         </Carousel>
@@ -278,7 +278,7 @@ export function HomePage() {
 
       {/* ===== Победители прошлых акций ===== */}
       <section className="section section--cream torn-top winners" id="winners">
-        <img className="winners__goat reveal" src="/img/goat-gifts.webp" alt="" width={220} height={427} />
+        <img className="winners__goat reveal" src="/img/goat-gifts.webp" alt="" width={220} height={427} loading="lazy" decoding="async" />
         {mobile ? (
           <Carousel label="Победители прошлых акций" head={winnersHead}>{winnerCards}</Carousel>
         ) : (

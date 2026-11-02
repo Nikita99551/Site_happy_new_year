@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { Link } from 'react-router-dom';
 import { useSession } from '@/entities/user';
 import { useModal } from '@/features/modal';
 import { SoonLink } from '@/shared/ui/soon-link/SoonLink';
@@ -65,7 +66,7 @@ export function RegisterModal({ open }) {
       width={680}
       title={<>Создайте кабинет для&nbsp;чеков и&nbsp;подарков</>}
       lead={<>Телефон&nbsp;— 10&nbsp;цифр, без&nbsp;8 и&nbsp;+7.</>}
-      decor={<img className="modal__goat modal__goat--right" src="/img/goat-scroll.webp" alt="" width={460} height={962} />}
+      decor={<img className="modal__goat modal__goat--right" src="/img/goat-scroll.webp" alt="" width={460} height={962} loading="lazy" decoding="async" />}
     >
       <form className="modal__form" noValidate onSubmit={submit}>
         {/* На невысоких экранах компьютера ФИО и телефон в один ряд — окно помещается без прокрутки */}
@@ -74,7 +75,7 @@ export function RegisterModal({ open }) {
           <Field label="Номер телефона" prefix="+7" type="tel" name="phone" inputMode="numeric" autoComplete="tel-national" placeholder="9XX XXX XX XX" required value={phone} onChange={(e) => setPhone(formatPhone(e.target.value))} error={errors.phone} />
         </div>
         <div className={`field${errors.store ? ' field--error' : ''}`}>
-          <span className="field__label">Ваш магазин <a className="link" href="#" onClick={(e) => { e.preventDefault(); openModal('store', { returnTo: 'register' }); }}>Изменить</a></span>
+          <span className="field__label">Ваш магазин <button type="button" className="link" onClick={() => openModal('store', { returnTo: 'register' })}>Изменить</button></span>
           <button className="field__box" type="button" style={{ width: '100%', textAlign: 'left' }} onClick={() => openModal('store', { returnTo: 'register' })}>
             <IconPin />
             <span style={{ fontWeight: 600, fontSize: 20 }}>
@@ -85,13 +86,13 @@ export function RegisterModal({ open }) {
           <span className="field__error" aria-live="polite">{errors.store}</span>
         </div>
         <Check name="consentRules" required checked={rules} onChange={(e) => setRules(e.target.checked)} error={errors.rules}>
-          Я ознакомился(ась) и&nbsp;принимаю <SoonLink className="link">Правила акции</SoonLink> «Год Козы&nbsp;— лови призы»
+          Я ознакомился(ась) и&nbsp;принимаю <Link className="link" to="/rules" target="_blank" rel="noopener">Правила акции</Link> «Год Козы&nbsp;— лови призы»
         </Check>
         <Check name="consentPd" required checked={pd} onChange={(e) => setPd(e.target.checked)} error={errors.pd}>
           Я даю <SoonLink className="link">согласие на&nbsp;обработку моих персональных данных</SoonLink>
         </Check>
         <div className="modal__actions"><Button block type="submit" disabled={busy}>{busy ? 'Секунду…' : 'Зарегистрироваться'}</Button></div>
-        <p className="modal__foot">Уже есть кабинет? <a className="link" href="#" onClick={(e) => { e.preventDefault(); openModal('login'); }}>Войти</a></p>
+        <p className="modal__foot">Уже есть кабинет? <button type="button" className="link" onClick={() => openModal('login')}>Войти</button></p>
       </form>
     </Modal>
   );

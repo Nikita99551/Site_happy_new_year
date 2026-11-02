@@ -24,6 +24,45 @@ const around = (a, b, card, gapY) => {
   return `M ${a[0]} ${a[1]} C ${a[0] + (x - a[0]) * 0.6} ${a[1] - 34}, ${x} ${a[1] - 16}, ${x} ${a[1] + 44} L ${x} ${gapY - 30} Q ${x} ${gapY}, ${x - 30} ${gapY} L ${b[0] + 46} ${gapY} Q ${b[0]} ${gapY}, ${b[0]} ${b[1]} `;
 };
 /**
+ * Перевод точки из координат элемента в координаты root по раскладке, без анимации появления (правка 29.10).
+ * getBoundingClientRect видит сдвиг .reveal (карточки въезжают снизу на 24 px), и пунктир прыгал за ними;
+ * offsetLeft/offsetTop его не видят, а постоянный наклон карточек (CSS rotate) учитываем сами.
+ */
+function frameIn(el, root) {
+  const chain = [];
+  for (let e = el; e && e !== root; e = e.offsetParent) chain.push(e);
+  return (px, py) => {
+    let x = px;
+    let y = py;
+    for (const e of chain) {
+      const cs = getComputedStyle(e);
+      const a = ((parseFloat(cs.rotate) || 0) * Math.PI) / 180;
+      if (a) {
+        const [ox, oy] = cs.transformOrigin.split(' ').map(parseFloat);
+        const dx = x - ox;
+        const dy = y - oy;
+        x = ox + dx * Math.cos(a) - dy * Math.sin(a);
+        y = oy + dx * Math.sin(a) + dy * Math.cos(a);
+      }
+      x += e.offsetLeft;
+      y += e.offsetTop;
+    }
+    return [x, y];
+  };
+}
+/** Рамка элемента в координатах root (с учётом наклона — как у getBoundingClientRect, но без анимации появления) */
+function boxIn(el, root) {
+  const f = frameIn(el, root);
+  const w = el.offsetWidth;
+  const h = el.offsetHeight;
+  const c = [f(0, 0), f(w, 0), f(0, h), f(w, h)];
+  const xs = c.map((q) => q[0]);
+  const ys = c.map((q) => q[1]);
+  return { left: Math.min(...xs), right: Math.max(...xs), top: Math.min(...ys), bottom: Math.max(...ys) };
+}
+const centerIn = (el, root) => frameIn(el, root)(el.offsetWidth / 2, el.offsetHeight / 2);
+
+/**
  * Карта «четыре остановки»: карточки-записки и пунктир между ними. Пунктир считается от настоящих
  * координат карточек, поэтому совпадает с ними на любой ширине; на телефоне (≤ 900) карточки идут столбиком без линии.
  */
@@ -37,19 +76,18 @@ export function StopsMap() {
     const svg = p?.ownerSVGElement;
     if (!m || !p || !svg || getComputedStyle(svg).display === 'none') return;
     const stops = Array.from(m.querySelectorAll('.stop'));
-    const mr = m.getBoundingClientRect();
-    svg.setAttribute('viewBox', `0 0 ${Math.round(mr.width)} ${Math.round(mr.height)}`);
+    svg.setAttribute('viewBox', `0 0 ${m.offsetWidth} ${m.offsetHeight}`);
     const pts = stops.map((st) => {
-      const r = st.getBoundingClientRect();
+      const r = boxIn(st, m);
+      const midY = (r.top + r.bottom) / 2;
       // Видимая кнопка: у карточки 03 их две (боковая и верхняя), CSS показывает одну в зависимости от раскладки
       const pinEl = Array.from(st.querySelectorAll('.stop__pin')).find((e) => getComputedStyle(e).display !== 'none') ?? st;
-      const pin = pinEl.getBoundingClientRect();
       return {
-        box: { top: r.top - mr.top, bottom: r.bottom - mr.top, left: r.left - mr.left, right: r.right - mr.left },
-        pin: [pin.left + pin.width / 2 - mr.left, pin.top + pin.height / 2 - mr.top],
-        bottom: [r.left + r.width / 2 - mr.left, r.bottom - mr.top],
-        left: [r.left - mr.left, r.top + r.height / 2 - mr.top],
-        right: [r.right - mr.left, r.top + r.height / 2 - mr.top],
+        box: r,
+        pin: centerIn(pinEl, m),
+        bottom: [(r.left + r.right) / 2, r.bottom],
+        left: [r.left, midY],
+        right: [r.right, midY],
       };
     });
     let d = '';
@@ -61,8 +99,8 @@ export function StopsMap() {
       const rowGap = (Math.max(s1.box.bottom, s2.box.bottom) + Math.min(s3.box.top, s4.box.top)) / 2;
       d = arch(s1.pin, s2.pin) + around(s2.pin, s3.pin, s2.box, rowGap) + arch(s3.pin, s4.pin, Math.max(s1.box.bottom, s2.box.bottom) + 14);
       if (fin) {
-        const f = fin.getBoundingClientRect();
-        const t = [f.left - mr.left + f.width * 0.5, f.top - mr.top - 12];
+        const f = boxIn(fin, m);
+        const t = [(f.left + f.right) / 2, f.top - 12];
         d += `M ${s4.pin[0]} ${s4.pin[1]} C ${s4.pin[0] - 170} ${s4.pin[1] - 110}, ${t[0] + 130} ${t[1] - 190}, ${t[0]} ${t[1]} `;
       }
       p.setAttribute('d', d);
@@ -77,24 +115,20 @@ export function StopsMap() {
     }
     if (fin && getComputedStyle(fin).position === 'absolute') {
       const last = pts[pts.length - 1];
-      const f = fin.getBoundingClientRect();
-      const fp = [f.left - mr.left - 16, f.top + f.height / 2 - mr.top];
+      const f = boxIn(fin, m);
+      const fp = [f.left - 16, (f.top + f.bottom) / 2];
       d += fp[1] > last.left[1] - 120 && fp[1] < last.bottom[1] + 20 ? hS(last.right, fp) : vS(last.bottom, [fp[0] + 40, fp[1] + 20]);
     }
     p.setAttribute('d', d);
   }, []);
 
   useEffect(() => {
+    // Анимация появления на линию не влияет (frameIn), поэтому пересчёт только когда меняется раскладка:
+    // шрифты догрузились (другая высота карточек) или поменялось окно
     draw();
     document.fonts?.ready.then(draw);
     window.addEventListener('load', draw);
-    // Карточки въезжают анимацией появления — пересчитываем линию, когда они встали на место
-    const m = map.current;
-    m?.addEventListener('transitionend', draw);
-    return () => {
-      window.removeEventListener('load', draw);
-      m?.removeEventListener('transitionend', draw);
-    };
+    return () => window.removeEventListener('load', draw);
   }, [draw]);
   useWindowResize(draw);
 

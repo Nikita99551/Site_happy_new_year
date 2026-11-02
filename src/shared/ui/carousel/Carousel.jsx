@@ -1,4 +1,4 @@
-import { Children, useCallback, useEffect, useRef, useState } from 'react';
+import { Children, useEffect, useRef, useState } from 'react';
 import { useReducedMotion } from '@/shared/lib/hooks';
 import { IconArrowLeft, IconArrowRight } from '@/shared/ui/icons/Icons';
 import './Carousel.scss';
@@ -10,16 +10,14 @@ import './Carousel.scss';
 export function Carousel({ head, children, after, label = 'Лента карточек' }) {
   const track = useRef(null);
   const [active, setActive] = useState(0);
-  const reduced = useReducedMotion();
   const count = Children.count(children);
+  // Точек столько, сколько у ленты положений «карточка у левого края» (последнее — упор в конец), а не по одной
+  // на карточку: на компьютере видно три-четыре карточки, и прежние точки 5–6 никогда не загорались, а в конце
+  // выделение перескакивало сразу на последнюю (правка 02.11)
+  const [pages, setPages] = useState(count);
+  const stops = useRef([0]);
+  const reduced = useReducedMotion();
   const behavior = reduced ? 'auto' : 'smooth';
-
-  // Шаг между карточками — по реальному расстоянию между первыми двумя (зазор на телефоне меньше)
-  const stepWidth = useCallback(() => {
-    const [a, b] = Array.from(track.current?.children ?? []);
-    if (a && b) return b.offsetLeft - a.offsetLeft;
-    return a ? a.getBoundingClientRect().width + 24 : 300;
-  }, []);
 
   // Стрелка — к началу следующей (предыдущей) карточки, даже если лента остановилась посередине
   const scrollBy = (dir) => {
@@ -36,10 +34,30 @@ export function Carousel({ head, children, after, label = 'Лента карто
   useEffect(() => {
     const el = track.current;
     if (!el) return;
+    // Горит точка положения, ближайшего к текущей прокрутке
     const onScroll = () => {
-      const atEnd = el.scrollLeft >= el.scrollWidth - el.clientWidth - 2;
-      setActive(atEnd ? count - 1 : Math.round(el.scrollLeft / stepWidth()));
+      const xs = stops.current;
+      const s = el.scrollLeft;
+      let best = 0;
+      for (let i = 1; i < xs.length; i++) if (Math.abs(xs[i] - s) < Math.abs(xs[best] - s)) best = i;
+      setActive(best);
     };
+    // Положения ленты пересчитываются при смене ширины (поворот телефона, окно браузера)
+    const measure = () => {
+      const cards = Array.from(el.children);
+      const base = cards[0]?.offsetLeft ?? 0;
+      const max = Math.max(0, el.scrollWidth - el.clientWidth);
+      const xs = [];
+      for (const c of cards) {
+        const x = Math.min(c.offsetLeft - base, max);
+        if (!xs.length || x - xs[xs.length - 1] > 8) xs.push(x);
+      }
+      stops.current = xs.length ? xs : [0];
+      setPages(stops.current.length);
+      onScroll();
+    };
+    const ro = new ResizeObserver(measure);
+    ro.observe(el);
     el.addEventListener('scroll', onScroll, { passive: true });
 
     // Перетаскивание мышью (на тач-экранах прокрутка нативная, с инерцией браузера).
@@ -87,6 +105,7 @@ export function Carousel({ head, children, after, label = 'Лента карто
     el.addEventListener('dragstart', onDragStart);
     return () => {
       stopGlide();
+      ro.disconnect();
       el.removeEventListener('scroll', onScroll);
       el.removeEventListener('pointerdown', onDown);
       el.removeEventListener('wheel', stopGlide);
@@ -94,7 +113,7 @@ export function Carousel({ head, children, after, label = 'Лента карто
       window.removeEventListener('pointerup', onUp);
       el.removeEventListener('dragstart', onDragStart);
     };
-  }, [count, reduced, stepWidth]);
+  }, [count, reduced]);
 
   return (
     <div className="container carousel">
@@ -107,9 +126,11 @@ export function Carousel({ head, children, after, label = 'Лента карто
       </div>
       {/* Лента в фокусе листается стрелками клавиатуры; label — название ленты для экранного диктора */}
       <div className="carousel__track reveal" ref={track} tabIndex={0} role="region" aria-label={label}>{children}</div>
-      <div className="carousel__dots" aria-hidden="true">
-        {Array.from({ length: count }, (_, i) => <span key={i} className={i === active ? 'is-active' : undefined} />)}
-      </div>
+      {pages > 1 && (
+        <div className="carousel__dots" aria-hidden="true">
+          {Array.from({ length: pages }, (_, i) => <span key={i} className={i === active ? 'is-active' : undefined} />)}
+        </div>
+      )}
       {after}
     </div>
   );

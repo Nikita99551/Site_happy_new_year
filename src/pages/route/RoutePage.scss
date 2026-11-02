@@ -47,6 +47,29 @@ html.no-anim .tree .ball--current { animation: none; }
 .tree-hint__ic { flex: none; display: grid; place-items: center; width: 36px; height: 36px; border-radius: 50%; background: var(--cr); color: var(--rd); }
 .tree-hint__ic svg { width: 22px; height: 22px; }
 .tree-hint__touch { display: none; }
+.tree-hint__nb { white-space: nowrap; }
+/* Палец у текущего шара (правка 30.10, TapHint в RouteTree.jsx): подлетает снизу справа, дважды нажимает и уходит — 2,8 с, как TAP_MS.
+   При каждом нажатии от шара расходится кремовое кольцо */
+.tap-hint__hand { transform-box: fill-box; transform-origin: 48% 22%; filter: drop-shadow(0 4px 6px rgba(0, 10, 4, 0.45)); animation: tap-hand 2.8s cubic-bezier(0.23, 1, 0.32, 1) both; }
+.tap-hint__ring { transform-box: fill-box; transform-origin: center; opacity: 0; animation: tap-ring 2.8s ease-out both; }
+@keyframes tap-hand {
+  0% { opacity: 0; translate: 46px 56px; scale: 1; }
+  20% { opacity: 1; translate: 0 0; scale: 1; }
+  30% { scale: 0.84; }
+  40% { scale: 1; }
+  52% { scale: 0.84; }
+  62% { scale: 1; }
+  84% { opacity: 1; translate: 0 0; }
+  100% { opacity: 0; translate: 18px 22px; }
+}
+@keyframes tap-ring {
+  0%, 29% { opacity: 0; scale: 0.7; }
+  32% { opacity: 0.95; scale: 0.8; }
+  46% { opacity: 0; scale: 1.5; }
+  51% { opacity: 0; scale: 0.7; }
+  54% { opacity: 0.95; scale: 0.8; }
+  68%, 100% { opacity: 0; scale: 1.5; }
+}
 @media (hover: none) { .tree-hint__hover { display: none; } .tree-hint__touch { display: inline; } }
 @media (prefers-reduced-motion: no-preference) { .tree-host.is-in .tree-hint__ic { animation: hint-nudge 1.4s var(--ease-in-out) 0.6s 3; } }
 @keyframes hint-nudge { 0%, 80%, 100% { transform: none; } 20% { transform: rotate(-16deg) scale(1.08); } 40% { transform: rotate(12deg) scale(1.12); } 60% { transform: rotate(-6deg); } }
@@ -118,10 +141,8 @@ html.no-anim .tree .ball--current { animation: none; }
 .receipt__note { grid-column: 1 / -1; font-size: 16px; color: var(--mu); }
 /* Список чеков с прокруткой: видно ~4 чека, как в макете 2855:4844 (полоса прокрутки, затухание снизу, подпись «Всего…») */
 .receipt__scroll { position: relative; }
-.receipt__list { max-height: 400px; overflow-y: auto; padding-right: 14px; scrollbar-width: thin; scrollbar-color: var(--g) rgba(217, 185, 140, 0.45); overscroll-behavior: contain; }
-.receipt__list::-webkit-scrollbar { width: 5px; }
-.receipt__list::-webkit-scrollbar-track { background: rgba(217, 185, 140, 0.45); border-radius: 3px; }
-.receipt__list::-webkit-scrollbar-thumb { background: var(--g); border-radius: 3px; }
+/* Полоса прокрутки — новогодняя, общая (shared/styles/scrollbar.scss) */
+.receipt__list { max-height: 400px; overflow-y: auto; padding-right: 14px; overscroll-behavior: contain; }
 .receipt__scroll::after { content: ''; position: absolute; left: 0; right: 20px; bottom: 0; height: 56px; background: linear-gradient(rgba(250, 247, 240, 0), #faf7f0); pointer-events: none; }
 .receipt__total { margin-top: 14px; text-align: center; font-weight: 700; font-size: 17px; color: var(--mu); }
 .receipt__total[hidden] { display: none; }
@@ -311,10 +332,9 @@ html.no-anim .tree .ball--current { animation: none; }
 .coupon__stub small { font-weight: 800; font-size: 15px; line-height: 1.25; color: var(--g); }
 .coupon__body { display: flex; flex-direction: column; align-items: flex-start; padding: 22px 22px 22px 24px; }
 .coupon__label { font-weight: 800; font-size: 12px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--mu); }
-.coupon__code { margin-top: 2px; font-family: var(--font-num); font-weight: 900; font-size: clamp(28px, 8.4cqi, 42px); line-height: 1.1; letter-spacing: 0.05em; color: var(--g); }
+/* Один размер для всех кодов (по самому длинному — ВОЛШЕБСТВО) и в одну строку: при переключении шагов купон не скачет (правка 30.10) */
+.coupon__code { margin-top: 2px; font-family: var(--font-num); font-weight: 900; font-size: clamp(22px, 7cqi, 36px); line-height: 1.1; letter-spacing: 0.03em; white-space: nowrap; color: var(--g); }
 .coupon__code--hidden { letter-spacing: 0.12em; color: #c3b9a3; }
-/* Длинные коды (ВОЛШЕБСТВО, ВКУСНЯШКА) — мельче и плотнее, чтобы помещались в купон */
-.coupon__code--long { font-size: clamp(22px, 7cqi, 36px); letter-spacing: 0.02em; }
 /* Кнопки шагов в купоне (правка 29.10): за каждый шаг свой код — выбрал шаг, видишь и копируешь его код.
    Пройденный шаг — сплошная обводка, закрытый — пунктир и бледный номер, выбранный — зелёная заливка */
 .coupon__steps { display: flex; flex-wrap: wrap; gap: 3px; margin-top: 8px; }
@@ -326,10 +346,12 @@ html.no-anim .tree .ball--current { animation: none; }
 .coupon__step:focus-visible { outline: 3px solid var(--go); outline-offset: 2px; }
 @media (hover: hover) { .coupon__step:not(.is-active):hover { border-color: var(--g); } }
 .coupon__steps + .coupon__code { margin-top: 10px; }
-.coupon__copy { margin-top: auto; padding: 9px 16px; border: 2px solid var(--g); border-radius: 999px; background: transparent; font-weight: 800; font-size: 15px; color: var(--g); transition: background-color var(--dur-fast) ease, color var(--dur-fast) ease, transform var(--dur-fast) var(--ease-out); }
+.coupon__copy { padding: 9px 16px; border: 2px solid var(--g); border-radius: 999px; background: transparent; font-weight: 800; font-size: 15px; color: var(--g); transition: background-color var(--dur-fast) ease, color var(--dur-fast) ease, transform var(--dur-fast) var(--ease-out); }
 .coupon__copy:active { transform: scale(0.96); }
 @media (hover: hover) { .coupon__copy:hover { background: var(--g); color: var(--cr); } }
-.coupon__when { margin-top: auto; padding-top: 10px; font-weight: 700; font-size: 15px; color: var(--rd); }
+/* Место под кнопку или «Откроется на N-м шаге» одной высоты: открытый и закрытый шаг не меняют высоту купона */
+.coupon__action { display: flex; align-items: center; min-height: 46px; margin-top: auto; padding-top: 12px; box-sizing: content-box; }
+.coupon__when { font-weight: 700; font-size: 15px; color: var(--rd); }
 .coupon__when .link { padding: 0; border: 0; background: none; font: inherit; }
 .coupon--locked .coupon__stub { background: #f3dd7a; }
 /* Три шага — одним рядом из трёх колонок (правка 28.10: переносились на вторую строку) */
@@ -353,9 +375,7 @@ html.no-anim .tree .ball--current { animation: none; }
   .coupon__sum { font-size: clamp(24px, 9.4cqi, 36px); }
   .coupon__stub small { font-size: 14px; }
   .coupon__body { padding: 16px 16px 18px 18px; }
-  .coupon__code { font-size: 32px; }
-  .coupon__code--long { font-size: 25px; letter-spacing: 0.01em; }
-  .coupon__copy { margin-top: 12px; }
+  .coupon__code { font-size: 28px; }
   /* Телефон: кнопки шагов крупнее, под палец (ряд может перенестись) */
   .coupon__step { min-width: 38px; height: 38px; font-size: 17px; }
   .promos__how { grid-template-columns: minmax(0, 1fr); padding: 18px 20px; }

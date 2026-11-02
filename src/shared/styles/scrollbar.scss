@@ -1,0 +1,36 @@
+@use '@/shared/styles/tokens' as *;
+
+/* ---------- Новогодняя полоса прокрутки (правка 30.10) ----------
+   Бегунок — леденцовая трость: красно-кремовые косые полоски; дорожка — под фон блока.
+   Chrome, Edge, Safari рисуют ::-webkit-scrollbar. Стандартные scrollbar-width / scrollbar-color в Chrome отключают
+   этот рисунок, поэтому у блоков их нет — они только для Firefox (там возможны лишь цвета), внизу файла.
+   Где спрятана (карусели, гирлянды, окна на телефоне) — scrollbar-width: none и display: none у самих блоков. */
+
+::-webkit-scrollbar { width: 14px; height: 14px; }
+::-webkit-scrollbar-track { background: #efe4cc; }
+::-webkit-scrollbar-thumb {
+  /* Не короче 48 px: у длинных списков (171 магазин) бегунок иначе превращается в точку */
+  min-height: 48px; border: 2px solid transparent; border-radius: 999px; background-clip: padding-box;
+  background-image: repeating-linear-gradient(-45deg, #e31e24 0 5px, #fff8e8 5px 10px);
+}
+::-webkit-scrollbar-thumb:hover { background-image: repeating-linear-gradient(-45deg, #f2262c 0 5px, #ffffff 5px 10px); }
+::-webkit-scrollbar-corner { background: transparent; }
+
+/* Списки внутри страниц и окон: бегунок чуть тоньше, дорожка скруглённая */
+.doc__toc::-webkit-scrollbar, .store-list::-webkit-scrollbar, .receipt__list::-webkit-scrollbar, .nav::-webkit-scrollbar { width: 12px; }
+.doc__toc::-webkit-scrollbar-track, .store-list::-webkit-scrollbar-track, .receipt__list::-webkit-scrollbar-track, .nav::-webkit-scrollbar-track { border-radius: 999px; }
+/* Содержание правил — на тёмно-зелёном */
+.doc__toc::-webkit-scrollbar-track { margin-block: 16px; background: rgba(255, 248, 232, 0.12); }
+/* Списки на кремовом и в белом меню */
+.store-list::-webkit-scrollbar-track, .receipt__list::-webkit-scrollbar-track { background: rgba(217, 185, 140, 0.35); }
+.nav::-webkit-scrollbar-track { margin-block: 12px; background: #f3ede0; }
+/* Окно выше экрана прокручивается само — дорожка прозрачная, поверх затемнения */
+dialog.modal::-webkit-scrollbar-track { background: transparent; }
+
+/* Firefox: только цвета, тонкая полоса */
+@supports not selector(::-webkit-scrollbar) {
+  html { scrollbar-color: #e31e24 #efe4cc; }
+  .doc__toc { scrollbar-width: thin; scrollbar-color: #e31e24 rgba(255, 248, 232, 0.12); }
+  .store-list, .receipt__list { scrollbar-width: thin; scrollbar-color: #e31e24 rgba(217, 185, 140, 0.35); }
+  .nav, dialog.modal--tall { scrollbar-width: thin; scrollbar-color: #e31e24 transparent; }
+}

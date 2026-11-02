@@ -1,9 +1,8 @@
 import { Link } from 'react-router-dom';
-import { SoonLink } from '@/shared/ui/soon-link/SoonLink';
 import { OpenModalButton } from '@/features/modal';
-import { CAMPAIGN, DELIVERY_PROMOS } from '@/shared/config/campaign';
+import { CAMPAIGN, DELIVERY_PROMOS, PROMO_STEPS_TEXT } from '@/shared/config/campaign';
 import { formatRub, plural } from '@/shared/lib/text';
-import { IconBox, IconClose, IconCoupon, IconCrate } from '@/shared/ui/icons/Icons';
+import { IconBox, IconCert, IconClose, IconCoupon, IconCrate, IconTicket } from '@/shared/ui/icons/Icons';
 import { StepGarland, StepRow } from '@/shared/ui/lights';
 import { CtaBanner } from '@/widgets/cta-banner/CtaBanner';
 import { PageLayout } from '@/widgets/page-layout/PageLayout';
@@ -13,10 +12,13 @@ import './ConditionsPage.scss';
 
 /** Вехи круга: подписи под гирляндой «Один круг — 30 шагов» */
 const MILESTONES = [
-  { n: 10, title: <>10‑й шаг</>, text: <>Розыгрыш сертификата Аникс на&nbsp;1&nbsp;500&nbsp;₽: получит каждый 30‑й</> },
-  { n: 20, title: <>20‑й шаг</>, text: <>Розыгрыш сертификата Аникс на&nbsp;3&nbsp;000&nbsp;₽: получит каждый 100‑й</> },
-  { n: 30, title: <>30‑й шаг&nbsp;— финиш</>, text: <>Билет на&nbsp;розыгрыш и&nbsp;новый круг</> },
+  { n: 10, Icon: IconCert, title: <>10‑й шаг</>, text: <>Розыгрыш сертификата Аникс на&nbsp;1&nbsp;500&nbsp;₽: получит каждый 30‑й</> },
+  { n: 20, Icon: IconCert, title: <>20‑й шаг</>, text: <>Розыгрыш сертификата Аникс на&nbsp;3&nbsp;000&nbsp;₽: получит каждый 100‑й</> },
+  { n: 30, Icon: IconTicket, title: <>30‑й шаг&nbsp;— финиш</>, text: <>Билет на&nbsp;розыгрыш и&nbsp;новый круг</> },
 ];
+
+/** Шаги с площадками партнёров для подписи под гирляндой: «4, 8, 12, 16, 24 и 28» (на 20-м — сертификат, правка 01.11) */
+const PARTNER_STEPS = `${CAMPAIGN.partnerStops.slice(0, -1).join(', ')} и\u00a0${CAMPAIGN.partnerStops.at(-1)}`;
 
 const d = (ms) => ({ '--d': `${ms}ms` });
 
@@ -131,18 +133,18 @@ export default function ConditionsPage() {
           <div className="scale reveal">
             <div className="scale__lights"><StepGarland step={30} labels={false} partners={[...CAMPAIGN.partnerStops]} wire="#173f2a" textColor="#173f2a" startSolid /></div>
             <div className="scale__labels">
-              {MILESTONES.map((m) => <div key={m.n}><b>{m.title}</b><p>{m.text}</p></div>)}
+              {MILESTONES.map((m) => <div key={m.n}><b><m.Icon className="scale__ic" />{m.title}</b><p>{m.text}</p></div>)}
             </div>
             {/* Телефон: гирлянда тремя рядами по 10 шагов, под каждым рядом — его веха (правка 24.10) */}
             <div className="scale__rows">
               {MILESTONES.map((m, i) => (
                 <div key={m.n} className="scale__row">
                   <StepRow row={i } step={30} labels={false} partners={[...CAMPAIGN.partnerStops]} wire="#173f2a" textColor="#173f2a" />
-                  <div><b>{m.title}</b><p>{m.text}</p></div>
+                  <div><b><m.Icon className="scale__ic" />{m.title}</b><p>{m.text}</p></div>
                 </div>
               ))}
             </div>
-            <p className="scale__legend"><IconCrate />Каждый 4‑й шаг&nbsp;— площадка партнёра: видео, рассказ о&nbsp;компании и&nbsp;отзывы</p>
+            <p className="scale__legend"><IconCrate />На&nbsp;{PARTNER_STEPS}‑м шагах&nbsp;— площадки партнёров: видео, рассказ о&nbsp;компании и&nbsp;отзывы</p>
           </div>
           <div className="odds">
             <div className="odds__card reveal">
@@ -164,7 +166,7 @@ export default function ConditionsPage() {
             <IconCoupon className="promo-strip__icon" />
             <div className="promo-strip__text">
               <b>Промокоды на&nbsp;доставку «Торнадо»&nbsp;— каждому</b>
-              <p>Каждый второй шаг&nbsp;— промокод на&nbsp;заказ в&nbsp;приложении «Торнадо». Это не&nbsp;розыгрыш: дошли до&nbsp;шага&nbsp;— код ваш, он&nbsp;появится на&nbsp;странице <Link className="link" to="/route">«Мой маршрут»</Link>.</p>
+              <p>На&nbsp;каждом нечётном шаге&nbsp;— {PROMO_STEPS_TEXT}&nbsp;— промокод на&nbsp;заказ в&nbsp;приложении «Торнадо». Это не&nbsp;розыгрыш: дошли до&nbsp;шага&nbsp;— код ваш, он&nbsp;появится на&nbsp;странице <Link className="link" to="/route">«Мой маршрут»</Link>.</p>
             </div>
             <ul className="promo-strip__deals">
               {DELIVERY_PROMOS.map((p) => (
@@ -183,7 +185,7 @@ export default function ConditionsPage() {
         <div className="container reveal">
           <h2>Полные правила акции</h2>
           <p className="lead">Организатор&nbsp;— ООО&nbsp;«Торговая сеть Аникс». Покупки и&nbsp;регистрация чеков&nbsp;— с&nbsp;16&nbsp;ноября 2026 по&nbsp;10&nbsp;января 2027&nbsp;года, выдача призов&nbsp;— до&nbsp;24&nbsp;января.</p>
-          <p style={{ marginTop: 18 }}><SoonLink className="link">Читать полные правила&nbsp;→</SoonLink></p>
+          <p style={{ marginTop: 18 }}><Link className="link" to="/rules">Читать полные правила&nbsp;→</Link></p>
         </div>
       </section>
 

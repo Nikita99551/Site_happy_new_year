@@ -4,15 +4,13 @@ import { useSession } from '@/entities/user';
 import { useModal } from '@/features/modal';
 import { useToast } from '@/shared/ui/toast/context';
 import { IconPin, IconUser } from '@/shared/ui/icons/Icons';
-import { SoonLink } from '@/shared/ui/soon-link/SoonLink';
 import './Header.scss';
 
-// Без адреса — страница ещё не готова: пункт на месте, но никуда не ведёт
 const NAV = [
   { to: '/', label: 'Главная' },
   { to: '/route', label: 'Мой маршрут' },
   { to: '/conditions', label: 'Условия' },
-  { label: 'Подарки' },
+  { to: '/prizes', label: 'Подарки' },
   { to: '/#partners', label: 'Партнёры' },
 ];
 
@@ -71,18 +69,22 @@ export function Header({ hero = false }) {
       header.style.setProperty('--header-offset', `${wrap.offsetTop}px`);
       document.documentElement.style.setProperty('--header-h', `${header.offsetHeight}px`);
     };
-    const onScroll = () => document.documentElement.classList.toggle('is-scrolled', wrap.getBoundingClientRect().top <= 1);
+    // Полоса прилипла к верху (её верх выше 2 px) — html.is-scrolled. Следит IntersectionObserver, а не замер
+    // на каждое событие прокрутки: тот заставлял пересчитывать страницу каждый кадр (правка 01.11, рывки на телефоне)
+    const io = new IntersectionObserver(
+      ([e]) => document.documentElement.classList.toggle('is-scrolled', e.boundingClientRect.top <= 1),
+      { rootMargin: '-2px 0px 0px 0px', threshold: 1 },
+    );
     setOffset();
-    onScroll();
+    io.observe(wrap);
     // Высота меняется и без изменения окна: подгрузились шрифты, перенеслась верхняя строка
     const ro = new ResizeObserver(setOffset);
     ro.observe(header);
     window.addEventListener('resize', setOffset);
-    window.addEventListener('scroll', onScroll, { passive: true });
     return () => {
       ro.disconnect();
+      io.disconnect();
       window.removeEventListener('resize', setOffset);
-      window.removeEventListener('scroll', onScroll);
     };
   }, []);
 
@@ -114,16 +116,17 @@ export function Header({ hero = false }) {
         </div>
         <div className="header__bar-wrap" ref={wrapRef}>
           <div className="header__bar">
-            <Link className="header__logo" to="/" aria-label="Аникс — на главную"><img src="/img/logo.svg" alt="Аникс" width={136} height={36} /></Link>
+            <Link className="header__logo tap-area" to="/" aria-label="Аникс — на главную"><img src="/img/logo.svg" alt="Аникс" width={136} height={36} /></Link>
             <button className="burger" type="button" aria-label="Открыть меню" aria-expanded={menuOpen} onClick={() => setMenuOpen(!menuOpen)}><span /><span /><span /></button>
             <nav className="nav" aria-label="Главное меню">
               {NAV.map((item) => {
-                if (!item.to) return <SoonLink key={item.label}>{item.label}</SoonLink>;
                 const active = item.to === '/#partners' ? isPartners : location.pathname === item.to && !isPartners;
                 return <Link key={item.to} to={item.to} aria-current={active ? 'page' : undefined}>{item.label}</Link>;
               })}
               {/* Телефон: строки с магазином и входом нет, поэтому профиль и магазин — внизу меню */}
               <div className="nav__account">
+                {/* Главное действие акции — первым в меню (правка 30.10); гостю окно чека само предложит войти */}
+                <button className="btn nav__receipt" type="button" onClick={() => { setMenuOpen(false); open('receipt'); }}>Зарегистрировать чек</button>
                 <button className="nav__store" type="button" onClick={() => { setMenuOpen(false); open('store'); }}>
                   <IconPin stroke="currentColor" width={18} height={18} />
                   <span>{selectedStore ? selectedStore.name : 'Выбрать магазин'}</span>
@@ -134,7 +137,7 @@ export function Header({ hero = false }) {
                     <button className="btn btn--secondary btn--small" type="button" onClick={signOut}>Выйти</button>
                   </div>
                 ) : (
-                  <button className="btn btn--small" type="button" onClick={() => { setMenuOpen(false); open('auth'); }}>Войти или зарегистрироваться</button>
+                  <button className="btn btn--secondary btn--small" type="button" onClick={() => { setMenuOpen(false); open('auth'); }}>Войти или зарегистрироваться</button>
                 )}
               </div>
             </nav>

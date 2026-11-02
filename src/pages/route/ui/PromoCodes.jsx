@@ -1,12 +1,12 @@
 import { useState } from 'react';
-import { codeForStep, DELIVERY_PROMOS, TORNADO_APP_URL } from '@/shared/config/campaign';
+import { codeForStep, DELIVERY_PROMOS, PROMO_STEPS_TEXT, TORNADO_APP_URL } from '@/shared/config/campaign';
 import { formatRub } from '@/shared/lib/text';
 import { Button } from '@/shared/ui/button/Button';
 import { IconCoupon } from '@/shared/ui/icons/Icons';
 
 /**
  * Промокоды доставки «Торнадо» (правка 27.10): каждому, кто дошёл до шага, — это не розыгрыш.
- * С 29.10 за каждый чётный шаг свой код (STEP_CODES): в купоне группы — кнопки шагов (2, 4, 6…), переключаешься
+ * С 29.10 за каждый шаг с промокодом свой код (STEP_CODES): в купоне группы — кнопки шагов (с 30.10 — нечётные: 1, 3, 5…), переключаешься
  * и копируешь код за выбранный шаг. Код шага открыт, когда шаг пройден; после первого круга открыты все.
  * Гость видит купоны закрытыми и приглашение войти. Вводится код в приложении «Торнадо» (TORNADO_APP_URL).
  */
@@ -31,7 +31,7 @@ export function PromoCodes({ step, circle, guest, onLogin }) {
         <div className="section-head reveal">
           <span className="ribbon ribbon--cream">Доставка «Торнадо»</span>
           <h2>Ваши промокоды на&nbsp;доставку</h2>
-          <p className="lead">За&nbsp;каждый второй шаг&nbsp;— свой промокод на&nbsp;заказ в&nbsp;приложении «Торнадо». Это не&nbsp;розыгрыш: дошли до&nbsp;шага&nbsp;— промокод ваш. Выберите шаг и&nbsp;скопируйте его код.</p>
+          <p className="lead">На&nbsp;каждом нечётном шаге&nbsp;— {PROMO_STEPS_TEXT}&nbsp;— свой промокод на&nbsp;заказ в&nbsp;приложении «Торнадо». Это не&nbsp;розыгрыш: дошли до&nbsp;шага&nbsp;— промокод ваш. Выберите шаг и&nbsp;скопируйте его код.</p>
         </div>
         <div className="promos__list">
           {DELIVERY_PROMOS.map((p, i) => {
@@ -54,15 +54,17 @@ export function PromoCodes({ step, circle, guest, onLogin }) {
                       ))}
                     </div>
                     {open
-                      ? <b className={`coupon__code${code.length > 8 ? ' coupon__code--long' : ''}`}>{code}</b>
+                      ? <b className="coupon__code">{code}</b>
                       : <b className="coupon__code coupon__code--hidden" aria-label="Промокод пока закрыт">••••••</b>}
-                    {open ? (
-                      <button type="button" className="coupon__copy" onClick={() => copy(code)}>{copied === code ? 'Скопировано ✓' : 'Скопировать'}</button>
-                    ) : guest ? (
-                      <p className="coupon__when"><button type="button" className="link" onClick={onLogin}>Войдите</button>, чтобы увидеть свои промокоды</p>
-                    ) : (
-                      <p className="coupon__when">Откроется на&nbsp;{sel}‑м шаге</p>
-                    )}
+                    <div className="coupon__action">
+                      {open ? (
+                        <button type="button" className="coupon__copy" onClick={() => copy(code)}>{copied === code ? 'Скопировано ✓' : 'Скопировать'}</button>
+                      ) : guest ? (
+                        <p className="coupon__when"><button type="button" className="link" onClick={onLogin}>Войдите</button>, чтобы увидеть свои промокоды</p>
+                      ) : (
+                        <p className="coupon__when">Откроется на&nbsp;{sel}‑м шаге</p>
+                      )}
+                    </div>
                   </div>
                 </div>
               </article>

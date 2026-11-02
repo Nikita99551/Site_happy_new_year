@@ -60,6 +60,9 @@
   .delivery-hint__phones { justify-content: center; gap: 14px; }
   .delivery-hint__text > b { font-size: 17px; }
   .delivery-hint__text li { font-size: 15px; }
+  /* Окно чека без прокрутки (правка 30.10): экраны чуть меньше, шаги по одной строке */
+  .delivery-hint { --ph-w: 46px; gap: 8px; }
+  .delivery-hint__text li { padding-left: 22px; font-size: 13.5px; line-height: 1.35; }
 }
 /* Экраны до 960 по высоте (Full HD в браузере, ноутбуки): подсказка чуть плотнее */
 @media (min-width: 601px) and (max-height: 960px) { .delivery-hint { margin-bottom: 14px; padding-block: 8px; } }

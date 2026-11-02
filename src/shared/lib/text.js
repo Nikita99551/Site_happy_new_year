@@ -9,8 +9,10 @@ export function plural(n, one, few, many) {
 }
 
 /** Число с неразрывными пробелами между разрядами: 1800 → '1 800' */
+// Один форматтер на весь сайт: toLocaleString создаёт его заново при каждом вызове, а счётчики зовут формат каждый кадр
+const RU_NUMBER = new Intl.NumberFormat('ru-RU');
 export function formatNumber(n) {
-  return n.toLocaleString('ru-RU').replace(/\s/g, ' ');
+  return RU_NUMBER.format(n).replace(/\s/g, ' ');
 }
 
 /** Сумма в рублях: 1800 → '1 800 ₽' */

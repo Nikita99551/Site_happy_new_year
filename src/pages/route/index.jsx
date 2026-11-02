@@ -54,7 +54,7 @@ export default function RoutePage() {
       {/* ===== Первый экран маршрута ===== */}
       <section className="section section--green route-hero on-dark" ref={heroRef}>
         <Snow />
-        <div className="route-hero__goat reveal" aria-hidden="true"><img src="/img/goat-lantern.webp" alt="" width={688} height={1024} /></div>
+        <div className="route-hero__goat reveal" aria-hidden="true"><img src="/img/goat-lantern.webp" alt="" width={688} height={1024} loading="lazy" decoding="async" /></div>
         <div className="container" style={{ position: 'relative', zIndex: 2 }}>
           <p className="route-hero__greet reveal">{user ? `${user.name}, с наступающим!` : 'С наступающим Новым годом!'}</p>
           <h1 className="reveal" style={d(60)}>Ваш новогодний маршрут</h1>
@@ -82,7 +82,7 @@ export default function RoutePage() {
             <Button variant="light" to="/">На главную</Button>
           </div>
           {guest && ready && (
-            <p className="route-hero__note reveal" style={d(380)}>Это пример маршрута. <a className="link" href="#" style={{ color: '#e2b24a' }} onClick={(e) => { e.preventDefault(); open('auth'); }}>Войдите</a>, чтобы увидеть свои шаги и&nbsp;чеки.</p>
+            <p className="route-hero__note reveal" style={d(380)}>Это пример маршрута. <button type="button" className="link" style={{ color: '#e2b24a' }} onClick={() => open('auth')}>Войдите</button>, чтобы увидеть свои шаги и&nbsp;чеки.</p>
           )}
         </div>
       </section>
@@ -117,7 +117,7 @@ export default function RoutePage() {
         </div>
       </section>
 
-      {/* ===== Промокоды доставки «Торнадо» за чётные шаги ===== */}
+      {/* ===== Промокоды доставки «Торнадо» (шаги — DELIVERY_PROMOS) ===== */}
       <PromoCodes step={shown.step} circle={shown.circle} guest={guest} onLogin={() => open('auth')} />
 
       {/* ===== Розыгрыши и история чеков ===== */}

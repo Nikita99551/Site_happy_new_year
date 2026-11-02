@@ -6,7 +6,8 @@ const COLORS = ['#e2b24a', '#e31e24', '#fff8e8'];
 /** Гирлянда в шапке главной: длинные дуги на всю ширину, цвета по кругу. Ширина берётся из контейнера. */
 export function HeaderLights({ className }) {
   const ref = useRef(null);
-  const width = useElementWidth(ref);
+  // Гирлянда во всю ширину экрана: ширина окна — точная первая прикидка, без замера посреди отрисовки
+  const width = useElementWidth(ref, typeof window === 'undefined' ? 0 : window.innerWidth);
   const W = Math.max(600, width || 1440);
   const H = 96;
   const swag = W / Math.max(1, Math.round(W / 720));

@@ -28,12 +28,17 @@ export function observeReveal(root = document) {
   let alive = true;
   const showVisible = () => {
     if (!alive) return;
-    for (const el of items) {
+    // Сначала все замеры, потом все классы: иначе каждый новый .is-in заставлял браузер пересчитывать страницу
+    // перед следующим замером (на слабом телефоне — ~0,2 с при открытии, правка 01.11)
+    const h = window.innerHeight;
+    const seen = items.filter((el) => {
+      if (el.classList.contains('is-in')) return false;
       const r = el.getBoundingClientRect();
-      if (r.height && r.top < window.innerHeight && r.bottom > 0 && !el.classList.contains('is-in')) {
-        el.classList.add('is-in');
-        io.unobserve(el);
-      }
+      return r.height && r.top < h && r.bottom > 0;
+    });
+    for (const el of seen) {
+      el.classList.add('is-in');
+      io.unobserve(el);
     }
   };
   const raf = requestAnimationFrame(showVisible);

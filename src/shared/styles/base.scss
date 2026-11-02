@@ -108,6 +108,13 @@ p { margin: 0; }
 .btn.btn--off:active { transform: none; }
 .link { font-weight: 800; color: var(--rd); text-decoration: underline; text-underline-offset: 3px; }
 .link--green { color: var(--g); }
+/* Кнопка, которая выглядит как ссылка («Войдите», «Назад к выбору», «Изменить»): действие на странице — это кнопка,
+   её понимают экранный диктор и клавиша «пробел» (правка 01.11, раньше были ссылки href="#") */
+button.link { padding: 0; border: 0; background: none; font: inherit; font-weight: 800; text-align: inherit; }
+/* Невидимое расширение области нажатия мелких ссылок до ~45 px по высоте — на телефоне по ним легко попасть пальцем,
+   вид не меняется (правка 01.11: логотип, «Условия акции», «← На главную») */
+.tap-area { position: relative; }
+.tap-area::after { content: ''; position: absolute; inset: -11px -6px; }
 
 .field { display: block; margin-bottom: 22px; }
 .field__label { display: flex; justify-content: space-between; font-weight: 800; font-size: 18px; margin-bottom: 8px; }

@@ -2,7 +2,7 @@
 
 /* Список прокручивается внутри окна: когда магазинов будет много, окно не вырастет выше экрана */
 .store-search { margin-top: 20px; }
-.store-list { display: grid; gap: 12px; margin-top: 14px; max-height: max(220px, 100dvh - 680px); overflow-y: auto; padding-right: 6px; overscroll-behavior: contain; scrollbar-width: thin; scrollbar-color: var(--g) rgba(217, 185, 140, 0.45); }
+.store-list { display: grid; gap: 12px; margin-top: 14px; max-height: max(220px, 100dvh - 680px); overflow-y: auto; padding-right: 6px; overscroll-behavior: contain; }
 .store { display: grid; grid-template-columns: 44px 1fr auto auto; align-items: center; gap: 20px; padding: 20px 24px; background: rgba(255, 255, 255, 0.6); border: 1.5px solid var(--kr); border-radius: 12px; }
 .store--selected { background: #fff; border: 2.5px solid var(--g); }
 .store__pin { width: 44px; height: 44px; border-radius: 50%; background: var(--pa); display: grid; place-items: center; color: var(--rd); }

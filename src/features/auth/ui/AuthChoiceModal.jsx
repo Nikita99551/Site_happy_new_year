@@ -22,8 +22,8 @@ export function AuthChoiceModal({ open }) {
           ? <>Чтобы зарегистрировать чек, войдите или создайте личный кабинет. Сразу после этого откроется окно чека.</>
           : <>Создайте личный кабинет или&nbsp;войдите, чтобы продолжить свой маршрут.</>}
       decor={<>
-        <img className="modal__stamp" src="/img/stamp.webp" alt="" width={115} height={146} />
-        <img className="modal__goat modal__goat--right" src="/img/goat-point.webp" alt="" width={460} height={798} />
+        <img className="modal__stamp" src="/img/stamp.webp" alt="" width={115} height={146} loading="lazy" decoding="async" />
+        <img className="modal__goat modal__goat--right" src="/img/goat-point.webp" alt="" width={460} height={798} loading="lazy" decoding="async" />
       </>}
     >
       <div className="modal__form modal__actions">
