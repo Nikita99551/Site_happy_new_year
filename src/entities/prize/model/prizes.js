@@ -10,6 +10,16 @@
  * @property {boolean} [cutout] — Картинка — вырезка на прозрачном фоне: показывается целиком, на светлой подложке
  */
 
+/**
+ * Суперпризы финала 12 января, кроме главного (сертификат на 250 000 ₽ на курорт «Манжерок»). Картинки — вырезки
+ * из макета Figma (страница «НОВЫЙ ГОД Сайт», над секцией «суперприза в финале»), цвет не указываем.
+ */
+export const FINAL_PRIZES = [
+  { id: 'iphone', title: 'Смартфон', model: 'Apple iPhone 18 Pro 256 ГБ', image: '/img/final-iphone.webp', alt: 'Смартфон Apple iPhone 18 Pro', cutout: true },
+  { id: 'dyson', title: 'Мультистайлер', model: 'Dyson Airwrap Co‑anda 2x HS09', image: '/img/final-dyson.webp', alt: 'Мультистайлер Dyson Airwrap Co-anda 2x HS09 с насадками', cutout: true },
+  { id: 'tv', title: 'Телевизор', model: 'Xiaomi TV A Pro 65 2026, 65″ (163 см)', image: '/img/final-tv-xiaomi.webp', alt: 'Телевизор Xiaomi TV A Pro 65 дюймов', cutout: true },
+  { id: 'ps5', title: 'Игровая консоль', model: 'PlayStation 5 Slim', image: '/img/final-ps5.webp', alt: 'Игровая консоль PlayStation 5 Slim с геймпадом', cutout: true },
+];
 
 /**
  * Еженедельные призы по неделям: в каждом розыгрыше 5 победителей (п. 8.2 правил). Картинки — вырезки на прозрачном фоне,

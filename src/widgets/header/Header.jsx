@@ -4,15 +4,13 @@ import { useSession } from '@/entities/user';
 import { useModal } from '@/features/modal';
 import { useToast } from '@/shared/ui/toast/context';
 import { IconPin, IconUser } from '@/shared/ui/icons/Icons';
-import { SoonLink } from '@/shared/ui/soon-link/SoonLink';
 import './Header.scss';
 
-// Без адреса — страница ещё не готова: пункт на месте, но никуда не ведёт
 const NAV = [
   { to: '/', label: 'Главная' },
   { to: '/route', label: 'Мой маршрут' },
   { to: '/conditions', label: 'Условия' },
-  { label: 'Подарки' },
+  { to: '/prizes', label: 'Подарки' },
   { to: '/#partners', label: 'Партнёры' },
 ];
 
@@ -119,7 +117,6 @@ export function Header({ hero = false }) {
             <button className="burger" type="button" aria-label="Открыть меню" aria-expanded={menuOpen} onClick={() => setMenuOpen(!menuOpen)}><span /><span /><span /></button>
             <nav className="nav" aria-label="Главное меню">
               {NAV.map((item) => {
-                if (!item.to) return <SoonLink key={item.label}>{item.label}</SoonLink>;
                 const active = item.to === '/#partners' ? isPartners : location.pathname === item.to && !isPartners;
                 return <Link key={item.to} to={item.to} aria-current={active ? 'page' : undefined}>{item.label}</Link>;
               })}

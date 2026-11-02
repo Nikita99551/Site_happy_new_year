@@ -14,7 +14,7 @@ export function Footer({ compact = false }) {
               <p className="footer__tag">Рядом с&nbsp;вами. К&nbsp;Новому году.</p>
             </div>
             <nav className="footer__nav" aria-label="Разделы сайта">
-              <Link to="/">Главная</Link><Link to="/route">Мой маршрут</Link><Link to="/conditions">Условия</Link><SoonLink>Подарки</SoonLink><Link to="/#partners">Партнёры</Link>
+              <Link to="/">Главная</Link><Link to="/route">Мой маршрут</Link><Link to="/conditions">Условия</Link><Link to="/prizes">Подарки</Link><Link to="/#partners">Партнёры</Link>
             </nav>
           </div>
         )}

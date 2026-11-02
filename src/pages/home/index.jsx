@@ -266,7 +266,7 @@ export function HomePage() {
               <p className="lead" style={{ color: 'rgba(255,248,232,.92)' }}>Участвуют все, кто прошёл круг. Каждый круг&nbsp;— ещё один билет.</p>
             </div>
           }
-          after={<><p className="prize-note reveal">Изображения призов носят иллюстративный характер: внешний вид, цвет и&nbsp;комплектация призов могут отличаться.</p><div className="final-strip reveal"><span className="star-shape" /><p><b>А&nbsp;12&nbsp;января&nbsp;— финал</b>5&nbsp;суперпризов, главный&nbsp;— <span className="final-strip__prize">сертификат на&nbsp;250&nbsp;000&nbsp;₽</span> на&nbsp;отдых на&nbsp;курорте «Манжерок»</p><SoonLink className="btn">Посмотреть все призы</SoonLink></div></>}
+          after={<><p className="prize-note reveal">Изображения призов носят иллюстративный характер: внешний вид, цвет и&nbsp;комплектация призов могут отличаться.</p><div className="final-strip reveal"><span className="star-shape" /><p><b>А&nbsp;12&nbsp;января&nbsp;— финал</b>5&nbsp;суперпризов, главный&nbsp;— <span className="final-strip__prize">сертификат на&nbsp;250&nbsp;000&nbsp;₽</span> на&nbsp;отдых на&nbsp;курорте «Манжерок»</p><Button to="/prizes">Посмотреть все призы</Button></div></>}
         >
           {WEEKLY_PRIZES.map((p, i) => <PrizeCard key={p.id} prize={p} badge={`${i + 1} неделя`} />)}
         </Carousel>

@@ -1,0 +1,256 @@
+@use '@/shared/styles/tokens' as *;
+
+/* Страница «Подарки» */
+.prizes-hero { padding-top: 88px; padding-bottom: 56px; overflow: clip; }
+.prizes-hero h1 { margin-top: 24px; font-size: clamp(40px, 5.4vw, 78px); max-width: 15ch; }
+.prizes-hero .lead { margin-top: 20px; max-width: 640px; color: rgba(255, 248, 232, 0.92); }
+.prizes-hero__note { margin-top: 18px; font-size: 16px; opacity: 0.7; }
+.prizes-hero__goat { position: absolute; right: var(--gutter); bottom: 0; width: 290px; z-index: 0; }
+.main-prize { display: grid; grid-template-columns: 1fr 1.1fr; gap: 64px; align-items: center; }
+.main-prize h2 { font-size: clamp(40px, 5.5vw, 80px); line-height: 1; }
+.main-prize .lead { margin-top: 24px; max-width: 520px; }
+.photo-card { position: relative; padding: 22px 22px 56px; background: #fff; box-shadow: var(--shadow-card); rotate: 3deg; }
+.photo-card img { aspect-ratio: 616 / 452; object-fit: cover; width: 100%; }
+.photo-card figcaption { position: absolute; left: 30px; bottom: 10px; font-family: var(--font-display); font-style: italic; font-size: 40px; color: var(--g); }
+.photo-card__tape { position: absolute; right: -40px; top: -16px; width: 130px; height: 38px; background: rgba(243, 230, 200, 0.85); rotate: 35deg; }
+.main-prize__badge { position: absolute; z-index: 3; left: -70px; top: -70px; width: 150px; height: 150px; }
+.main-prize__badge .num { font-size: 70px; }
+.main-prize__badge small { font-weight: 800; font-size: 14px; line-height: 1.05; text-align: center; }
+.main-prize__stamp { position: absolute; z-index: 3; right: -40px; bottom: -40px; width: 150px; rotate: 8deg; }
+.main-prize__branch { position: absolute; z-index: 3; right: -20px; top: -90px; width: 200px; rotate: 200deg; }
+.main-prize__wrap { position: relative; }
+.certs { display: grid; grid-template-columns: 1fr 1fr; gap: 32px; margin-top: 48px; }
+/* Компьютер: сертификаты не во всю ширину — блок помещается в экран (правка 27.10) */
+@media (min-width: 1201px) { .certs { max-width: min(100%, 1180px, 150vh); margin-top: 8px; } .certs__note { margin-top: 18px; } .main-prize h2 { font-size: clamp(40px, min(4.6vw, 7.6vh), 72px); } .prizes-hero { padding-top: clamp(56px, 8vh, 88px); } .prizes-hero h1 { font-size: clamp(40px, min(5vw, 8vh), 74px); } .calendar { margin-top: 36px; } .calendar__notes { margin-top: 28px; font-size: 18px; } }
+.certs img { width: 100%; }
+.certs__note { margin-top: 24px; font-size: 16px; color: var(--mu); }
+.calendar { position: relative; margin-top: 60px; }
+.calendar__wire { position: absolute; left: 0; right: 0; top: 0; height: 40px; }
+.calendar__row { display: flex; align-items: flex-start; gap: 16px; padding-top: 34px; }
+.cal-tag { position: relative; flex: 0 0 124px; min-height: 210px; padding: 50px 10px 24px; text-align: center; color: var(--g); background: var(--cr) url('/img/paper-cream.webp') center/cover; filter: drop-shadow(0 8px 16px rgba(0, 10, 4, 0.35)); }
+.cal-tag:nth-child(even) { background-color: var(--go); background-blend-mode: multiply; }
+.cal-tag::before { content: ''; position: absolute; left: 50%; top: -34px; height: 34px; border-left: 2px solid rgba(255, 248, 232, 0.8); }
+.cal-tag__hole { position: absolute; left: 50%; top: 22px; width: 14px; height: 14px; margin-left: -7px; border-radius: 50%; background: var(--g); }
+.cal-tag small { display: block; font-weight: 700; font-size: 15px; }
+.cal-tag .num { font-size: 68px; }
+.cal-tag b { display: block; margin-top: 8px; font-weight: 800; font-size: 17px; color: var(--rd); }
+.cal-tag--final { flex-basis: 332px; min-height: 250px; margin-left: 12px; padding: 52px 28px 30px; background: none !important; color: var(--g); text-align: left; }
+/* Финальная бирка — светлая бумага с рваными краями и красной рамкой: дата читается и на зелёном фоне (правка 24.10) */
+.cal-tag--final::after { content: ''; position: absolute; inset: 0; z-index: -1; background: linear-gradient(rgba(255, 248, 232, 0.55), rgba(255, 248, 232, 0.55)), var(--cr) url('/img/paper-cream.webp') center/cover; clip-path: url(#clip-torn-both); }
+.cal-tag--final { isolation: isolate; }
+.cal-tag__frame { position: absolute; inset: 16px 12px; border: 1.5px dashed rgba(227, 30, 36, 0.55); pointer-events: none; }
+.cal-tag--final::before { border-color: var(--go); }
+.cal-tag--final .cal-tag__hole { background: var(--g); }
+.cal-tag__date { position: relative; display: inline-flex; align-items: center; gap: 10px; padding: 8px 16px 8px 10px; background: var(--rd); color: var(--cr); font-weight: 800; font-size: 20px; line-height: 1.1; clip-path: polygon(0 0, 100% 0, calc(100% - 12px) 50%, 100% 100%, 0 100%); padding-right: 26px; }
+.cal-tag__date .star-shape { width: 26px; height: 26px; flex: none; }
+.cal-tag--final b { position: relative; margin-top: 14px; font-size: 21px; color: var(--g); line-height: 1.3; }
+.cal-tag:nth-child(odd):not(.cal-tag--final) { rotate: 3deg; } .cal-tag:nth-child(even):not(.cal-tag--final) { rotate: -2deg; }
+/* Бирка качается вокруг прищепки на верёвке (верх нитки): угол --sway пишет useGarlandSway */
+.cal-tag { transform-origin: 50% -34px; transform: rotate(var(--sway, 0deg)); }
+.calendar__notes { margin-top: 40px; font-weight: 700; font-size: 19px; }
+.calendar__notes p + p { margin-top: 10px; font-weight: 500; font-size: 17px; opacity: 0.75; }
+
+@include below-lg {
+  .main-prize { grid-template-columns: 1fr; }
+  .calendar__row { flex-wrap: wrap; row-gap: 48px; }
+}
+
+@include below-md {
+  .prizes-hero { padding-top: 60px; }
+  .prizes-hero__goat { display: none; }
+  .main-prize__badge { left: -16px; top: -56px; width: 110px; height: 110px; }
+  .main-prize__badge .num { font-size: 50px; }
+  .main-prize__branch { display: none; }
+  .main-prize__stamp { width: 110px; right: -10px; }
+  .certs { grid-template-columns: 1fr; }
+  .cal-tag--final { flex-basis: 100%; margin-left: 0; }
+}
+
+@include below-md {
+  .calendar__wire { display: none; }
+  .cal-tag::before { display: none; }
+  .calendar__row { padding-top: 0; justify-content: center; }
+}
+
+/* 1201–1799: семь бирок и финальная в ряд не помещались в контейнер (на 1304 финальная вылезала за экран, на 1440 — на 12 px за поле, правка 24.10) —
+   недельные бирки делят оставшееся место поровну; на ноутбуках до 1439 финальная ещё и чуть уже */
+@media (min-width: #{$bp-lg + 1px}) and (max-width: #{$bp-wide - 1px}) {
+  .calendar__row { gap: 12px; }
+  .cal-tag:not(.cal-tag--final) { flex: 1 1 0; min-width: 0; padding-inline: 6px; }
+  .cal-tag--final { margin-left: 6px; }
+}
+@media (min-width: #{$bp-lg + 1px}) and (max-width: $bp-xl) {
+  .cal-tag--final { flex-basis: 300px; padding: 50px 22px 28px; }
+  .cal-tag--final b { font-size: 19px; }
+}
+
+// ---- Адаптив: Full HD и планшеты (правка 23.10.2026) ----
+@include above-xl {
+  .prizes-hero__goat { width: 340px; }
+  .main-prize { gap: 96px; }
+  .certs { gap: 48px; }
+  .cal-tag { flex-basis: 150px; min-height: 230px; }
+  .cal-tag .num { font-size: 76px; }
+  .cal-tag--final { flex-basis: 380px; }
+}
+@include below-lg { .prizes-hero__goat { width: 200px; opacity: 0.9; } }
+@include below-lg { .prizes-hero__note, .prizes-hero .lead { max-width: calc(100% - 260px); } }
+@include tablet-land {
+  .prizes-hero__goat { width: 230px; }
+  .main-prize { grid-template-columns: 1fr 1fr; gap: 40px; }
+  .main-prize__badge { left: -40px; top: -50px; width: 120px; height: 120px; }
+  .main-prize__badge .num { font-size: 56px; }
+  .cal-tag { flex-basis: 112px; }
+  .cal-tag--final { flex-basis: 100%; min-height: 0; margin-left: 0; padding-bottom: 30px; }
+}
+@include tablet-port {
+  .prizes-hero__goat { display: block; width: 200px; }
+  .prizes-hero .container { padding-right: 220px; }
+  .certs { grid-template-columns: 1fr 1fr; gap: 24px; }
+  .calendar__row { gap: 14px; }
+  .cal-tag { flex: 1 1 calc(25% - 14px); }
+  .cal-tag--final { flex-basis: 100%; }
+}
+
+.fact .num { font-variant-numeric: tabular-nums; }
+
+/* ---- Телефон (правка 24.10) ---- */
+@include below-md {
+  /* На планшете текст сужен под козу; на телефоне козы нет — текст во всю ширину */
+  .prizes-hero__note, .prizes-hero .lead { max-width: none; }
+  /* Главный приз крупнее: фото выше, видно горы и реку */
+  .photo-card { padding: 14px 14px 52px; rotate: 1.5deg; }
+  .photo-card img { aspect-ratio: 4 / 5; object-position: 62% center; }
+  .photo-card figcaption { left: 20px; bottom: 8px; font-size: 34px; }
+  .cal-tag--final { padding: 50px 22px 30px; }
+  .cal-tag__date { font-size: 18px; }
+  .cal-tag--final b { font-size: 19px; }
+}
+@include tablet-port {
+  .photo-card img { aspect-ratio: 616 / 452; }
+}
+/* Невысокие экраны ноутбуков: бирки календаря ниже (правка 27.10) */
+@media (min-width: 1201px) and (max-height: 860px) {
+  .cal-tag { min-height: 180px; padding-top: 44px; }
+  .cal-tag .num { font-size: 56px; }
+  .cal-tag--final { min-height: 0; }
+}
+/* Телефон (правка 27.10): бирки календаря по четыре в ряд — неделя видна целиком на одном экране */
+@include below-md {
+  .calendar__row { gap: 28px 10px; }
+  .cal-tag:not(.cal-tag--final) { flex: 0 0 calc(25% - 8px); min-width: 0; min-height: 0; padding: 34px 2px 14px; }
+  .cal-tag__hole { top: 14px; width: 12px; height: 12px; margin-left: -6px; }
+  .cal-tag small, .cal-tag b { font-size: 13px; }
+  .cal-tag .num { font-size: 46px; }
+  .cal-tag b { margin-top: 4px; }
+  /* Бирка финала (правка 30.10): текст был 13 px и под ним пустое место — крупно и по высоте текста */
+  .cal-tag--final { min-height: 0; padding: 54px 26px 34px; }
+  .cal-tag--final .cal-tag__date { font-size: 20px; }
+  .cal-tag--final b { margin-top: 16px; font-size: clamp(19px, 5.4vw, 22px); line-height: 1.35; }
+}
+/* Правки Никиты 27.10 (компьютер): первый экран на всю высоту окна, заголовок в две строки; главный приз и суперпризы крупнее */
+@media (min-width: 1201px) {
+  .prizes-hero { display: flex; align-items: center; min-height: calc(100svh - var(--header-h, 164px)); padding-block: 64px 72px; }
+  .prizes-hero h1 { max-width: none; font-size: clamp(52px, min(5.6vw, 9.5vh), 96px); line-height: 1; }
+  .prizes-hero .lead { max-width: 720px; }
+  /* Коза по высоте блока: рожки не упираются в шапку */
+  .prizes-hero__goat { width: clamp(260px, calc((100svh - 240px) / 1.94), 420px); }
+  #main-prize { padding-block: clamp(72px, 11vh, 120px); }
+  .main-prize { grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.15fr); }
+  .main-prize h2 { font-size: clamp(44px, min(5vw, 9vh), 84px); }
+  .main-prize .lead { max-width: 560px; }
+  #final { padding-block: clamp(72px, 10vh, 112px); }
+  #final .prize-card--wide { flex-basis: clamp(440px, 28vw, 540px); }
+  #final .prize-card__pic { aspect-ratio: 1 / 0.66; }
+  #final .prize-card__body { padding: 20px 26px 24px; }
+  #final .prize-card h3 { font-size: 26px; }
+  #final .prize-card__model { font-size: 18px; }
+}
+
+/* ---- Цифры первого экрана с картинками (правка 28.10): бирка на бумаге, над числом — что за ним стоит ----
+   Картинки выглядывают над верхним краем бирки; вся бирка — ссылка на свой раздел ниже */
+.pfacts { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 28px; max-width: 1120px; margin-top: 64px; }
+.pfact {
+  --pic-h: 150px;
+  position: relative; display: flex; flex-direction: column; padding: 0 22px 20px;
+  color: var(--g); text-decoration: none;
+  background: var(--cr) url('/img/paper-cream.webp') center/cover;
+  box-shadow: 0 16px 34px rgba(0, 10, 4, 0.38);
+  rotate: -1.2deg;
+  transition: rotate 300ms var(--ease-out), translate 300ms var(--ease-out), box-shadow 300ms ease;
+}
+.pfact:nth-child(2) { rotate: 1deg; }
+.pfact:nth-child(3) { rotate: -0.6deg; }
+.pfact:focus-visible { outline: 3px solid var(--go); outline-offset: 4px; }
+.pfact__pic { position: relative; display: block; height: var(--pic-h); margin: -32px -8px 0; }
+.pfact__pic > * { position: absolute; bottom: 0; max-width: none; transition: translate 300ms var(--ease-out), rotate 300ms var(--ease-out); }
+.pfact__pic > img { width: auto; filter: drop-shadow(0 6px 8px rgba(0, 10, 4, 0.28)); }
+.pfact__text { display: flex; align-items: center; gap: 14px; margin-top: 12px; }
+.pfact .num { flex: none; font-size: clamp(52px, 7.4vh, 84px); line-height: 0.9; color: var(--rd); font-variant-numeric: tabular-nums; }
+.pfact small { min-width: 0; font-weight: 800; font-size: 17px; line-height: 1.25; }
+
+/* 2 — два сертификата веером */
+.pfact__pic--certs > img { width: 64%; height: auto; }
+.pfact__pic--certs > img:nth-child(1) { left: -1%; bottom: 4%; rotate: -6deg; }
+.pfact__pic--certs > img:nth-child(2) { right: -1%; bottom: 25%; rotate: 5deg; }
+/* 35 — еженедельные призы стопкой: аэрогриль, кофеварка, колонка, робот-пылесос */
+.pfact__pic--weekly > img:nth-child(1) { left: 1%; height: 74%; }
+.pfact__pic--weekly > img:nth-child(2) { left: 28%; height: 96%; }
+.pfact__pic--weekly > img:nth-child(3) { left: 50%; height: 56%; }
+.pfact__pic--weekly > img:nth-child(4) { right: 0; height: 40%; }
+.pfact__tag { position: absolute; z-index: 2; left: 12px; top: -18px; padding: 6px 12px; background: var(--rd); color: var(--cr); font-weight: 800; font-size: 15px; line-height: 1.1; white-space: nowrap; rotate: -4deg; box-shadow: 0 6px 12px rgba(0, 10, 4, 0.3); }
+/* 5 — главный приз (фото «Манжерок») и четыре суперприза: телевизор сзади, стайлер, консоль, впереди смартфон */
+.pfact__pic--final > img:nth-child(1) { left: 30%; bottom: 36%; height: 56%; }
+.pfact__pic--final > img:nth-child(2) { right: 18%; bottom: 3%; height: 84%; }
+.pfact__pic--final > img:nth-child(3) { right: -1%; height: 94%; }
+.pfact__pic--final > img:nth-child(5) { left: 38%; height: 58%; }
+.pfact__photo { left: 0; bottom: 3% !important; width: 40%; padding: 5px 5px 20px; background: #fff; box-shadow: 0 6px 12px rgba(0, 10, 4, 0.28); rotate: -7deg; container-type: inline-size; }
+.pfact__photo img { display: block; width: 100%; aspect-ratio: 4 / 3; object-fit: cover; }
+/* Подпись по ширине полароида: на планшете 1024 «Манжерок» вылезала за рамку на 9 px */
+.pfact__photo i { position: absolute; left: 7px; bottom: 1px; font-family: var(--font-display); font-size: min(15px, 15.5cqi); color: var(--g); white-space: nowrap; }
+
+@include hover {
+  .pfact:hover { rotate: 0deg; translate: 0 -6px; box-shadow: 0 22px 40px rgba(0, 10, 4, 0.45); }
+  .pfact:hover .pfact__pic--certs > img:nth-child(1) { translate: -4px 2px; rotate: -9deg; }
+  .pfact:hover .pfact__pic--certs > img:nth-child(2) { translate: 4px -4px; rotate: 8deg; }
+  .pfact:hover .pfact__pic--weekly > img:nth-child(2), .pfact:hover .pfact__pic--final > img:nth-child(3) { translate: 0 -6px; }
+  .pfact:hover .pfact__photo { rotate: -10deg; }
+}
+@media (prefers-reduced-motion: reduce) { .pfact, .pfact__pic > * { transition: none; } }
+
+/* Компьютер: первый экран целиком в окне и на невысоких ноутбуках — отступы, заголовок и картинки по высоте окна;
+   бирки и текст не заходят на козу справа */
+@media (min-width: 1201px) {
+  .prizes-hero { padding-block: clamp(36px, 6vh, 64px) clamp(44px, 7vh, 72px); }
+  .prizes-hero h1 { margin-top: clamp(14px, 2.2vh, 24px); font-size: clamp(52px, min(5.6vw, 8.8vh), 96px); }
+  .prizes-hero .lead { margin-top: clamp(12px, 2.2vh, 22px); max-width: min(900px, 100% - 360px); text-wrap: balance; }
+  .prizes-hero__note { margin-top: clamp(10px, 1.8vh, 18px); }
+  .pfacts { max-width: min(1120px, 100% - 360px); margin-top: clamp(46px, 7vh, 72px); }
+  .pfact { --pic-h: clamp(104px, 16.5vh, 196px); }
+}
+/* Планшет: три бирки в ряд слева от козы, число над подписью */
+@include tablet-land {
+  .pfacts { max-width: calc(100% - 250px); gap: 20px; }
+  .pfact { --pic-h: 120px; padding: 0 16px 16px; }
+  .pfact__text { flex-direction: column; align-items: flex-start; gap: 6px; }
+  .pfact .num { font-size: 56px; }
+  .pfact small { font-size: 15px; }
+}
+/* Телефон и узкий планшет (правка 30.10): три широкие бирки одна под другой, как бирка финала в «мозаике» 29.10 —
+   в узких бирках призы были мелкие и непонятные. Картинка во всю ширину над краем, под ней число и подпись в строку */
+@include below-md {
+  .pfacts { grid-template-columns: minmax(0, 1fr); gap: 42px; max-width: 560px; margin-top: 60px; }
+  .pfact { --pic-h: clamp(150px, 44vw, 240px); padding: 0 18px 18px; }
+  .pfact__pic { margin: -28px -6px 0; }
+  .pfact__text { gap: 14px; margin-top: 10px; }
+  .pfact .num { flex-basis: 1.2em; font-size: clamp(72px, 21vw, 100px); text-align: center; }
+  .pfact small { font-size: clamp(17px, 4.8vw, 20px); }
+  .pfact__tag { left: 8px; top: -18px; padding: 6px 10px; font-size: 14px; }
+  /* Еженедельные призы реже: каждый прибор видно и узнать */
+  .pfact__pic--weekly > img:nth-child(1) { left: 2%; height: 70%; }
+  .pfact__pic--weekly > img:nth-child(2) { left: 27%; height: 96%; }
+  .pfact__pic--weekly > img:nth-child(3) { left: 52%; height: 54%; }
+  .pfact__pic--weekly > img:nth-child(4) { right: 1%; height: 42%; }
+}
+/* Переход с бирок первого экрана: раздел встаёт чуть ниже липкой шапки, ленточка и значок «1» не прячутся под ней */
+#main-prize, #final, #weekly, #certs, #calendar { scroll-margin-top: clamp(40px, 6vh, 64px); }

@@ -1,2 +1,2 @@
 export { PrizeCard } from './ui/PrizeCard';
-export { WEEKLY_PRIZES } from './model/prizes';
+export { FINAL_PRIZES, WEEKLY_PRIZES } from './model/prizes';
