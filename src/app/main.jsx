@@ -35,9 +35,9 @@ window.matchMedia('(orientation: portrait)').addEventListener('change', fitNarro
 if (performance.now() > 250) document.documentElement.classList.add('boot-shown');
 
 createRoot(document.getElementById('root')).render(
-  <StrictMode>
+ /* <StrictMode>*/
     <ErrorBoundary>
       <App />
-    </ErrorBoundary>
-  </StrictMode>,
+    </ErrorBoundary>,
+ {/* </StrictMode>,*/}
 );

@@ -55,8 +55,6 @@ export function Header({ hero = false }) {
     toast('Вы вышли из профиля. Можно войти с другим номером');
   };
 
-  console.log("user",user)
-
   const maskedPhone = user ? `+7 ${user.phone.slice(0, 3)} •••‑••‑${user.phone.slice(8)}` : '';
 
   // Липкая шапка: верхняя строка уезжает, панель остаётся (--header-offset = высота строки).
