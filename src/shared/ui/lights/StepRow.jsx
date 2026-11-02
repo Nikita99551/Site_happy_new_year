@@ -8,12 +8,19 @@ const X0 = 16;
 const DX = 27;
 const MX = 266;
 const wireY = (x) => 8 + 30 * Math.sin((Math.PI * x) / W);
+/** Подпись под коробкой партнёра в две строки: ряд узкий, длинное название делим по пробелу ближе к середине */
+function splitLabel(text) {
+  const spaces = [...text.matchAll(/ /g)].map((m) => m.index);
+  if (text.length <= 10 || !spaces.length) return [text];
+  const at = spaces.reduce((a, b) => (Math.abs(b - text.length / 2) < Math.abs(a - text.length / 2) ? b : a));
+  return [text.slice(0, at), text.slice(at + 1)];
+}
 
 /**
  * Один ряд гирлянды из 10 шагов для телефона (правка 24.10): крупные лампочки, веха 10/20/30 и место под «вы здесь».
  * Используется тремя рядами на «Моём маршруте», в открытке на главной и на «Условиях».
  */
-export function StepRow({ row, step, here = false, labels = true, partners = [], wire = '#0b2417', textColor = '#fff8e8', moving = false }) {
+export function StepRow({ row, step, here = false, labels = true, partners = [], partnerLabel, wire = '#0b2417', textColor = '#fff8e8', moving = false }) {
   const shadowId = useId();
   const first = row * 10 + 1;
   const milestone = first + 9;
@@ -47,7 +54,16 @@ export function StepRow({ row, step, here = false, labels = true, partners = [],
         <ellipse cx={x} cy={y + 19} rx={9.5} ry={12.5} fill={cur ? '#e31e24' : on ? '#e2b24a' : '#fff8e8'} opacity={on ? undefined : 0.35} />
       </g>,
     );
-    if (partners.includes(n)) boxes.push(<PartnerBox key={`p${n}`} x={x} y={y + 52} s={24} />);
+    if (partners.includes(n)) {
+      boxes.push(<PartnerBox key={`p${n}`} x={x} y={y + 52} s={24} />);
+      if (partnerLabel) {
+        boxes.push(
+          <text key={`l${n}`} x={x} y={y + 76} textAnchor="middle" fontFamily={FONT_TEXT} fontWeight={800} fontSize={11} fill={textColor} opacity={0.85}>
+            {splitLabel(partnerLabel).map((t, j) => <tspan key={j} x={x} dy={j ? 12 : 0}>{t}</tspan>)}
+          </text>,
+        );
+      }
+    }
   }
 
   const my = 42;

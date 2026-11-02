@@ -29,7 +29,7 @@ export function ReceiptHistory({ user }) {
               <Fragment key={r.id}>
                 {/* Новые сверху: отметка над чеком, который закрыл круг */}
                 {[...(marks.get(r.id) ?? [])].reverse().map((c) => (
-                  <p key={c} className="receipt__circle"><span>★ {cap(circleName(c))} круг пройден&nbsp;— билет на&nbsp;розыгрыш</span></p>
+                  <p key={c} className="receipt__circle"><span>★ {cap(circleName(c))} круг пройден&nbsp;— билет в&nbsp;финал</span></p>
                 ))}
                 <div className={`receipt__row${isPending ? ' receipt__row--pending' : ''}`}>
                   <div><b>Чек •••• {r.last4}</b><small><time dateTime={r.at}>{formatWhen(r.at, now)}</time></small></div>

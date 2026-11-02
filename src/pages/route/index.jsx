@@ -12,6 +12,7 @@ import { Snow } from '@/shared/ui/snow/Snow';
 import { CtaBanner } from '@/widgets/cta-banner/CtaBanner';
 import { PageLayout } from '@/widgets/page-layout/PageLayout';
 import { RouteTree } from '@/widgets/route-tree/RouteTree';
+import { PartnerTasks } from './ui/PartnerTasks';
 import { PromoCodes } from './ui/PromoCodes';
 import { ReceiptHistory } from './ui/ReceiptHistory';
 import './RoutePage.scss';
@@ -56,16 +57,17 @@ export default function RoutePage() {
               <span key={pos.step} className={`num${tick}`}>{pos.step}</span>
               <div className="route-hero__of">
                 <b>из 30 шагов</b>
-                <span className="ticket ticket--gold">{circleName(pos.circle)} круг</span>
+                {/* Плашка круга красная с первого круга, чтобы выделялась (правка 03.11) */}
+                <span className="ticket ticket--red">{circleName(pos.circle)} круг</span>
                 {finished
-                  ? <p>Круг пройден&nbsp;— билет на&nbsp;розыгрыш ваш! Следующий чек начнёт новый круг.</p>
-                  : <p>До {p.goalGen} на&nbsp;{p.next}‑м шаге&nbsp;— всего <span>{p.leftText}</span>, это покупки на&nbsp;<span>{p.leftRub}</span>.</p>}
+                  ? <p>Круг пройден&nbsp;— билет в&nbsp;финал ваш! Следующий чек начнёт новый круг.</p>
+                  : <p>До {p.goalGen} на&nbsp;{p.next}‑м шаге&nbsp;— всего <span>{p.leftText}</span>: это {p.leftCost}.</p>}
               </div>
             </div>
             <div className="counters reveal" style={d(200)}>
-              <div className="ticket ticket--cream counter"><span className="num">{shown.receiptsTotal}</span><small>чеков</small></div>
+              <div className="ticket ticket--cream counter"><span className="num">{shown.receiptsTotal}</span><small>{plural(shown.receiptsTotal, 'чек', 'чека', 'чеков')}</small></div>
               <div className="ticket ticket--cream counter"><span key={circlesDone} className={`num${tick}`}>{circlesDone}</span><small>{plural(circlesDone, 'круг', 'круга', 'кругов')}<br />{plural(circlesDone, 'пройден', 'пройдено', 'пройдено')}</small></div>
-              <div className="ticket ticket--cream counter counter--red"><span key={chances} className={`num${tick}`}>{chances}</span><small>{plural(chances, 'билет', 'билета', 'билетов')}<br />на розыгрыш</small></div>
+              <div className="ticket ticket--cream counter counter--red"><span key={chances} className={`num${tick}`}>{chances}</span><small>{plural(chances, 'билет', 'билета', 'билетов')} на<br /><span className="counter__nb">главный приз</span></small></div>
             </div>
           </div>
           {/* Гирлянда шагов — на компьютере и планшете. На телефоне её нет (правка 29.10): ниже ёлка с теми же шагами */}
@@ -86,12 +88,12 @@ export default function RoutePage() {
           <RouteTree from={start} to={target} paused={!ready || !!modal} partnerStops={shown.partnerStops} guest={guest} />
           <div className="tree-panel reveal" style={d(120)}>
             <h2>Карта вашего пути</h2>
-            <p className="lead tree-panel__lead">Идите по&nbsp;гирлянде снизу вверх: от&nbsp;первого шара у&nbsp;подножия ёлки к&nbsp;звезде. На&nbsp;10‑м и&nbsp;20‑м шагах&nbsp;— розыгрыши сертификатов Аникс. Пройдёте все шаги&nbsp;— и&nbsp;звезда на&nbsp;верхушке зажжётся: это финиш и&nbsp;билет на&nbsp;розыгрыш призов.</p>
+            <p className="lead tree-panel__lead">Идите по&nbsp;гирлянде снизу вверх: от&nbsp;первого шара у&nbsp;подножия ёлки к&nbsp;звезде. На&nbsp;10‑м и&nbsp;20‑м шагах&nbsp;— розыгрыши сертификатов Аникс. Пройдёте все шаги&nbsp;— и&nbsp;звезда на&nbsp;верхушке зажжётся: это финиш и&nbsp;билет в&nbsp;финальный розыгрыш.</p>
             <div className="tree-panel__next">
               {finished ? (
                 <><b>Круг пройден&nbsp;— <em>билет ваш!</em></b><p>Следующий чек начнёт новый круг и&nbsp;даст ещё один шанс.</p></>
               ) : (
-                <><b>До {p.goalGen} на&nbsp;{p.next}‑м шаге&nbsp;— <em>всего {p.leftText}</em></b><p>Это покупки на&nbsp;<span>{p.leftRub}</span>. На&nbsp;{p.next}‑м шаге&nbsp;— {p.goalText}.</p></>
+                <><b>До {p.goalGen} на&nbsp;{p.next}‑м шаге&nbsp;— <em>всего {p.leftText}</em></b><p>Это {p.leftCost}. На&nbsp;{p.next}‑м шаге&nbsp;— {p.goalText}.</p></>
               )}
               <OpenModalButton modal="receipt" block>Добавить чек</OpenModalButton>
             </div>
@@ -101,14 +103,17 @@ export default function RoutePage() {
                 <li><i className="i-red" />Красный шар&nbsp;— вы здесь</li>
                 <li><i className="i-dim" />Прозрачный шар&nbsp;— откроется после новых чеков</li>
                 <li><i className="i-gift"><IconGift /></i>Подарок&nbsp;— розыгрыш сертификата Аникс</li>
-                <li><i className="i-box"><IconCrate /></i>Коробка&nbsp;— площадка партнёра: видео и&nbsp;отзывы</li>
+                <li><i className="i-box"><IconCrate /></i>Коробка&nbsp;— задание партнёра: нажмите, чтобы открыть</li>
                 <li><i className="i-coupon"><IconCoupon /></i>Купон&nbsp;— промокод на&nbsp;доставку «Торнадо», каждому</li>
-                <li><i className="i-star"><IconStar /></i>Звезда&nbsp;— финиш и&nbsp;билет на&nbsp;розыгрыш</li>
+                <li><i className="i-star"><IconStar /></i>Звезда&nbsp;— финиш и&nbsp;билет в&nbsp;финал</li>
               </ul>
             </div>
           </div>
         </div>
       </section>
+
+      {/* ===== Задания партнёров на шагах с коробками (правка 03.11) ===== */}
+      <PartnerTasks step={shown.step} circle={shown.circle} guest={guest} />
 
       {/* ===== Промокоды доставки «Торнадо» (шаги — DELIVERY_PROMOS) ===== */}
       <PromoCodes step={shown.step} circle={shown.circle} guest={guest} onLogin={() => open('auth')} />
@@ -119,17 +124,20 @@ export default function RoutePage() {
           <div>
             <div className="section-head reveal">
               <span className="ribbon">Ваши розыгрыши</span>
-              <h2>Билеты на&nbsp;розыгрыши</h2>
+              <h2>Где вы участвуете</h2>
             </div>
             <div className="ticket ticket--cream ticket-card reveal" style={{ color: '#173f2a' }}>
               <img className="ticket-card__seal" src="/img/seal-check.svg" alt="" width={100} height={100} />
               <span className="ticket-card__divider" />
-              <div><b>{circlesDone === 0 ? 'Первый круг впереди' : circlesDone === 1 ? 'Первый круг пройден' : `Пройдено ${circlesDone} ${plural(circlesDone, 'круг', 'круга', 'кругов')}`}</b><p>Первый круг&nbsp;— первый билет. Каждый новый круг даёт ещё один билет, а&nbsp;ёлка начинается заново.</p></div>
+              <div><b>{circlesDone === 0 ? 'Первый круг впереди' : circlesDone === 1 ? 'Первый круг пройден' : `Пройдено ${circlesDone} ${plural(circlesDone, 'круг', 'круга', 'кругов')}`}</b><p>Каждый круг из&nbsp;30&nbsp;шагов&nbsp;— билет в&nbsp;финальный розыгрыш 12&nbsp;января. Чем больше билетов, тем больше шансов на&nbsp;главный приз.</p></div>
             </div>
             <div className="ticket ticket--gold ticket-card reveal" style={d(80)}>
               <img className="ticket-card__seal" src="/img/seal-star.svg" alt="" width={100} height={100} />
               <span className="ticket-card__divider" />
-              <div><b>Участие в&nbsp;розыгрышах призов открыто</b><OpenModalButton modal="receipt">Зарегистрировать чек</OpenModalButton></div>
+              {/* Еженедельный розыгрыш — с первого шага (правка 02.11) */}
+              {shown.step > 0 || circlesDone > 0
+                ? <div><b>Вы участвуете в&nbsp;еженедельных розыгрышах</b><p>Розыгрыши по&nbsp;вторникам, с&nbsp;24&nbsp;ноября по&nbsp;5&nbsp;января. Каждую неделю&nbsp;— 5&nbsp;призов.</p><OpenModalButton modal="receipt">Зарегистрировать чек</OpenModalButton></div>
+                : <div><b>Один чек от&nbsp;600&nbsp;₽&nbsp;— и&nbsp;вы в&nbsp;еженедельном розыгрыше</b><OpenModalButton modal="receipt">Зарегистрировать чек</OpenModalButton></div>}
             </div>
             <div className="share-tag reveal" style={d(160)}>
               <b>Поделитесь прогрессом в&nbsp;чате магазина</b>

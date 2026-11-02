@@ -4,6 +4,7 @@ import { PrizeCard, WEEKLY_PRIZES } from '@/entities/prize';
 import { getProgress, useSeenStart, useSession, useStepAnimation } from '@/entities/user';
 import { OpenModalButton, useModal } from '@/features/modal';
 import { api } from '@/shared/api';
+import { CAMPAIGN_WEEKS, PARTNER_STEPS_TEXT } from '@/shared/config/campaign';
 import { formatNumber } from '@/shared/lib/text';
 import { useInView, useIsMobile } from '@/shared/lib/hooks';
 import { Button } from '@/shared/ui/button/Button';
@@ -13,6 +14,7 @@ import { HeaderLights, Lights, StepRow, useGarlandSway } from '@/shared/ui/light
 import { useParallax } from '@/shared/ui/parallax/useParallax';
 import { Snow, SNOW_PUFF } from '@/shared/ui/snow/Snow';
 import { SoonLink } from '@/shared/ui/soon-link/SoonLink';
+import { CircleScale } from '@/widgets/circle-scale/CircleScale';
 import { CtaBanner } from '@/widgets/cta-banner/CtaBanner';
 import { PageLayout } from '@/widgets/page-layout/PageLayout';
 import { useCoverHero } from './lib/useCoverHero';
@@ -44,6 +46,9 @@ const HERO_FLAKES = [
 
 /** Логотипы партнёров демонстрационные. ЗАПОЛНИТЬ: реальные партнёры и ссылки на их страницы. */
 const PARTNERS = ['Молочный луг', 'Хлебный дом', 'Таёжный чай', 'Сладкий вечер', 'Сибирская ягода', 'Золотой колос', 'Родной источник'];
+
+/** Блок «Победители прошлых акций» скрыт до появления победителей этой акции (правка 02.11): вернуть — true */
+const SHOW_WINNERS = false;
 
 const winnersHead = (
   <div className="section-head reveal">
@@ -117,7 +122,6 @@ export function HomePage() {
   const { pos, moving } = useStepAnimation({ from: start, to: { circle: me.circle, step: me.step }, run: postcardInView && !modal });
   const step = pos.step;
   const progress = getProgress(step);
-  const weeksTotal = 8;
   const now = participants.length;
   const max = Math.max(...participants, 1);
 
@@ -156,7 +160,7 @@ export function HomePage() {
               <div className="ticket steps-strip__ticket"><span className="ticket__stitch" /><span className="num">600&nbsp;₽</span><b>= 1&nbsp;шаг</b></div>
               <div className="milestone"><span className="seal"><span className="num">10</span></span><div><b>10‑й шаг</b><p>Розыгрыш сертификата Аникс на&nbsp;1&nbsp;500&nbsp;₽</p></div></div>
               <div className="milestone"><span className="seal"><span className="num">20</span></span><div><b>20‑й шаг</b><p>Розыгрыш сертификата Аникс на&nbsp;3&nbsp;000&nbsp;₽</p></div></div>
-              <div className="milestone"><span className="seal seal--red"><span className="num">30</span></span><div><b>30‑й шаг — финиш</b><p>Билет на&nbsp;розыгрыш, главный&nbsp;— сертификат в&nbsp;«Манжерок»</p></div></div>
+              <div className="milestone"><span className="seal seal--red"><span className="num">30</span></span><div><b>30‑й шаг — финиш</b><p>Билет в&nbsp;финал, где главный приз&nbsp;— отдых на&nbsp;курорте «Манжерок»</p></div></div>
             </div>
             <div className="section-head reveal">
               <span className="ribbon ribbon--green">Как участвовать</span>
@@ -182,8 +186,8 @@ export function HomePage() {
             <div className="numbers__rows">
               <div className="numbers__row"><div><b>Столько длится акция</b><p>С&nbsp;16&nbsp;ноября 2026 по&nbsp;10&nbsp;января 2027&nbsp;года.</p></div><div className="numbers__val"><CountUp value={8} /><small>недель</small></div></div>
               <div className="numbers__row"><div><b>Один круг маршрута</b><p>Каждые полные 600&nbsp;₽ в&nbsp;чеке&nbsp;— один шаг.</p></div><div className="numbers__val"><CountUp value={30} /><small>шагов</small></div></div>
-              <div className="numbers__row"><div><b>Еженедельные розыгрыши</b><p>7&nbsp;недель по&nbsp;5&nbsp;призов, каждый до&nbsp;15&nbsp;000&nbsp;₽.</p></div><div className="numbers__val"><CountUp value={35} /><small>призов</small></div></div>
-              <div className="numbers__row"><div><b>Финал 12&nbsp;января</b><p>Главный&nbsp;— сертификат на&nbsp;250&nbsp;000&nbsp;₽ на&nbsp;отдых на&nbsp;курорте «Манжерок» (Алтай).</p></div><div className="numbers__val"><CountUp value={5} /><small>призов</small></div></div>
+              <div className="numbers__row"><div><b>Еженедельные розыгрыши</b><p>7&nbsp;недель по&nbsp;5&nbsp;призов, каждый до&nbsp;15&nbsp;000&nbsp;₽. Участвуют все, у&nbsp;кого есть хотя&nbsp;бы один шаг.</p></div><div className="numbers__val"><CountUp value={35} /><small>призов</small></div></div>
+              <div className="numbers__row"><div><b>Финал 12&nbsp;января</b><p>Главный приз&nbsp;— сертификат на&nbsp;250&nbsp;000&nbsp;₽ на&nbsp;отдых на&nbsp;курорте «Манжерок» (Алтай). Билет в&nbsp;финал даёт каждый пройденный круг из&nbsp;30&nbsp;шагов.</p></div><div className="numbers__val"><CountUp value={5} /><small>призов</small></div></div>
             </div>
           </div>
           {/* Карточка графика отстаёт от текста слева (дальний слой), скрепка на ней едет быстрее (ближний) */}
@@ -191,28 +195,40 @@ export function HomePage() {
             <img className="chart-card__clip" src="/img/paperclip.webp" alt="" width={110} height={169} />
             <h3>Уже <CountUp value={participants[now - 1] ?? 0} duration={1400} /> покупателей в&nbsp;пути</h3>
             <p className="chart-card__sub">Участников с&nbsp;начала акции, по&nbsp;неделям</p>
-            <div className="chart" role="img" aria-label={`Участники по неделям: ${participants.map(formatNumber).join(', ')}; недели ${now + 1}–${weeksTotal} впереди`}>
-              {Array.from({ length: weeksTotal }, (_, i) => {
-                const value = participants[i];
-                if (value === undefined) return <div key={i} className="chart__bar chart__bar--future"><div className="chart__fill" /></div>;
-                const h = `${Math.round((value / max) * 92)}%`;
-                return (
-                  <div key={i} className={`chart__bar${i === now - 1 ? ' chart__bar--now' : ''}`} style={{ '--h': h, '--i': i }}>
-                    <span className="chart__val">{formatNumber(value)}</span><div className="chart__fill" style={{ '--h': h }} />
-                  </div>
-                );
-              })}
+            {/* Под столбиками — даты недель (правка 02.11). На телефоне столбики не вмещают даты: график ложится набок, дата слева от полоски */}
+            <div className="chart-wrap" role="img" aria-label={`Участники по неделям: ${participants.map((v, i) => `${CAMPAIGN_WEEKS[i]?.aria} — ${formatNumber(v)}`).join('; ')}`}>
+              <div className="chart">
+                {CAMPAIGN_WEEKS.map((_, i) => {
+                  const value = participants[i];
+                  if (value === undefined) return <div key={i} className="chart__bar chart__bar--future"><div className="chart__fill" /></div>;
+                  const share = (value / max) * 0.92;
+                  const h = `${Math.round(share * 100)}%`;
+                  return (
+                    <div key={i} className={`chart__bar${i === now - 1 ? ' chart__bar--now' : ''}`} style={{ '--h': h, '--hn': share.toFixed(3), '--i': i }}>
+                      <span className="chart__val">{formatNumber(value)}</span><div className="chart__fill" />
+                    </div>
+                  );
+                })}
+              </div>
+              <div className="chart__labels">
+                {CAMPAIGN_WEEKS.map((w, i) => {
+                  const n = i + 1;
+                  const cls = n < now ? 'is-past' : n === now ? 'is-now' : undefined;
+                  const mark = n === now ? <small className="chart__mark">сейчас</small> : n === CAMPAIGN_WEEKS.length ? <small className="chart__mark chart__mark--final">финал</small> : null;
+                  return mobile
+                    ? <span key={n} className={cls}><span className="chart__date">{w.full}</span>{mark}</span>
+                    : <span key={n} className={cls}><span className="chart__days">{w.days}</span><span className="chart__month">{w.months}</span>{mark}</span>;
+                })}
+              </div>
             </div>
-            <div className="chart__labels">
-              {Array.from({ length: weeksTotal }, (_, i) => {
-                const n = i + 1;
-                const cls = n < now ? 'is-past' : n === now ? 'is-now' : undefined;
-                return <span key={n} className={cls}>{n}{n === now && <small>сейчас</small>}{n === weeksTotal && <small style={{ color: '#b98a2e' }}>финал</small>}</span>;
-              })}
-            </div>
-            <p className="chart-card__note">Пример. Настоящие цифры появятся и&nbsp;будут обновляться каждую неделю акции.</p>
+            <p className="chart-card__note">Цифры обновляются раз в&nbsp;неделю.</p>
           </div>
         </div>
+      </section>
+
+      {/* ===== Один круг — 30 шагов: тот же блок, что на «Условиях», без карточек под ним (правка 02.11) ===== */}
+      <section className="section section--cream torn-top home-circle" id="circle">
+        <div className="container"><CircleScale /></div>
       </section>
 
       {/* ===== Ваш путь к подаркам ===== */}
@@ -221,7 +237,7 @@ export function HomePage() {
           <div className="reveal">
             <span className="ribbon ribbon--green">Мой маршрут</span>
             <h2 style={{ marginTop: 24 }}>Ваш путь к&nbsp;подаркам</h2>
-            <p className="lead" style={{ marginTop: 20, maxWidth: 500 }}>Каждый чек&nbsp;— новые шаги по&nbsp;новогодней ёлке. Чеки, круги и&nbsp;ближайшие розыгрыши&nbsp;— на&nbsp;странице «Мой маршрут».</p>
+            <p className="lead" style={{ marginTop: 20, maxWidth: 500 }}>За&nbsp;каждый чек вы получаете шаги по&nbsp;новогодней ёлке. Свои чеки, шаги и&nbsp;ближайшие розыгрыши смотрите на&nbsp;странице «Мой маршрут».</p>
             <Button to="/route">Посмотреть мой маршрут</Button>
           </div>
           {/* Коллаж разложен по слоям: красная бумага дальше открытки, марка, бирка, ветка и печать ближе — едут быстрее и сильнее следуют за курсором */}
@@ -237,7 +253,7 @@ export function HomePage() {
               </svg>
               <span className="postcard__label">{user ? 'Ваш маршрут' : 'Пример маршрута'}</span>
               <div className="postcard__big"><span key={step} className={`num${moving ? ' num--tick' : ''}`}>{step}</span><b>из 30 шагов</b></div>
-              <p className="postcard__next">{step >= 30 ? <>Круг пройден&nbsp;— <em>билет на&nbsp;розыгрыш ваш!</em></> : <>До {progress.goalGen} на&nbsp;{progress.next}‑м шаге&nbsp;— <em>{progress.leftText}</em></>}</p>
+              <p className="postcard__next">{step >= 30 ? <>Круг пройден&nbsp;— <em>билет в&nbsp;финал ваш!</em></> : <>До {progress.goalGen} на&nbsp;{progress.next}‑м шаге&nbsp;— <em>{progress.leftText}</em></>}</p>
               <div className="postcard__lights">
                 {mobile ? (
                   // Телефон: три ряда по 10 шагов, лампочки и подписи крупнее (правка 24.10)
@@ -263,17 +279,17 @@ export function HomePage() {
             <div className="section-head reveal" style={{ marginBottom: 0 }}>
               <span className="ribbon ribbon--cream">Еженедельные призы</span>
               <h2>5&nbsp;призов каждую неделю</h2>
-              <p className="lead" style={{ color: 'rgba(255,248,232,.92)' }}>Участвуют все, кто прошёл круг. Каждый круг&nbsp;— ещё один билет.</p>
+              <p className="lead" style={{ color: 'rgba(255,248,232,.92)' }}>Участвует каждый, у&nbsp;кого есть хотя&nbsp;бы один шаг. Для&nbsp;этого хватит одного чека от&nbsp;600&nbsp;₽.</p>
             </div>
           }
-          after={<><p className="prize-note reveal">Изображения призов носят иллюстративный характер: внешний вид, цвет и&nbsp;комплектация призов могут отличаться.</p><div className="final-strip reveal"><span className="star-shape" /><p><b>А&nbsp;12&nbsp;января&nbsp;— финал</b>5&nbsp;суперпризов, главный&nbsp;— <span className="final-strip__prize">сертификат на&nbsp;250&nbsp;000&nbsp;₽</span> на&nbsp;отдых на&nbsp;курорте «Манжерок»</p><Button to="/prizes">Посмотреть все призы</Button></div></>}
+          after={<><p className="prize-note reveal">Изображения призов носят иллюстративный характер: внешний вид, цвет и&nbsp;комплектация призов могут отличаться.</p><div className="final-strip reveal"><span className="star-shape" /><p><b>А&nbsp;12&nbsp;января&nbsp;— финал</b>5&nbsp;суперпризов, главный&nbsp;— <span className="final-strip__prize">сертификат на&nbsp;250&nbsp;000&nbsp;₽</span> на&nbsp;отдых на&nbsp;курорте «Манжерок». Каждый пройденный круг из&nbsp;30&nbsp;шагов&nbsp;— билет в&nbsp;финал: чем больше билетов, тем больше шансов.</p><Button to="/prizes">Посмотреть все призы</Button></div></>}
         >
           {WEEKLY_PRIZES.map((p, i) => <PrizeCard key={p.id} prize={p} badge={`${i + 1} неделя`} />)}
         </Carousel>
       </section>
 
       {/* ===== Победители прошлых акций ===== */}
-      <section className="section section--cream torn-top winners" id="winners">
+      {SHOW_WINNERS && <section className="section section--cream torn-top winners" id="winners">
         <img className="winners__goat reveal" src="/img/goat-gifts.webp" alt="" width={220} height={427} loading="lazy" decoding="async" />
         {mobile ? (
           <Carousel label="Победители прошлых акций" head={winnersHead}>{winnerCards}</Carousel>
@@ -283,14 +299,14 @@ export function HomePage() {
             <div className="winners__grid">{winnerCards}</div>
           </div>
         )}
-      </section>
+      </section>}
 
       {/* ===== Партнёры ===== */}
       <section className="section section--plaid torn-top partners" id="partners">
         <div className="container">
           <div className="partners__paper-wrap reveal"><div className="partners__paper">
-            <h2>Вместе с&nbsp;любимыми брендами</h2>
-            <p className="lead">5&nbsp;товаров партнёров в&nbsp;чеке&nbsp;— ещё 1&nbsp;шаг к&nbsp;шагам за&nbsp;сумму покупки. Нажмите на&nbsp;логотип, чтобы открыть площадку партнёра.</p>
+            <h2>Партнёры акции</h2>
+            <p className="lead">5&nbsp;товаров партнёров в&nbsp;одном чеке дают ещё 1&nbsp;шаг сверх шагов за&nbsp;сумму покупки. А&nbsp;на&nbsp;{PARTNER_STEPS_TEXT}‑м шагах маршрута вас ждут задания от&nbsp;партнёров: выполните задание и&nbsp;участвуйте в&nbsp;розыгрыше призов партнёра.</p>
             <div className="partners__logos">
               {PARTNERS.map((name, i) => <SoonLink key={name}><img src={`/img/partner-${i + 1}.webp`} alt={name} width={480} height={270} loading="lazy" /></SoonLink>)}
             </div>

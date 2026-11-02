@@ -59,7 +59,7 @@
  * @property {string} fullName
  * @property {string} phone
  * @property {string} storeId
- * @property {{ pd: true; rules: true }} consents
+ * @property {{ pd: true; rules: true; publish: boolean }} consents — publish: согласие на публикацию имени и фото победителя, по желанию (правка 03.11)
  */
 
 /**

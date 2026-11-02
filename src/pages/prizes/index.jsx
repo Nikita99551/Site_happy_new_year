@@ -101,7 +101,7 @@ export default function PrizesPage() {
           <div className="section-head reveal" style={{ marginBottom: 0 }}>
             <span className="ribbon ribbon--cream">Еженедельные призы</span>
             <h2>5&nbsp;призов каждую неделю</h2>
-            <p className="lead" style={{ color: 'rgba(255,248,232,.92)' }}>Участвуют все, кто прошёл круг. Каждый круг&nbsp;— ещё один билет.</p>
+            <p className="lead" style={{ color: 'rgba(255,248,232,.92)' }}>Участвует каждый, у&nbsp;кого есть хотя&nbsp;бы один шаг. Для&nbsp;этого хватит одного чека от&nbsp;600&nbsp;₽.</p>
           </div>
         } after={<p className="prize-note reveal">Изображения призов носят иллюстративный характер: внешний вид, цвет и&nbsp;комплектация призов могут отличаться.</p>}>
           {WEEKLY_PRIZES.map((p, i) => <PrizeCard key={p.id} prize={p} badge={`${i + 1} неделя`} />)}
@@ -129,8 +129,8 @@ export default function PrizesPage() {
         <div className="container">
           <div className="section-head reveal">
             <span className="ribbon">Календарь розыгрышей</span>
-            <h2>Пройдите 30&nbsp;шагов&nbsp;—<br /> участвуйте в&nbsp;розыгрышах</h2>
-            <p className="lead">За&nbsp;каждый пройденный круг&nbsp;— билет на&nbsp;розыгрыш. Два круга&nbsp;— два билета, три&nbsp;— три: ёлка начинается заново, билеты копятся.</p>
+            <h2>Один шаг&nbsp;—<br /> и&nbsp;вы в&nbsp;розыгрыше</h2>
+            <p className="lead">В&nbsp;еженедельных розыгрышах участвует каждый, у&nbsp;кого есть хотя&nbsp;бы один шаг. В&nbsp;финал 12&nbsp;января попадают те, кто прошёл круг из&nbsp;30&nbsp;шагов. Каждый новый круг даёт ещё один билет в&nbsp;финал, и&nbsp;шансов на&nbsp;главный приз становится больше.</p>
           </div>
           <div className="calendar reveal" ref={calendarRef}>
             <svg className="calendar__wire" viewBox="0 0 1312 40" preserveAspectRatio="none" aria-hidden="true"><path d="M0 8 C 220 44 440 44 656 8 C 872 44 1092 44 1312 8" fill="none" stroke="#e2b24a" strokeWidth={2.5} /></svg>
@@ -141,14 +141,14 @@ export default function PrizesPage() {
               <div className="cal-tag cal-tag--final"><span className="cal-tag__hole" /><span className="cal-tag__frame" aria-hidden="true" /><span className="cal-tag__date"><span className="star-shape" />12&nbsp;января · финал</span><b>5&nbsp;суперпризов, главный&nbsp;— сертификат на&nbsp;250&nbsp;000&nbsp;₽ на&nbsp;курорт «Манжерок»</b></div>
             </div>
             <div className="calendar__notes">
-              <p>Еженедельный приз&nbsp;— стоимостью до&nbsp;15&nbsp;000&nbsp;₽. Участвуют все, кто прошёл 30&nbsp;шагов к&nbsp;дате розыгрыша.</p>
-              <p>Розыгрыши&nbsp;— по&nbsp;вторникам: 24&nbsp;ноября, 1, 8, 15, 22 и&nbsp;29&nbsp;декабря, 5&nbsp;января. Финал&nbsp;— 12&nbsp;января 2027&nbsp;года. Победителей выбирает случайный алгоритм среди всех допущенных, результаты публикуются на&nbsp;сайте на&nbsp;следующий день. <Link className="link" style={{ color: '#e2b24a' }} to="/rules">Полные правила&nbsp;→</Link></p>
+              <p>Еженедельный приз стоит до&nbsp;15&nbsp;000&nbsp;₽. Участвуют все, у&nbsp;кого к&nbsp;дате розыгрыша есть хотя&nbsp;бы один шаг. В&nbsp;финале участвуют билеты: один пройденный круг&nbsp;— один билет.</p>
+              <p>Розыгрыши&nbsp;— по&nbsp;вторникам: 24&nbsp;ноября, 1, 8, 15, 22 и&nbsp;29&nbsp;декабря, 5&nbsp;января. Финал&nbsp;— 12&nbsp;января 2027&nbsp;года. Победителей выбирает программа случайным образом. Результаты публикуем на&nbsp;сайте на&nbsp;следующий день. <Link className="link" style={{ color: '#e2b24a' }} to="/rules">Полные правила&nbsp;→</Link></p>
             </div>
           </div>
         </div>
       </section>
 
-      <CtaBanner cream title={<>Ваши покупки&nbsp;— начало новогодней истории</>} actions={<OpenModalButton modal="receipt">Зарегистрировать чек</OpenModalButton>} goat={{ src: '/img/goat-dance-wink.webp', width: 656, height: 958 }} />
+      <CtaBanner cream title={<>Зарегистрируйте чек&nbsp;— и&nbsp;вы в&nbsp;розыгрыше недели</>} actions={<OpenModalButton modal="receipt">Зарегистрировать чек</OpenModalButton>} goat={{ src: '/img/goat-dance-wink.webp', width: 656, height: 958 }} />
     </PageLayout>
   );
 }

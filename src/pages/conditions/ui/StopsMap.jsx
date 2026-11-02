@@ -5,7 +5,7 @@ const STOPS = [
   { n: '01', title: <>Покупайте в&nbsp;Аникс</>, text: <>Чек от&nbsp;600&nbsp;₽. Алкоголь и&nbsp;табачные изделия в&nbsp;сумму не&nbsp;входят. Перед оплатой скажите кассиру, что участвуете в&nbsp;акции.</>, sidePin: false },
   { n: '02', title: <>Регистрируйте чек</>, text: <>У&nbsp;кассира, на&nbsp;кассе самообслуживания или на&nbsp;сайте. Назовите номер телефона. До&nbsp;5&nbsp;чеков в&nbsp;день.</>, sidePin: false },
   { n: '03', title: <>Шагайте по&nbsp;маршруту</>, text: <>Каждые полные 600&nbsp;₽&nbsp;— один шаг. На&nbsp;10‑м и&nbsp;20‑м шагах каждый 30‑й и&nbsp;100‑й получает сертификат Аникс.</>, sidePin: true },
-  { n: '04', title: <>Финиш на&nbsp;30‑м шаге</>, text: <>Круг из&nbsp;30&nbsp;шагов&nbsp;— билет на&nbsp;розыгрыш призов. Новый круг&nbsp;— ещё один билет.</>, sidePin: false },
+  { n: '04', title: <>Финиш на&nbsp;30‑м шаге</>, text: <>30&nbsp;шагов&nbsp;— билет в&nbsp;финальный розыгрыш 12&nbsp;января. Новый круг&nbsp;— ещё один билет и&nbsp;больше шансов.</>, sidePin: false },
 ];
 
 /* Отрезки пунктира. vS — вниз к кнопке, hS — бок в бок, eP — от бокового края к кнопке карточки ниже (не задевая заголовок) */
@@ -145,7 +145,7 @@ export function StopsMap() {
           <p>{s.text}</p>
         </article>
       ))}
-      <p className="map__finish reveal" style={{ '--d': '300ms' }}>А&nbsp;дальше&nbsp;— розыгрыш призов!</p>
+      <p className="map__finish reveal" style={{ '--d': '300ms' }}>А&nbsp;12&nbsp;января&nbsp;— финальный розыгрыш!</p>
       <img className="map__goat reveal" src="/img/goat-point.webp" alt="" width={300} height={520} loading="lazy" />
     </div>
   );
