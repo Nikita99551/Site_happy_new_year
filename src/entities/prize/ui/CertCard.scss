@@ -1,0 +1,6 @@
+@use '@/shared/styles/tokens' as *;
+
+/* Сертификат вектором (CertCard.jsx): скругление 18 из 640×360 — в процентах, чтобы тень повторяла углы при любом размере */
+.cert-card { display: block; width: 100%; height: auto; aspect-ratio: 640 / 360; border-radius: 2.8125% / 5%; }
+.cert-card__title { font-family: var(--font-text); font-weight: 700; font-size: 17px; letter-spacing: 3.6px; fill: #d4c58e; }
+.cert-card__step { font-family: var(--font-text); font-weight: 500; font-size: 19px; fill: #fff8e8; }

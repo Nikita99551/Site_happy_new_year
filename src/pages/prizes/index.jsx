@@ -1,6 +1,6 @@
 import { useRef } from 'react';
 import { Link } from 'react-router-dom';
-import { FINAL_PRIZES, PrizeCard, WEEKLY_PRIZES } from '@/entities/prize';
+import { CertCard, FINAL_PRIZES, PrizeCard, WEEKLY_PRIZES } from '@/entities/prize';
 import { OpenModalButton } from '@/features/modal';
 import { CAMPAIGN } from '@/shared/config/campaign';
 import { Carousel } from '@/shared/ui/carousel/Carousel';
@@ -31,8 +31,8 @@ export default function PrizesPage() {
           <div className="pfacts reveal" style={d(200)}>
             <Link className="pfact" to="#certs">
               <span className="pfact__pic pfact__pic--certs" aria-hidden="true">
-                <img src="/img/cert-1500.webp" alt="" width={676} height={360} />
-                <img src="/img/cert-3000.webp" alt="" width={676} height={360} />
+                <CertCard amount="1500" step={10} />
+                <CertCard amount="3000" step={20} />
               </span>
               <span className="pfact__text"><CountUp value={2} duration={700} /><small>розыгрыша сертификатов на&nbsp;пути круга</small></span>
             </Link>
@@ -117,8 +117,8 @@ export default function PrizesPage() {
             <p className="lead">Дошли до&nbsp;10‑го или 20‑го шага&nbsp;— можете получить подарочный сертификат Аникс: его получает каждый 30‑й и&nbsp;каждый 100‑й участник недели.</p>
           </div>
           <div className="certs">
-            <img className="reveal" src="/img/cert-1500-card.webp" alt="Подарочный сертификат Аникс на 1 500 ₽, каждому 30-му на 10-м шаге" width={640} height={360} loading="lazy" />
-            <img className="reveal" style={d(100)} src="/img/cert-3000-card.webp" alt="Подарочный сертификат Аникс на 3 000 ₽, каждому 100-му на 20-м шаге" width={640} height={360} loading="lazy" />
+            <CertCard className="reveal" amount="1500" step={10} label="Подарочный сертификат Аникс на 1 500 ₽, каждому 30-му на 10-м шаге" />
+            <CertCard className="reveal" style={d(100)} amount="3000" step={20} label="Подарочный сертификат Аникс на 3 000 ₽, каждому 100-му на 20-м шаге" />
           </div>
           <p className="certs__note">Счёт участников идёт внутри каждой недели и&nbsp;начинается заново. Подробнее&nbsp;— <Link className="link" to="/conditions#circle">на&nbsp;странице условий акции</Link>.</p>
         </div>

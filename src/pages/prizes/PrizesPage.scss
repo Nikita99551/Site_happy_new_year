@@ -17,12 +17,12 @@
 .main-prize__badge .num { font-size: 70px; }
 .main-prize__badge small { font-weight: 800; font-size: 14px; line-height: 1.05; text-align: center; }
 .main-prize__stamp { position: absolute; z-index: 3; right: -40px; bottom: -40px; width: 150px; rotate: 8deg; }
-.main-prize__branch { position: absolute; z-index: 3; right: -20px; top: -90px; width: 200px; rotate: 200deg; }
+/* Ветка на углу фото: шар висит вниз, нить почти отвесно (правка 02.11 — при повороте на 200° шар «висел» вверх) */
+.main-prize__branch { position: absolute; z-index: 3; right: -20px; top: -96px; width: 200px; rotate: 6deg; }
 .main-prize__wrap { position: relative; }
 .certs { display: grid; grid-template-columns: 1fr 1fr; gap: 32px; margin-top: 48px; }
 /* Компьютер: сертификаты не во всю ширину — блок помещается в экран (правка 27.10) */
 @media (min-width: 1201px) { .certs { max-width: min(100%, 1180px, 150vh); margin-top: 8px; } .certs__note { margin-top: 18px; } .main-prize h2 { font-size: clamp(40px, min(4.6vw, 7.6vh), 72px); } .prizes-hero { padding-top: clamp(56px, 8vh, 88px); } .prizes-hero h1 { font-size: clamp(40px, min(5vw, 8vh), 74px); } .calendar { margin-top: 36px; } .calendar__notes { margin-top: 28px; font-size: 18px; } }
-.certs img { width: 100%; }
 .certs__note { margin-top: 24px; font-size: 16px; color: var(--mu); }
 .calendar { position: relative; margin-top: 60px; }
 .calendar__wire { position: absolute; left: 0; right: 0; top: 0; height: 40px; }
@@ -189,10 +189,10 @@
 .pfact .num { flex: none; font-size: clamp(52px, 7.4vh, 84px); line-height: 0.9; color: var(--rd); font-variant-numeric: tabular-nums; }
 .pfact small { min-width: 0; font-weight: 800; font-size: 17px; line-height: 1.25; }
 
-/* 2 — два сертификата веером */
-.pfact__pic--certs > img { width: 64%; height: auto; }
-.pfact__pic--certs > img:nth-child(1) { left: -1%; bottom: 4%; rotate: -6deg; }
-.pfact__pic--certs > img:nth-child(2) { right: -1%; bottom: 25%; rotate: 5deg; }
+/* 2 — два сертификата веером (с 02.11 — вектор CertCard; у прежних картинок в ширину входила тень, поэтому 61 %, а не 64 %) */
+.pfact__pic--certs > .cert-card { width: 61%; filter: drop-shadow(0 6px 8px rgba(0, 10, 4, 0.28)); }
+.pfact__pic--certs > .cert-card:nth-child(1) { left: -1%; bottom: 6%; rotate: -6deg; }
+.pfact__pic--certs > .cert-card:nth-child(2) { right: -1%; bottom: 27%; rotate: 5deg; }
 /* 35 — еженедельные призы стопкой: аэрогриль, кофеварка, колонка, робот-пылесос */
 .pfact__pic--weekly > img:nth-child(1) { left: 1%; height: 74%; }
 .pfact__pic--weekly > img:nth-child(2) { left: 28%; height: 96%; }
@@ -211,8 +211,8 @@
 
 @include hover {
   .pfact:hover { rotate: 0deg; translate: 0 -6px; box-shadow: 0 22px 40px rgba(0, 10, 4, 0.45); }
-  .pfact:hover .pfact__pic--certs > img:nth-child(1) { translate: -4px 2px; rotate: -9deg; }
-  .pfact:hover .pfact__pic--certs > img:nth-child(2) { translate: 4px -4px; rotate: 8deg; }
+  .pfact:hover .pfact__pic--certs > .cert-card:nth-child(1) { translate: -4px 2px; rotate: -9deg; }
+  .pfact:hover .pfact__pic--certs > .cert-card:nth-child(2) { translate: 4px -4px; rotate: 8deg; }
   .pfact:hover .pfact__pic--weekly > img:nth-child(2), .pfact:hover .pfact__pic--final > img:nth-child(3) { translate: 0 -6px; }
   .pfact:hover .pfact__photo { rotate: -10deg; }
 }
