@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import {useEffect, useState} from 'react';
 import { Link } from 'react-router-dom';
 import { useSession } from '@/entities/user';
 import { useModal } from '@/features/modal';
@@ -40,6 +40,12 @@ export function ReceiptModal({ open }) {
   const [error, setError] = useState('');
   const [busy, setBusy] = useState(false);
   const c = CHANNELS[channel];
+
+  /*Исправил баг, что в модалке сохраняется ранее введённый код*/
+  useEffect(() => {
+    setNumber("")
+  }, [open]);
+
 
   // При открытии старая ошибка не показывается
   const [wasOpen, setWasOpen] = useState(open);

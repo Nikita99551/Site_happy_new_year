@@ -63,8 +63,8 @@ export function SessionProvider({ children }) {
     return res;
   }, [refresh]);
 
-  const registerReceiptQr = useCallback(async (qr) => {
-    const res = await api.registerReceiptQr(qr);
+  const registerReceiptQr = useCallback(async (code) => {
+    const res = await api.registerReceiptQr(code);
     await refresh();
     return res;
   }, [refresh]);

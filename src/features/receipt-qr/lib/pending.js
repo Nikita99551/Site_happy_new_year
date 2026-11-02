@@ -7,7 +7,7 @@
 const KEY = 'anix_qr_pending';
 
 /** Адрес из QR-кода на чеке — от корня сайта */
-export const QR_PATH = 'api/add_code_from_qr';
+export const QR_PATH = 'qr';
 
 /** Сколько помнить отсканированный чек, если человек так и не вошёл */
 const TTL_MS = 24 * 60 * 60 * 1000;
