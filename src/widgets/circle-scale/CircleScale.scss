@@ -14,6 +14,19 @@
 .scale__rows { display: none; }
 .scale__legend { display: flex; align-items: center; gap: 14px; margin-top: 24px; font-weight: 700; font-size: 19px; }
 .scale__legend svg { width: 36px; height: 36px; flex: none; }
+/* Главная (правка 03.11): коробки — кнопки окна задания. Подпись как ссылка, при наведении коробка крупнее, когда блок
+   появился — коробки по очереди слегка качаются на нитке; так видно, что их можно нажать */
+.scale__tap { color: var(--rd); }
+.scale--tasks .lights__task { cursor: pointer; outline: none; transform-box: fill-box; transform-origin: 50% 0; transition: transform var(--dur-fast) var(--ease-out); }
+.scale--tasks .lights__task text { fill: var(--rd); opacity: 1; text-decoration: underline; text-decoration-thickness: 1.5px; text-underline-offset: 3px; }
+.scale--tasks .lights__task:active { transform: scale(0.94); }
+.scale--tasks .lights__task:focus-visible { filter: drop-shadow(0 0 5px #e2b24a); }
+@media (hover: hover) { .scale--tasks .lights__task:hover { transform: scale(1.08); } }
+/* Одно мягкое покачивание на нитке, затухает само (правка 03.11: двойная тряска на 7° была слишком долгой и резкой) */
+.scale--tasks.is-in .lights__task { animation: task-nudge 1.6s ease-in-out calc(600ms + var(--i, 0) * 90ms) 1; }
+@keyframes task-nudge { 0%, 100% { transform: rotate(0); } 30% { transform: rotate(-3deg); } 60% { transform: rotate(2deg); } 85% { transform: rotate(-0.6deg); } }
+@media (prefers-reduced-motion: reduce) { .scale--tasks .lights__task { animation: none !important; } }
+html.no-anim .scale--tasks .lights__task { animation: none; }
 
 @include below-md {
   .scale__labels { display: grid; height: auto; gap: 16px; margin-top: 20px; text-align: left; }

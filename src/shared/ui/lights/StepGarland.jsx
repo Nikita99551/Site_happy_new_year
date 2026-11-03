@@ -1,13 +1,15 @@
 import { useId } from 'react';
 import { FONT_NUM, FONT_TEXT, G_BURST, G_SCALLOP, G_STAR, G_WIRE_PATH, wireY } from './geometry';
 import { PartnerBox } from './PartnerBox';
+import { taskButton } from './taskButton';
 
 /**
  * Гирлянда шагов 1:1 по макету: три дуги по 10 шагов, лампочки 20×28, вехи 10/20 — зубчатый круг, 30 — звезда.
  * Используется на «Моём маршруте» (прогресс) и на «Условиях» (шкала круга).
  * partnerLabel — подпись под каждой коробкой партнёра (правка 02.11: пока «С родной земли»), шкала становится выше.
+ * onPartner(n) — коробки становятся кнопками окна задания (правка 03.11, главная).
  */
-export function StepGarland({ step, here = false, labels = true, partners = [], partnerLabel, wire = '#0b2417', textColor = '#fff8e8', startSolid = false, height, segment, moving = false }) {
+export function StepGarland({ step, here = false, labels = true, partners = [], partnerLabel, onPartner, wire = '#0b2417', textColor = '#fff8e8', startSolid = false, height, segment, moving = false }) {
   const H = height ?? (labels ? 170 : 150) + (partnerLabel ? 28 : 0);
   const SW = 1312 / 3;
   const shadowId = useId();
@@ -73,7 +75,8 @@ export function StepGarland({ step, here = false, labels = true, partners = [], 
     );
     if (partners.includes(n)) {
       partnerBoxes.push(
-        <g key={`p${n}`}>
+        <g key={`p${n}`} {...taskButton(n, partnerBoxes.length, onPartner)}>
+          {onPartner && <rect x={x - 56} y={y + 50} width={112} height={partnerLabel ? 64 : 42} fill="transparent" />}
           <line x1={x} y1={y + 36} x2={x} y2={y + 54} stroke="#173f2a" strokeWidth={1.5} />
           <PartnerBox x={x} y={y + 72} s={36} />
           {partnerLabel && <text x={x} y={y + 107} textAnchor="middle" fontFamily={FONT_TEXT} fontWeight={800} fontSize={14} fill={textColor} opacity={0.85}>{partnerLabel}</text>}
@@ -83,7 +86,7 @@ export function StepGarland({ step, here = false, labels = true, partners = [], 
   }
 
   return (
-    <svg viewBox={segment === undefined ? `0 0 1312 ${H}` : `${segment * SW - 8} 0 ${SW + 50} ${H}`} className="lights" aria-hidden="true" style={segment === undefined ? undefined : { overflow: 'hidden' }}>
+    <svg viewBox={segment === undefined ? `0 0 1312 ${H}` : `${segment * SW - 8} 0 ${SW + 50} ${H}`} className="lights" aria-hidden={onPartner ? undefined : 'true'} role={onPartner ? 'group' : undefined} aria-label={onPartner ? 'Гирлянда круга из 30 шагов' : undefined} style={segment === undefined ? undefined : { overflow: 'hidden' }}>
       <defs>
         <filter id={shadowId} x="-30%" y="-30%" width="160%" height="180%">
           <feDropShadow dx={0} dy={4} stdDeviation={4} floodColor="#000" floodOpacity={0.25} />

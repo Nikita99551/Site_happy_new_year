@@ -228,7 +228,7 @@ export function HomePage() {
 
       {/* ===== Один круг — 30 шагов: тот же блок, что на «Условиях», без карточек под ним (правка 02.11) ===== */}
       <section className="section section--cream torn-top home-circle" id="circle">
-        <div className="container"><CircleScale /></div>
+        <div className="container"><CircleScale tasks /></div>
       </section>
 
       {/* ===== Ваш путь к подаркам ===== */}

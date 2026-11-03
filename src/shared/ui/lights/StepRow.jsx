@@ -1,6 +1,7 @@
 import { useId } from 'react';
 import { FONT_NUM, FONT_TEXT, G_BURST, G_SCALLOP, G_STAR } from './geometry';
 import { PartnerBox } from './PartnerBox';
+import { taskButton } from './taskButton';
 
 // Ряд рисуется под ширину телефона (~330 px): 1 единица ≈ 1,1 px
 const W = 300;
@@ -20,7 +21,7 @@ function splitLabel(text) {
  * Один ряд гирлянды из 10 шагов для телефона (правка 24.10): крупные лампочки, веха 10/20/30 и место под «вы здесь».
  * Используется тремя рядами на «Моём маршруте», в открытке на главной и на «Условиях».
  */
-export function StepRow({ row, step, here = false, labels = true, partners = [], partnerLabel, wire = '#0b2417', textColor = '#fff8e8', moving = false }) {
+export function StepRow({ row, step, here = false, labels = true, partners = [], partnerLabel, onPartner, wire = '#0b2417', textColor = '#fff8e8', moving = false }) {
   const shadowId = useId();
   const first = row * 10 + 1;
   const milestone = first + 9;
@@ -55,14 +56,18 @@ export function StepRow({ row, step, here = false, labels = true, partners = [],
       </g>,
     );
     if (partners.includes(n)) {
-      boxes.push(<PartnerBox key={`p${n}`} x={x} y={y + 52} s={24} />);
-      if (partnerLabel) {
-        boxes.push(
-          <text key={`l${n}`} x={x} y={y + 76} textAnchor="middle" fontFamily={FONT_TEXT} fontWeight={800} fontSize={11} fill={textColor} opacity={0.85}>
-            {splitLabel(partnerLabel).map((t, j) => <tspan key={j} x={x} dy={j ? 12 : 0}>{t}</tspan>)}
-          </text>,
-        );
-      }
+      // onPartner — коробка с подписью становится кнопкой окна задания (правка 03.11, главная); прозрачная рамка — палец попадает легче
+      boxes.push(
+        <g key={`p${n}`} {...taskButton(n, boxes.length, onPartner)}>
+          {onPartner && <rect x={x - 32} y={y + 38} width={64} height={partnerLabel ? 56 : 30} fill="transparent" />}
+          <PartnerBox x={x} y={y + 52} s={24} />
+          {partnerLabel && (
+            <text x={x} y={y + 76} textAnchor="middle" fontFamily={FONT_TEXT} fontWeight={800} fontSize={11} fill={textColor} opacity={0.85}>
+              {splitLabel(partnerLabel).map((t, j) => <tspan key={j} x={x} dy={j ? 12 : 0}>{t}</tspan>)}
+            </text>
+          )}
+        </g>,
+      );
     }
   }
 
@@ -72,7 +77,7 @@ export function StepRow({ row, step, here = false, labels = true, partners = [],
   const done = step >= milestone;
 
   return (
-    <svg viewBox={`0 0 ${W} ${H}`} className="lights lights--row" aria-hidden="true">
+    <svg viewBox={`0 0 ${W} ${H}`} className="lights lights--row" aria-hidden={onPartner ? undefined : 'true'} role={onPartner ? 'group' : undefined} aria-label={onPartner ? `Шаги ${first}–${milestone}` : undefined}>
       <defs>
         <filter id={shadowId} x="-30%" y="-30%" width="160%" height="180%">
           <feDropShadow dx={0} dy={3} stdDeviation={3} floodColor="#000" floodOpacity={0.25} />
