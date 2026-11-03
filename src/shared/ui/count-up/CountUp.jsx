@@ -3,6 +3,7 @@ import { formatNumber } from '@/shared/lib/text';
 
 /**
  * Число «досчитывает» от нуля до значения, когда появляется на экране (один раз).
+ * Число на первом экране показывает итог сразу (правка 03.11: на «Подарках» при открытии страницы были нули).
  * При reduced-motion и `?noanim` сразу показывает итог. Экранный диктор читает итоговое число.
  */
 export function CountUp({ value, className = 'num', duration = 1100 }) {
@@ -16,11 +17,20 @@ export function CountUp({ value, className = 'num', duration = 1100 }) {
     const out = digits.current;
     if (!el || !out) return;
     const show = (n) => (out.textContent = formatNumber(n));
-    const instant = played.current || !('IntersectionObserver' in window) || window.matchMedia('(prefers-reduced-motion: reduce)').matches || /noanim/.test(location.search);
+    const r = el.getBoundingClientRect();
+    const onFirstScreen = r.top < window.innerHeight && r.bottom > 0;
+    const instant = played.current || onFirstScreen || !('IntersectionObserver' in window) || window.matchMedia('(prefers-reduced-motion: reduce)').matches || /noanim/.test(location.search);
     show(instant ? value : 0);
     if (instant) return;
     let raf = 0;
     const io = new IntersectionObserver(([e]) => {
+      // Страница открылась ниже числа (ссылка на якорь, например /#partners) — число уже над экраном: сразу итог, без нуля
+      if (!e.isIntersecting && e.boundingClientRect.bottom < 0) {
+        io.disconnect();
+        played.current = true;
+        show(value);
+        return;
+      }
       if (!e.isIntersecting) return;
       io.disconnect();
       played.current = true;
@@ -31,7 +41,7 @@ export function CountUp({ value, className = 'num', duration = 1100 }) {
         if (p < 1) raf = requestAnimationFrame(step);
       };
       raf = requestAnimationFrame(step);
-    }, { threshold: 0.6 });
+    });
     io.observe(el);
     return () => {
       io.disconnect();
