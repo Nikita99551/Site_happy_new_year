@@ -17,6 +17,8 @@ export function RegisterModal({ open }) {
   const [phone, setPhone] = useState('');
   const [rules, setRules] = useState(false);
   const [pd, setPd] = useState(false);
+  // Согласие на публикацию победителя — по желанию (правка 03.11): без него регистрация проходит
+  const [publish, setPublish] = useState(false);
   const [errors, setErrors] = useState({});
   const [busy, setBusy] = useState(false);
 
@@ -39,16 +41,14 @@ export function RegisterModal({ open }) {
     if (Object.keys(next).length) return;
     setBusy(true);
     try {
-      // Формируем данные строго по контракту сервера!
-      await register({
-        fio: fullName.trim(),
-        phone_number: formatPhone(phone),
-        shops_id: Number(selectedStoreId), // Сервер ждет число (0), передаем Number()
-      });
+      await register({ fullName: fullName.trim(), phone: normalizePhone(phone), storeId: selectedStoreId, consents: { pd: true, rules: true, publish } });
+      // Форма чистая для следующего человека (общий компьютер в магазине)
       setFullName('');
       setPhone('');
       setRules(false);
       setPd(false);
+      setPublish(false);
+      // Окно «Вы зарегистрированы»: видно, что всё получилось; оттуда — к чеку или на маршрут (правка 27.10)
       openModal('registered');
     } catch (err) {
       setErrors({ phone: err instanceof Error ? err.message : 'Не удалось зарегистрироваться' });
@@ -64,7 +64,7 @@ export function RegisterModal({ open }) {
       onClose={back}
       ribbon="Регистрация"
       width={680}
-      title={<>Создайте кабинет для&nbsp;чеков и&nbsp;подарков</>}
+      title={<>Создайте кабинет<span className="modal__title-more"> для&nbsp;чеков и&nbsp;подарков</span></>}
       lead={<>Телефон&nbsp;— 10&nbsp;цифр, без&nbsp;8 и&nbsp;+7.</>}
       decor={<img className="modal__goat modal__goat--right" src="/img/goat-scroll.webp" alt="" width={460} height={962} loading="lazy" decoding="async" />}
     >
@@ -78,11 +78,9 @@ export function RegisterModal({ open }) {
           <span className="field__label">Ваш магазин <button type="button" className="link" onClick={() => openModal('store', { returnTo: 'register' })}>Изменить</button></span>
           <button className="field__box" type="button" style={{ width: '100%', textAlign: 'left' }} onClick={() => openModal('store', { returnTo: 'register' })}>
             <IconPin />
-            <span style={{ fontWeight: 600, fontSize: 20 }}>
-              {selectedStore?.name ? `${selectedStore.name.replace('Аникс ', '')} · ${selectedStore.address}` : 'Выберите магазин'}
-            </span>
+            <span className="field__value">{selectedStore ? `${selectedStore.name.replace('Аникс ', '')} · ${selectedStore.address}` : 'Выберите магазин'}</span>
           </button>
-          <span className="field__hint field__hint--optional">Магазин нужен, чтобы показывать его новости и&nbsp;сообщество.</span>
+          <span className="field__hint field__hint--optional">В&nbsp;этом магазине вы получите приз, если выиграете.</span>
           <span className="field__error" aria-live="polite">{errors.store}</span>
         </div>
         <Check name="consentRules" required checked={rules} onChange={(e) => setRules(e.target.checked)} error={errors.rules}>
@@ -90,6 +88,10 @@ export function RegisterModal({ open }) {
         </Check>
         <Check name="consentPd" required checked={pd} onChange={(e) => setPd(e.target.checked)} error={errors.pd}>
           Я даю <SoonLink className="link">согласие на&nbsp;обработку моих персональных данных</SoonLink>
+        </Check>
+        {/* ЗАПОЛНИТЬ: текст согласия на распространение персональных данных (ст. 10.1 152-ФЗ) и ссылку на документ — у юристов */}
+        <Check name="consentPublish" checked={publish} onChange={(e) => setPublish(e.target.checked)}>
+          Если выиграю, разрешаю опубликовать моё имя и&nbsp;фото с&nbsp;вручения приза <span className="check__opt">по&nbsp;желанию</span>
         </Check>
         <div className="modal__actions"><Button block type="submit" disabled={busy}>{busy ? 'Секунду…' : 'Зарегистрироваться'}</Button></div>
         <p className="modal__foot">Уже есть кабинет? <button type="button" className="link" onClick={() => openModal('login')}>Войти</button></p>

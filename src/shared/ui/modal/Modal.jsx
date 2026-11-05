@@ -25,13 +25,28 @@ export function Modal({ open, onClose, ribbon, title, lead, width = 640, center 
     }
   }, [open]);
 
-  // Окно выше экрана (например, регистрация с ошибками на ноутбуке 1366×768): прокручивается само окно, коза прячется
+  // Окно выше экрана. Не хватает немного (правка 02.11: на Full HD окно чека с ошибкой под полем прокручивалось из-за 20–40 px) —
+  // окно целиком чуть уменьшается (zoom), прокрутки нет. Не хватает много (регистрация с ошибками на низком телефоне) —
+  // прокручивается само окно, коза прячется. На сенсорном экране шрифт полей не мельче 16 px, иначе iPhone приближает страницу при вводе
   useEffect(() => {
     const d = ref.current;
     if (!d || !open) return;
     const box = d.querySelector('.modal__box');
     if (!box) return;
-    const check = () => d.classList.toggle('modal--tall', box.offsetHeight + 48 > window.innerHeight);
+    const canZoom = CSS.supports('zoom', '0.9');
+    const check = () => {
+      box.style.zoom = '';
+      const cs = getComputedStyle(d);
+      // Запас 6 px: после уменьшения строки текста округляются и окно вылезало на 2–3 px
+      const avail = window.innerHeight - parseFloat(cs.paddingTop) - parseFloat(cs.paddingBottom) - 6;
+      const f = avail / box.offsetHeight;
+      const input = box.querySelector('input:not([type=checkbox])');
+      const touch = window.matchMedia('(pointer: coarse)').matches;
+      const min = touch && input ? Math.max(0.8, 16 / parseFloat(getComputedStyle(input).fontSize)) : 0.8;
+      const fit = f >= 1 || (canZoom && f >= min);
+      if (f < 1 && fit) box.style.zoom = String(Math.floor(f * 1000) / 1000);
+      d.classList.toggle('modal--tall', !fit);
+    };
     check();
     const ro = new ResizeObserver(check);
     ro.observe(box);

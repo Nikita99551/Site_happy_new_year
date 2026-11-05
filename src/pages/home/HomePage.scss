@@ -100,9 +100,13 @@
 .chart__bar--future .chart__fill { background: transparent; border: 2px dashed var(--kr); height: 20%; }
 .chart__val { position: absolute; left: 50%; transform: translateX(-50%); bottom: calc(var(--h, 0%) + 6px); font-family: var(--font-num); font-weight: 700; font-size: 18px; white-space: nowrap; }
 .chart__bar--now .chart__val { color: var(--rd); font-size: 22px; }
-.chart__labels { display: grid; grid-template-columns: repeat(8, 1fr); gap: 14px; margin-top: 12px; text-align: center; font-family: var(--font-num); font-weight: 900; font-size: 24px; }
-.chart__labels span { color: var(--kr); } .chart__labels .is-past { color: var(--g); } .chart__labels .is-now { color: var(--rd); }
-.chart__labels small { display: block; font-family: var(--font-text); font-weight: 800; font-size: 15px; }
+/* Подписи недель датами (правка 02.11): «16–22» крупно, месяц ниже, у текущей недели — «сейчас», у последней — «финал» */
+.chart__labels { display: grid; grid-template-columns: repeat(8, 1fr); gap: 14px; margin-top: 12px; text-align: center; line-height: 1.15; }
+.chart__labels > span { color: var(--kr); } .chart__labels > .is-past { color: var(--g); } .chart__labels > .is-now { color: var(--rd); }
+.chart__days { display: block; font-family: var(--font-num); font-weight: 900; font-size: 21px; white-space: nowrap; }
+.chart__month { display: block; font-weight: 800; font-size: 13px; white-space: nowrap; }
+.chart__mark { display: block; margin-top: 2px; font-weight: 800; font-size: 13px; }
+.chart__mark--final { color: #b98a2e; }
 .chart-card__note { margin-top: 18px; font-size: 15px; color: var(--mu); }
 .chart-card__clip { position: absolute; left: -52px; top: -74px; width: 110px; rotate: 12deg; }
 /* Путь к подаркам: открытка */
@@ -135,6 +139,10 @@
 .final-strip p { flex: 1; font-size: 17px; min-width: 240px; line-height: 1.4; }
 .final-strip p b { display: block; font-size: 20px; font-weight: 800; }
 .final-strip__prize { color: var(--go); font-weight: 800; white-space: nowrap; }
+/* «Один круг» на главной (правка 02.11): как на «Условиях», заголовок во всю ширину гирлянды */
+.home-circle .section-head { max-width: 1300px; }
+@media (min-width: 1201px) { .home-circle { padding-block: clamp(64px, 9vh, 96px); } }
+
 /* Победители: записки */
 /* Победители: 6 карточек сеткой 3×2 (на телефоне карусель). Вместо фото — рисунок приза на «полароиде» с номером билета (правка 24.10) */
 .winners__grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 72px 32px; margin-top: 64px; }
@@ -236,19 +244,30 @@
   .postcard__label { display: block; padding-left: 62px; }
   .postcard-stack__tag span { font-size: 9px; }
   /* Ветка на правом краю зелёной открытки, над печатью (правка 24.10) */
-  .postcard-stack__branch { width: 110px; right: -10px; bottom: 96px; rotate: 18deg; }
-  .postcard__seal { width: 66px; right: 2%; bottom: 46px; }
+  /* Ветка — в левый нижний угол открытки, под «Старт» третьего ряда: справа она закрывала звезду «30» и «финиш»
+     (правка 02.11, iPhone 16 Pro Max). Печать — ниже подписи «финиш», свисает с края открытки */
+  .postcard-stack__branch { width: 96px; right: auto; left: -12px; bottom: 30px; rotate: -14deg; scale: -1 1; }
+  .postcard__seal { width: 66px; right: 2%; bottom: 18px; }
   .winners__goat { display: none; }
   .partners__paper { padding: 32px 24px; }
   .partners__logos { --cols: 2; --gap: 20px; row-gap: 16px; margin-top: 28px; justify-content: center; }
   .numbers__val .num { font-size: 64px; }
   .numbers__row p { max-width: none; }
-  .chart { height: 220px; gap: 8px; }
   .chart-card { padding: 32px 24px; transform: none; }
   .chart-card__clip { display: none; }
-  .chart__val { font-size: 13px; }
-  .chart__bar--now .chart__val { font-size: 15px; }
-  .chart__labels { gap: 8px; font-size: 18px; }
+  /* Телефон: график набок — слева дата недели, справа полоска и число (правка 02.11: столбики не вмещают даты) */
+  .chart-wrap { display: grid; grid-template-columns: auto 1fr; column-gap: 12px; margin-top: 22px; }
+  .chart-wrap .chart { grid-area: 1 / 2; grid-template-columns: 1fr; grid-template-rows: repeat(8, 36px); gap: 4px; height: auto; margin-top: 0; padding: 0 0 0 6px; border-bottom: 0; border-left: 2px solid rgba(23, 63, 42, 0.6); align-items: center; }
+  .chart-wrap .chart__labels { grid-area: 1 / 1; grid-template-columns: none; grid-template-rows: repeat(8, 36px); gap: 4px; margin-top: 0; text-align: left; align-items: center; }
+  .chart__bar { flex-direction: row; justify-content: flex-start; align-items: center; }
+  .chart__fill { flex: none; align-self: center; width: calc((100% - 62px) * var(--hn, 0)); height: 20px; }
+  .chart__bar--future .chart__fill { width: 20%; height: 20px; }
+  .chart__val { position: static; order: 2; margin-left: 8px; transform: none; font-size: 16px; }
+  .chart__bar--now .chart__val { font-size: 18px; }
+  .chart__date { display: block; font-weight: 800; font-size: 15px; white-space: nowrap; }
+  .chart__mark { margin-top: 0; font-size: 12px; }
+  .chart-card .chart__fill { transform-origin: 0 50%; }
+  .chart-card:not(.is-in) .chart__fill { transform: scaleX(0); }
   .note-card { padding-top: 220px; }
 }
 

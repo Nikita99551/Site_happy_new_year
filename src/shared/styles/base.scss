@@ -128,6 +128,8 @@ button.link { padding: 0; border: 0; background: none; font: inherit; font-weigh
 .field__prefix { font-weight: 700; font-size: 21px; color: var(--g); padding-right: 12px; border-right: 2px solid var(--kr); }
 .field input { flex: 1; min-width: 0; border: 0; outline: 0; background: transparent; font: inherit; font-size: 21px; font-weight: 600; color: var(--ink); }
 .field input::placeholder { color: var(--ph); font-weight: 500; }
+/* Выбранное значение в поле-кнопке (магазин в регистрации) */
+.field__value { font-weight: 600; font-size: 20px; line-height: 1.3; }
 .field__hint { margin-top: 8px; font-size: 15px; color: var(--mu); }
 .field__error { display: none; margin-top: 8px; font-size: 15px; font-weight: 700; color: var(--rd); }
 .field--error .field__error { display: block; }
@@ -140,6 +142,8 @@ button.link { padding: 0; border: 0; background: none; font: inherit; font-weigh
 .check input:checked + .check__box::after { content: ''; position: absolute; left: 8px; top: 3px; width: 7px; height: 13px; border: solid var(--cr); border-width: 0 3px 3px 0; rotate: 45deg; }
 .check input:focus-visible + .check__box { outline: 3px solid var(--go); outline-offset: 2px; }
 .check--error .check__box { border-color: var(--rd); }
+/* Пометка необязательной галочки (согласие на публикацию победителя, правка 03.11) */
+.check__opt { display: inline-block; margin-left: 4px; padding: 0 8px; border-radius: 999px; background: rgba(23, 63, 42, 0.08); color: var(--mu); font-weight: 700; font-size: 0.8em; line-height: 1.6; white-space: nowrap; }
 
 @include below-lg {
   :root { --gutter: 40px; }

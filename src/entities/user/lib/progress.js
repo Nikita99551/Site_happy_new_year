@@ -1,4 +1,4 @@
-import { CAMPAIGN, nextMilestone } from '@/shared/config/campaign';
+import { CAMPAIGN, nextMilestone, stepsCostText } from '@/shared/config/campaign';
 import { formatRub, plural } from '@/shared/lib/text';
 
 /**
@@ -9,9 +9,10 @@ import { formatRub, plural } from '@/shared/lib/text';
  * @property {number} left
  * @property {string} leftText — «3 шага»
  * @property {string} leftRub — Покупки на столько рублей до вехи: «1 800 ₽»
+ * @property {string} leftCost — «покупки на 1 800 ₽, а с товарами партнёров — меньше: …» (stepsCostText)
  * @property {string} certRub — Номинал сертификата на вехе, если это 10 или 20
- * @property {string} goalGen — «розыгрыша сертификата» или «билета на розыгрыш» (родительный падеж)
- * @property {string} goalText — «каждый 30‑й получает сертификат Аникс на 1 500 ₽» или «билет на розыгрыш призов»
+ * @property {string} goalGen — «розыгрыша сертификата» или «билета в финал» (родительный падеж)
+ * @property {string} goalText — «каждый 30‑й получает сертификат Аникс на 1 500 ₽» или «билет в финальный розыгрыш главного приза»
  */
 
 export function getProgress(step) {
@@ -25,9 +26,10 @@ export function getProgress(step) {
     left,
     leftText: `${left} ${plural(left, 'шаг', 'шага', 'шагов')}`,
     leftRub: formatRub(left * CAMPAIGN.stepRub),
+    leftCost: stepsCostText(left),
     certRub,
-    goalGen: next === 30 ? 'билета на розыгрыш' : 'розыгрыша сертификата',
-    goalText: next === 30 ? 'билет на розыгрыш призов' : `каждый ${every}‑й получает сертификат Аникс на ${certRub}`,
+    goalGen: next === 30 ? 'билета в финал' : 'розыгрыша сертификата',
+    goalText: next === 30 ? 'билет в финальный розыгрыш главного приза' : `каждый ${every}‑й получает сертификат Аникс на ${certRub}`,
   };
 }
 

@@ -1,3 +1,5 @@
+import { formatRub } from '@/shared/lib/text';
+
 /** Параметры акции «Год Козы — лови призы». Единственное место, где меняются цифры механики. */
 export const CAMPAIGN = {
   /** Период покупок и регистрации чеков */
@@ -16,7 +18,7 @@ export const CAMPAIGN = {
   milestones: { 10: 1500, 20: 3000 },
   /** Каждый N-й участник недели, дошедший до вехи, получает сертификат */
   milestoneEvery: { 10: 30, 20: 100 },
-  /** Шаги, на которых стоит площадка партнёра (коробка) */
+  /** Шаги с заданием партнёра (коробка на ёлке и гирлянде) */
   partnerStops: [4, 8, 12, 16, 24, 28],
   /** Даты еженедельных розыгрышей и финала */
   weeklyDraws: ['24.11', '01.12', '08.12', '15.12', '22.12', '29.12', '05.01'],
@@ -44,6 +46,18 @@ export const PROMO_STEPS_TEXT = (() => {
   const even = s.length > 4 && s.every((n, i) => i === 0 || n - s[i - 1] === s[1] - s[0]);
   return even ? `${s[0]}, ${s[1]}, ${s[2]} и так до ${last}` : `${s.slice(0, -1).join(', ')} и ${last}`;
 })();
+/**
+ * Задания партнёров на шагах CAMPAIGN.partnerStops (правка 02.11, вместо «площадки партнёра: видео и отзывы»).
+ * Дошёл до коробки — открывается задание партнёра; выполнять не обязательно; выполнил — участвует в розыгрыше призов партнёра.
+ * ЗАПОЛНИТЬ: партнёр на каждом шаге, текст задания и приз. Пока у всех один партнёр-заглушка, задания и приза нет (null)
+ */
+// task — текст задания, prize — что разыгрывает партнёр («Корзина фермерских продуктов»), url — где выполнить; null — пока неизвестно
+export const PARTNER_TASKS = Object.fromEntries(CAMPAIGN.partnerStops.map((n) => [n, { partner: 'С родной земли', task: null, prize: null, url: null }]));
+/** Шаги с заданиями партнёров для текстов: «4, 8, 12, 16, 24 и 28» */
+export const PARTNER_STEPS_TEXT = `${CAMPAIGN.partnerStops.slice(0, -1).join(', ')} и ${CAMPAIGN.partnerStops.at(-1)}`;
+/** Подпись под коробками на гирлянде «Один круг», пока партнёр один на все шаги */
+export const PARTNER_LABEL = PARTNER_TASKS[CAMPAIGN.partnerStops[0]].partner;
+
 /** Приложение доставки «Торнадо»: там вводится промокод */
 export const TORNADO_APP_URL = 'https://clck.ru/3ExQW2';
 
@@ -67,7 +81,41 @@ export function codeForStep(n) {
   return STEP_CODES[n] ?? promoForStep(n)?.code;
 }
 
+/**
+ * Во что обойдутся n шагов (правка 03.11): рубли — только для обычных покупок, а товары партнёров дают шаги отдельно,
+ * поэтому сумма — верхняя граница. «покупки на 1 800 ₽, а с товарами партнёров — меньше: каждые 5 товаров дают ещё шаг»
+ */
+export function stepsCostText(n) {
+  return `покупки на\u00a0${formatRub(n * CAMPAIGN.stepRub)}, а\u00a0с\u00a0товарами партнёров\u00a0— меньше: каждые ${CAMPAIGN.partnerItemsPerStep}\u00a0товаров дают ещё шаг`;
+}
+
 /** Следующая веха после текущего шага: 10, 20 или 30 */
 export function nextMilestone(step) {
   return step < 10 ? 10 : step < 20 ? 20 : 30;
 }
+
+const MONTH_SHORT = ['янв', 'фев', 'мар', 'апр', 'мая', 'июн', 'июл', 'авг', 'сен', 'окт', 'ноя', 'дек'];
+const MONTH_GEN = ['января', 'февраля', 'марта', 'апреля', 'мая', 'июня', 'июля', 'августа', 'сентября', 'октября', 'ноября', 'декабря'];
+
+/**
+ * Недели акции с датами для графика «Акция в цифрах» (правка 02.11: вместо номеров 1–8 — периоды).
+ * days — «16–22», months — «ноя» или «ноя–дек» (две строки под столбиком), full — «16–22 ноября» или «30 ноя – 6 дек» (одной строкой на телефоне)
+ */
+export const CAMPAIGN_WEEKS = (() => {
+  const start = new Date(`${CAMPAIGN.start}T00:00:00`);
+  const end = new Date(`${CAMPAIGN.end}T00:00:00`);
+  const count = Math.round((end - start) / 86400000 / 7);
+  return Array.from({ length: count }, (_, i) => {
+    const a = new Date(start);
+    a.setDate(a.getDate() + i * 7);
+    const b = new Date(a);
+    b.setDate(b.getDate() + 6);
+    const same = a.getMonth() === b.getMonth();
+    return {
+      days: `${a.getDate()}–${b.getDate()}`,
+      months: same ? MONTH_SHORT[a.getMonth()] : `${MONTH_SHORT[a.getMonth()]}–${MONTH_SHORT[b.getMonth()]}`,
+      full: same ? `${a.getDate()}–${b.getDate()} ${MONTH_GEN[a.getMonth()]}` : `${a.getDate()} ${MONTH_SHORT[a.getMonth()]} – ${b.getDate()} ${MONTH_SHORT[b.getMonth()]}`,
+      aria: same ? `${a.getDate()}–${b.getDate()} ${MONTH_GEN[a.getMonth()]}` : `${a.getDate()} ${MONTH_GEN[a.getMonth()]} – ${b.getDate()} ${MONTH_GEN[b.getMonth()]}`,
+    };
+  });
+})();
