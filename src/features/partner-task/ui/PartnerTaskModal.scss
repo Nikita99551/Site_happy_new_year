@@ -1,0 +1,20 @@
+@use '@/shared/styles/tokens' as *;
+
+/* Окно «Задание партнёра» (правка 02.11): коробка над заголовком, карточка задания пунктиром, три шага цифрами */
+.task-box { display: block; width: 60px; height: 60px; margin-bottom: 10px; }
+.task-card { margin-top: 22px; padding: 18px 22px; border: 2px dashed var(--kr); border-radius: 12px; background: rgba(255, 255, 255, 0.55); }
+.task-card small { display: block; font-weight: 800; font-size: 13px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--rd); }
+.task-card b { display: block; margin-top: 4px; font-size: 21px; font-weight: 800; }
+.task-card p { margin-top: 6px; font-size: 17px; line-height: 1.45; color: var(--mu); }
+.task-prize { margin-top: 18px; font-weight: 800; font-size: 19px; line-height: 1.35; }
+.task-prize small { display: block; font-size: 13px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--mu); }
+.task-note { margin: 16px 0 22px; font-size: 17px; line-height: 1.45; color: var(--mu); }
+
+@include below-md {
+  .task-box { width: 48px; height: 48px; margin-bottom: 6px; }
+  .task-card { padding: 16px 18px; }
+  .task-card b { font-size: 19px; }
+  .task-card p { font-size: 16px; }
+  .task-note { margin: 12px 0 16px; font-size: 16px; }
+  .task-prize { margin-top: 14px; font-size: 17px; }
+}

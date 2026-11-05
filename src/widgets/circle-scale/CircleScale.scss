@@ -1,0 +1,64 @@
+@use '@/shared/styles/tokens' as *;
+
+/* Шкала «Один круг»: подписи вех по центрам вех 10 и 20 (1/3 и 2/3 ширины) и по правому краю у 30, как в макете 2679:4105 */
+.scale { position: relative; margin-top: 44px; }
+.scale__labels { position: relative; height: 92px; margin-top: 8px; text-align: center; }
+.scale__labels > div { position: absolute; top: 0; width: 260px; }
+.scale__labels > div:nth-child(1) { left: 33.33%; transform: translateX(-50%); }
+.scale__labels > div:nth-child(2) { left: 66.67%; transform: translateX(-50%); }
+.scale__labels > div:nth-child(3) { right: 0; text-align: right; }
+.scale__labels b { display: block; font-size: 20px; font-weight: 800; }
+/* Значок вехи перед заголовком (правка 01.11): сертификат на 10 и 20, билет на 30 — как коробка в подписи «Каждый 4-й шаг» */
+.scale__ic { display: inline-block; width: 1.75em; height: 1.2em; margin-right: 0.4em; vertical-align: -0.24em; }
+.scale__labels p { margin-top: 4px; font-size: 17px; color: var(--mu); }
+.scale__rows { display: none; }
+.scale__legend { display: flex; align-items: center; gap: 14px; margin-top: 24px; font-weight: 700; font-size: 19px; }
+.scale__legend svg { width: 36px; height: 36px; flex: none; }
+/* Главная (правка 03.11): коробки — кнопки окна задания. Подпись как ссылка, при наведении коробка крупнее, когда блок
+   появился — коробки по очереди слегка качаются на нитке; так видно, что их можно нажать */
+.scale__tap { color: var(--rd); }
+.scale--tasks .lights__task { cursor: pointer; outline: none; transform-box: fill-box; transform-origin: 50% 0; transition: transform var(--dur-fast) var(--ease-out); }
+.scale--tasks .lights__task text { fill: var(--rd); opacity: 1; text-decoration: underline; text-decoration-thickness: 1.5px; text-underline-offset: 3px; }
+.scale--tasks .lights__task:active { transform: scale(0.94); }
+.scale--tasks .lights__task:focus-visible { filter: drop-shadow(0 0 5px #e2b24a); }
+@media (hover: hover) { .scale--tasks .lights__task:hover { transform: scale(1.08); } }
+/* Одно мягкое покачивание на нитке, затухает само (правка 03.11: двойная тряска на 7° была слишком долгой и резкой) */
+.scale--tasks.is-in .lights__task { animation: task-nudge 1.6s ease-in-out calc(600ms + var(--i, 0) * 90ms) 1; }
+@keyframes task-nudge { 0%, 100% { transform: rotate(0); } 30% { transform: rotate(-3deg); } 60% { transform: rotate(2deg); } 85% { transform: rotate(-0.6deg); } }
+@media (prefers-reduced-motion: reduce) { .scale--tasks .lights__task { animation: none !important; } }
+html.no-anim .scale--tasks .lights__task { animation: none; }
+
+@include below-md {
+  .scale__labels { display: grid; height: auto; gap: 16px; margin-top: 20px; text-align: left; }
+  .scale__labels > div:nth-child(n) { position: static; width: auto; transform: none; text-align: left; }
+  /* Шкала на телефоне листается вбок, как гирлянда маршрута */
+  .scale__lights { overflow-x: auto; margin-inline: calc(-1 * var(--gutter)); padding-inline: var(--gutter); scrollbar-width: none; }
+  .scale__lights .lights { min-width: 760px; }
+  .scale__lights, .scale__labels { display: none; }
+  .scale__rows { display: grid; gap: 28px; margin-top: 8px; }
+  .scale__row .lights { display: block; width: 100%; height: auto; }
+  .scale__row > div { margin-top: 4px; }
+  .scale__row b { display: block; font-size: 20px; font-weight: 800; }
+  .scale__row p { margin-top: 4px; font-size: 17px; color: var(--mu); }
+}
+@include tablet-port {
+  /* Планшет: гирлянда круга целиком, без рядов */
+  .scale__lights { display: block; overflow: visible; margin-inline: 0; padding-inline: 0; }
+  .scale__lights .lights { min-width: 0; }
+  .scale__labels { display: grid; }
+  .scale__rows { display: none; }
+  .scale__labels { grid-template-columns: repeat(3, 1fr); }
+}
+@media (min-width: 1201px) {
+  .scale { margin-top: 20px; container-type: inline-size; }
+  .scale__labels { height: 104px; margin-top: 10px; }
+  .scale__labels > div::before { content: ''; position: absolute; left: 50%; bottom: calc(100% + 4px); height: calc(8.23cqw + 6px); border-left: 2px dashed rgba(23, 63, 42, 0.45); }
+  .scale__labels > div:nth-child(3)::before { left: auto; right: 2.9cqw; height: calc(8.6cqw + 6px); }
+  .scale__labels b { font-size: 20px; }
+  .scale__labels p { margin-top: 4px; font-size: 16px; line-height: 1.4; }
+  .scale__legend { margin-top: 18px; font-size: 18px; }
+}
+/* Full HD: подпись «Каждый 4-й шаг — площадка партнёра» под «Старт», слева от подписей вех */
+@media (min-width: 1600px) {
+  .scale__legend { position: relative; z-index: 1; max-width: 23%; margin-top: -96px; align-items: flex-start; line-height: 1.35; }
+}

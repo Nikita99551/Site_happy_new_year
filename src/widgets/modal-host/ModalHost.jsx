@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { AuthChoiceModal, LoginModal, RegisteredModal, RegisterModal } from '@/features/auth';
 import { useModal } from '@/features/modal';
+import { PartnerTaskModal } from '@/features/partner-task';
 import { QrReceiptModal } from '@/features/receipt-qr';
 import { ProcessingModal, ReceiptModal } from '@/features/receipt-register';
 import { StoreModal } from '@/features/store-select';
@@ -25,6 +26,7 @@ export function ModalHost() {
       {was('receipt') && <ReceiptModal open={is('receipt')} />}
       {was('qr') && <QrReceiptModal open={is('qr')} />}
       {was('processing') && <ProcessingModal open={is('processing')} />}
+      {was('task') && <PartnerTaskModal open={is('task')} />}
       {was('store') && <StoreModal open={is('store')} returnTo={state?.name === 'store' ? state.payload?.returnTo : undefined} />}
     </>
   );
