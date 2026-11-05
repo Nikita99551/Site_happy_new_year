@@ -2,7 +2,7 @@
  * Реализация API поверх fetch. Включается переменной VITE_API_MODE=http (см. .env.example).
  * Адреса эндпоинтов и формы ответов описаны в README. Сессия — cookie (credentials: 'include').
  */
-
+import { mockApi } from './mock';
 import { toUser } from './progress';
 
 const BASE = import.meta.env.VITE_API_URL ?? '/api';
@@ -155,10 +155,10 @@ export const httpApi = {
     }
   },
 
-/*  sample() {
+  sample() {
     console.log("mok")
     return mockApi.sample();
-  },*/
+  },
 
   async login(phone_number) {
     await request('/auth/login', { method: 'POST', body: JSON.stringify({ phone_number }) });
@@ -204,6 +204,7 @@ export const httpApi = {
 
   // ЗАГЛУШКА (согласовать с бэкендом): тот же адрес, что в QR-коде на чеке, но POST — GET этого адреса открывает сайт (README, «Чек по QR-коду»)
   registerReceiptQr(code) {
+    console.log("code",code)
     return request(`/checks/me`, { method: 'POST', body: JSON.stringify({ code }) });
   },
 
