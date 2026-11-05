@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { useStepAnimation } from '@/entities/user';
+import { useModal } from '@/features/modal';
 import { CAMPAIGN, nextMilestone, promoForStep } from '@/shared/config/campaign';
 import { useInView, useReducedMotion } from '@/shared/lib/hooks';
 import { formatRub, plural } from '@/shared/lib/text';
@@ -7,6 +8,7 @@ import { CouponMark, IconCoupon, IconCrate, IconGift } from '@/shared/ui/icons/I
 import { FONT_NUM, FONT_TEXT } from '@/shared/ui/lights/geometry';
 import { PartnerBox } from '@/shared/ui/lights';
 import { DESKTOP_TREE, MOBILE_TREE } from './geometry';
+import { placeCoupons, placeHere } from './placement';
 
 /** Плашка-подпись на ёлке. kicker — мелкая строка сверху («РОЗЫГРЫШ»): сертификат не подарок каждому, а шанс */
 function Label({ x, y, text, kicker, bg, color, w, fs = 14 }) {
@@ -57,7 +59,7 @@ function TipContent({ n, step, partner, codesOpen }) {
     const next = nextMilestone(n);
     const dl = next - n;
     note = `До ${next === 30 ? 'финиша' : `розыгрыша на ${next}‑м шаге`} — ${dl} ${plural(dl, 'шаг', 'шага', 'шагов')}`;
-  } else note = `Откроется после новых чеков: ${formatRub(CAMPAIGN.stepRub)} в чеке — 1 шаг`;
+  } else note = `Откроется после новых чеков: ${formatRub(CAMPAIGN.stepRub)} в чеке или ${CAMPAIGN.partnerItemsPerStep} товаров партнёров — 1 шаг`;
 
   const items = [];
   // Сертификат — шанс, а не подарок каждому: его получает каждый N‑й участник недели
@@ -65,7 +67,8 @@ function TipContent({ n, step, partner, codesOpen }) {
   // Промокод доставки — гарантированно каждому (правка 27.10): пройденный шаг отсылает к коду ниже, будущий — обещает
   const promo = promoForStep(n);
   if (promo) items.push({ key: 'promo', icon: <IconCoupon />, kicker: 'Промокод «Торнадо»', title: `−${formatRub(promo.discount)} на доставку`, text: codesOpen ? `На заказ от ${formatRub(promo.minOrder)}. Код за этот шаг — ниже, в «Ваших промокодах»` : `На заказ от ${formatRub(promo.minOrder)} — каждому, кто дойдёт до шага` });
-  if (partner.includes(n)) items.push({ key: 'box', icon: <IconCrate />, kicker: 'Площадка партнёра', title: 'Видео, рассказ о компании и отзывы' });
+  // Задание партнёра (правка 02.11): дошёл до шага — задание открыто, выполнил — участвует в розыгрыше призов партнёра
+  if (partner.includes(n)) items.push({ key: 'box', icon: <IconCrate />, kicker: 'Задание партнёра', title: 'Выполните задание и участвуйте в розыгрыше призов партнёра', text: codesOpen ? 'Нажмите на коробку, чтобы открыть задание' : 'Откроется, когда дойдёте до шага' });
 
   return (
     <>
@@ -102,34 +105,7 @@ function TapHint({ x, y, k }) {
   );
 }
 
-/** Прямоугольник по центру и размерам: [лево, верх, право, низ] */
-const box = (x, y, w, h) => [x - w / 2, y - h / 2, x + w / 2, y + h / 2];
-const overlaps = (a, b, pad) => a[0] < b[2] + pad && b[0] < a[2] + pad && a[1] < b[3] + pad && b[1] < a[3] + pad;
-
-/**
- * Где поставить купон у каждого шага с промокодом: первое свободное место у шара — слева снизу, справа снизу, сбоку чуть выше
- * (справа, слева), слева сверху, справа сверху, сбоку посередине. Занято: коробки партнёров, подарки 10/20 с подписью «РОЗЫГРЫШ»,
- * подписи «Старт» и «Вы здесь» (у текущего шага) и уже поставленные купоны.
- * @returns {[number, number, number][]} [шаг, x, y] центра купона
- */
-function placeCoupons(tg, k, partnerStops, step) {
-  const busy = [box(tg.start.x, tg.start.y, tg.start.w, tg.start.fs * 2.15)];
-  for (const [n, cx, cy] of tg.balls) {
-    if (n === step && n !== 10 && n !== 20) busy.push(box(cx, cy + tg.here.dy, tg.here.w, tg.here.fs * 2.15));
-    if (partnerStops.includes(n)) busy.push(box(cx + 26 * k, cy + 26 * k, 40 * k, 40 * k));
-    if (n === 10 || n === 20) busy.push(box(cx, cy + 4 * k, 76 * k, 76 * k), box(cx, cy + tg.gift.dy, tg.gift.w, tg.gift.fs * 2.95));
-  }
-  const spots = [[-32, 28], [32, 28], [36, 18], [-36, 18], [-40, -24], [40, -24], [54, -4], [-54, -4]];
-  const out = [];
-  for (const [n, cx, cy] of tg.balls) {
-    if (!promoForStep(n)) continue;
-    const at = spots.map(([dx, dy]) => [cx + dx * k, cy + dy * k]);
-    const free = at.find(([x, y]) => !busy.some((b) => overlaps(box(x, y, 46 * k, 34 * k), b, 2 * k))) ?? at[0];
-    busy.push(box(free[0], free[1], 46 * k, 34 * k));
-    out.push([n, free[0], free[1]]);
-  }
-  return out;
-}
+// Расстановка «Вы здесь» и купонов — placement.js (правка 02.11: подписи и купоны больше не наезжают друг на друга и на шары)
 
 /**
  * Карта пути «ёлка» из 30 шагов (на компьютере — геометрия макета 860×1260, на телефоне — вытянутая ёлка). Путь идёт снизу вверх: шаг 1 у подножия, 30 — звезда.
@@ -162,6 +138,7 @@ export function RouteTree({ from, to, paused = false, partnerStops, guest = fals
   // подлетает и дважды «нажимает», так понятно, что шар можно нажать или навести. poke — номер шага, пока палец на экране
   const [poke, setPoke] = useState(null);
   const pokeDone = useRef(false);
+  const { open: openModal } = useModal();
 
   // Шары появляются по очереди
   useEffect(() => {
@@ -190,7 +167,18 @@ export function RouteTree({ from, to, paused = false, partnerStops, guest = fals
     setTip(next);
     setView(next);
   };
+  // Коробка партнёра — кнопка: открывает окно задания (правка 02.11)
+  const openTask = (el) => {
+    setTip(null);
+    setPoke(null);
+    openModal('task', { step: Number(el.dataset.task) });
+  };
   const onClick = (e) => {
+    const box = e.target.closest('[data-task]');
+    if (box) {
+      openTask(box);
+      return;
+    }
     const g = e.target.closest('.ball');
     pinned.current = !!g;
     setPoke(null);
@@ -248,15 +236,22 @@ export function RouteTree({ from, to, paused = false, partnerStops, guest = fals
   };
   const onKey = (e) => {
     if (e.key === 'Escape') setTip(null);
+    const box = e.target.closest?.('[data-task]');
+    if (box && (e.key === 'Enter' || e.key === ' ')) {
+      e.preventDefault();
+      openTask(box);
+    }
   };
 
   const labels = [];
+  // «Вы здесь» — в первом свободном месте у текущего шара; купоны обходят её (правка 02.11)
+  const here = placeHere(tg, k, partnerStops, step);
   const balls = tg.balls.map(([n, cx, cy]) => {
     const state = n < step ? 'done' : n === step ? 'current' : 'locked';
     const isGift = n === 10 || n === 20;
     const r = (state === 'current' ? 36 : 30) * k;
     if (isGift) labels.push(<Label key={`l${n}`} x={cx} y={cy + tg.gift.dy} kicker="РОЗЫГРЫШ" text={`Сертификат ${n === 10 ? '1 500 ₽' : '3 000 ₽'}`} bg="#e31e24" color="#fff8e8" w={tg.gift.w} fs={tg.gift.fs} />);
-    if (!isGift && state === 'current') labels.push(<Label key={`l${n}`} x={cx} y={cy + tg.here.dy} text="Вы здесь" bg="#e31e24" color="#fff8e8" w={tg.here.w} fs={tg.here.fs} />);
+    if (here && state === 'current') labels.push(<Label key={`l${n}`} x={here.x} y={here.y} text="Вы здесь" bg="#e31e24" color="#fff8e8" w={tg.here.w} fs={tg.here.fs} />);
     return (
       <g key={n} className={`ball ball--${state}${tip?.n === n ? ' is-active' : ''}${moving && n === step ? ' ball--arrive' : ''}${moving && n === step - 1 ? ' ball--lit' : ''}`} tabIndex={0} role="button" data-step={n} aria-label={`Шаг ${n}${state === 'done' ? ', пройден' : state === 'current' ? ', вы здесь' : ', ещё не открыт'}`}>
         {/* Зона наведения — сплошной круг: при увеличении шара (hover) он только растёт и не уходит из-под курсора.
@@ -286,10 +281,28 @@ export function RouteTree({ from, to, paused = false, partnerStops, guest = fals
       </g>
     );
   });
-  const boxes = tg.balls.filter(([n]) => partnerStops.includes(n)).map(([n, cx, cy]) => <PartnerBox key={`b${n}`} x={cx + 26 * k} y={cy + 26 * k} s={40 * k} />);
+  // Коробки партнёров — кнопки окна задания; у открытого задания (шаг пройден) красный значок «!»
+  const taskOpen = (n) => !guest && (n <= step || pos.circle > 1);
+  const boxes = tg.balls.filter(([n]) => partnerStops.includes(n)).map(([n, cx, cy]) => {
+    const bx = cx + 26 * k;
+    const by = cy + 26 * k;
+    const s = 40 * k;
+    return (
+      <g key={`b${n}`} className={`tree__task${taskOpen(n) ? ' is-open' : ''}`} role="button" tabIndex={0} data-task={n} aria-label={`Задание партнёра на шаге ${n}${taskOpen(n) ? ', открыто' : ''}`}>
+        <rect x={bx - s / 2} y={by - s / 2} width={s} height={s} fill="transparent" />
+        <PartnerBox x={bx} y={by} s={s} />
+        {taskOpen(n) && (
+          <g pointerEvents="none">
+            <circle cx={bx + 14 * k} cy={by - 13 * k} r={8 * k} fill="#e31e24" stroke="#fff8e8" strokeWidth={1.5 * k} />
+            <text x={bx + 14 * k} y={by - 8.6 * k} textAnchor="middle" fontFamily={FONT_NUM} fontWeight={900} fontSize={13 * k} fill="#fff8e8">!</text>
+          </g>
+        )}
+      </g>
+    );
+  });
   // Купоны промокодов доставки (шаги — DELIVERY_PROMOS): у шара в свободном углу (правка 30.10). Слева снизу у соседнего шара
   // часто висит коробка партнёра или стоит подарок 10/20 с подписью «РОЗЫГРЫШ» — тогда купон справа снизу, иначе сверху
-  const coupons = placeCoupons(tg, k, partnerStops, step).map(([n, x, y]) => <CouponMark key={`c${n}`} x={x} y={y} s={46 * k} />);
+  const coupons = placeCoupons(tg, k, partnerStops, step, here, (n) => !!promoForStep(n)).map(([n, x, y]) => <CouponMark key={`c${n}`} x={x} y={y} s={46 * k} />);
   // У звезды — только если на финише есть промокод (с 30.10 нет: промокоды на нечётных шагах, Никита просил не ставить его на 30-й)
   if (promoForStep(CAMPAIGN.circleSteps)) coupons.push(<CouponMark key="c30" x={tg.star.x - tg.star.r * 1.1} y={tg.star.y + tg.star.r * 0.6} s={46 * k} rot={-18} />);
   const lit = step >= 30;

@@ -1,24 +1,14 @@
 import { Link } from 'react-router-dom';
 import { OpenModalButton } from '@/features/modal';
-import { CAMPAIGN, DELIVERY_PROMOS, PROMO_STEPS_TEXT } from '@/shared/config/campaign';
+import { DELIVERY_PROMOS, PROMO_STEPS_TEXT } from '@/shared/config/campaign';
 import { formatRub, plural } from '@/shared/lib/text';
-import { IconBox, IconCert, IconClose, IconCoupon, IconCrate, IconTicket } from '@/shared/ui/icons/Icons';
-import { StepGarland, StepRow } from '@/shared/ui/lights';
+import { IconBox, IconClose, IconCoupon, IconCrate } from '@/shared/ui/icons/Icons';
+import { CircleScale } from '@/widgets/circle-scale/CircleScale';
 import { CtaBanner } from '@/widgets/cta-banner/CtaBanner';
 import { PageLayout } from '@/widgets/page-layout/PageLayout';
 import { StopsMap } from './ui/StopsMap';
 import { ImportantRules } from './ui/ImportantRules';
 import './ConditionsPage.scss';
-
-/** Вехи круга: подписи под гирляндой «Один круг — 30 шагов» */
-const MILESTONES = [
-  { n: 10, Icon: IconCert, title: <>10‑й шаг</>, text: <>Розыгрыш сертификата Аникс на&nbsp;1&nbsp;500&nbsp;₽: получит каждый 30‑й</> },
-  { n: 20, Icon: IconCert, title: <>20‑й шаг</>, text: <>Розыгрыш сертификата Аникс на&nbsp;3&nbsp;000&nbsp;₽: получит каждый 100‑й</> },
-  { n: 30, Icon: IconTicket, title: <>30‑й шаг&nbsp;— финиш</>, text: <>Билет на&nbsp;розыгрыш и&nbsp;новый круг</> },
-];
-
-/** Шаги с площадками партнёров для подписи под гирляндой: «4, 8, 12, 16, 24 и 28» (на 20-м — сертификат, правка 01.11) */
-const PARTNER_STEPS = `${CAMPAIGN.partnerStops.slice(0, -1).join(', ')} и\u00a0${CAMPAIGN.partnerStops.at(-1)}`;
 
 const d = (ms) => ({ '--d': `${ms}ms` });
 
@@ -125,27 +115,7 @@ export default function ConditionsPage() {
       {/* ===== Один круг — 30 шагов ===== */}
       <section className="section section--cream torn-top circle-sec" id="circle">
         <div className="container">
-          <div className="section-head reveal">
-            <span className="ribbon ribbon--green">Один круг</span>
-            <h2>Один круг&nbsp;— 30&nbsp;шагов</h2>
-            <p className="lead">На&nbsp;пути вас ждут розыгрыши сертификатов Аникс на&nbsp;10‑м и&nbsp;20‑м шагах, площадки партнёров и&nbsp;финиш с&nbsp;розыгрышем призов.</p>
-          </div>
-          <div className="scale reveal">
-            <div className="scale__lights"><StepGarland step={30} labels={false} partners={[...CAMPAIGN.partnerStops]} wire="#173f2a" textColor="#173f2a" startSolid /></div>
-            <div className="scale__labels">
-              {MILESTONES.map((m) => <div key={m.n}><b><m.Icon className="scale__ic" />{m.title}</b><p>{m.text}</p></div>)}
-            </div>
-            {/* Телефон: гирлянда тремя рядами по 10 шагов, под каждым рядом — его веха (правка 24.10) */}
-            <div className="scale__rows">
-              {MILESTONES.map((m, i) => (
-                <div key={m.n} className="scale__row">
-                  <StepRow row={i } step={30} labels={false} partners={[...CAMPAIGN.partnerStops]} wire="#173f2a" textColor="#173f2a" />
-                  <div><b><m.Icon className="scale__ic" />{m.title}</b><p>{m.text}</p></div>
-                </div>
-              ))}
-            </div>
-            <p className="scale__legend"><IconCrate />На&nbsp;{PARTNER_STEPS}‑м шагах&nbsp;— площадки партнёров: видео, рассказ о&nbsp;компании и&nbsp;отзывы</p>
-          </div>
+          <CircleScale />
           <div className="odds">
             <div className="odds__card reveal">
               <h3>Кто получает сертификаты</h3>
@@ -156,7 +126,7 @@ export default function ConditionsPage() {
             </div>
             <div className="more-circles reveal" style={d(100)}>
               <h3>Больше кругов&nbsp;— больше шансов</h3>
-              <p>За&nbsp;каждый пройденный круг&nbsp;— билет на&nbsp;розыгрыш. Кругов может быть сколько угодно: ёлка начинается заново, а&nbsp;билеты копятся.</p>
+              <p>Каждый круг из&nbsp;30&nbsp;шагов&nbsp;— билет в&nbsp;финальный розыгрыш 12&nbsp;января. Кругов может быть сколько угодно: ёлка начинается заново, а&nbsp;билеты копятся. Чем больше билетов, тем больше шансов на&nbsp;главный приз.</p>
               <div className="more-circles__row"><div><span className="num">1&nbsp;круг</span><small>30 шагов</small></div><span className="ticket ticket--gold">билет</span></div>
               <div className="more-circles__row"><div><span className="num">2&nbsp;круга</span><small>60 шагов</small></div><span className="ticket ticket--gold">билет</span><span className="ticket ticket--gold">билет</span></div>
             </div>

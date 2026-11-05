@@ -20,6 +20,7 @@
 .ticket--green { background: var(--g); }
 .ticket--gold { background: var(--go); color: var(--g); }
 .ticket--cream { background: var(--cr); color: var(--g); }
+.ticket--red { background: var(--rd); color: var(--cr); }
 .ticket__stitch { position: absolute; inset: 12px; border: 2px dashed currentColor; opacity: 0.6; pointer-events: none; }
 /* Зубчатая печать */
 .seal {

@@ -1,13 +1,16 @@
 import { useId } from 'react';
 import { FONT_NUM, FONT_TEXT, G_BURST, G_SCALLOP, G_STAR, G_WIRE_PATH, wireY } from './geometry';
 import { PartnerBox } from './PartnerBox';
+import { taskButton } from './taskButton';
 
 /**
  * Гирлянда шагов 1:1 по макету: три дуги по 10 шагов, лампочки 20×28, вехи 10/20 — зубчатый круг, 30 — звезда.
  * Используется на «Моём маршруте» (прогресс) и на «Условиях» (шкала круга).
+ * partnerLabel — подпись под каждой коробкой партнёра (правка 02.11: пока «С родной земли»), шкала становится выше.
+ * onPartner(n) — коробки становятся кнопками окна задания (правка 03.11, главная).
  */
-export function StepGarland({ step, here = false, labels = true, partners = [], wire = '#0b2417', textColor = '#fff8e8', startSolid = false, height, segment, moving = false }) {
-  const H = height ?? (labels ? 170 : 150);
+export function StepGarland({ step, here = false, labels = true, partners = [], partnerLabel, onPartner, wire = '#0b2417', textColor = '#fff8e8', startSolid = false, height, segment, moving = false }) {
+  const H = height ?? (labels ? 170 : 150) + (partnerLabel ? 28 : 0);
   const SW = 1312 / 3;
   const shadowId = useId();
   const bulbs = [];
@@ -15,6 +18,8 @@ export function StepGarland({ step, here = false, labels = true, partners = [], 
   const partnerBoxes = [];
   let hereX = 0;
   let hereY = 0;
+  /** Центр лампочки шага n по горизонтали */
+  const bulbX = (n) => Math.floor((n - 1) / 10) * SW + 24.9 + 41.82 * ((n - 1) % 10);
 
   for (let n = 1; n <= 30; n++) {
     const s = Math.floor((n - 1) / 10);
@@ -34,16 +39,18 @@ export function StepGarland({ step, here = false, labels = true, partners = [], 
         );
       } else {
         // Сертификат — розыгрыш, а не подарок каждому: мелкая строка «РОЗЫГРЫШ» над суммой (правка 27.10).
-        // Если «вы здесь» висит на соседней лампочке, подпись прячется — их не наложить друг на друга, а текст над гирляндой и так говорит, сколько осталось
+        // «Вы здесь» на соседней лампочке (шаг 9 или 11): подпись не прячется, а отходит в сторону от звёздочки (правка 03.11)
         const nearHere = here && Math.abs(step - n) === 1;
+        const anchor = !nearHere ? 'middle' : step < n ? 'start' : 'end';
+        const lx = !nearHere ? mx : step < n ? bulbX(step) + 44 : bulbX(step) - 44;
         milestones.push(
           <g key={n} className="milestone">
             <path d={G_SCALLOP} fill="#e2b24a" transform={`translate(${mx - 36} -2) scale(0.72)`} filter={`url(#${shadowId})`} />
             <text x={mx} y={46} textAnchor="middle" fontFamily={FONT_NUM} fontWeight={900} fontSize={34} fill="#173f2a" pointerEvents="none">{n}</text>
-            {labels && !nearHere && (
-              <text x={mx} y={93} textAnchor="middle" fontFamily={FONT_TEXT} fontWeight={800} fill={textColor} pointerEvents="none">
-                <tspan x={mx} fontSize={12} letterSpacing={1.5} opacity={0.8}>РОЗЫГРЫШ</tspan>
-                <tspan x={mx} dy={20} fontSize={17}>сертификата {n === 10 ? '1 500 ₽' : '3 000 ₽'}</tspan>
+            {labels && (
+              <text x={lx} y={93} textAnchor={anchor} fontFamily={FONT_TEXT} fontWeight={800} fill={textColor} pointerEvents="none">
+                <tspan x={lx} fontSize={12} letterSpacing={1.5} opacity={0.8}>РОЗЫГРЫШ</tspan>
+                <tspan x={lx} dy={20} fontSize={17}>сертификата {n === 10 ? '1 500 ₽' : '3 000 ₽'}</tspan>
               </text>
             )}
           </g>,
@@ -68,16 +75,18 @@ export function StepGarland({ step, here = false, labels = true, partners = [], 
     );
     if (partners.includes(n)) {
       partnerBoxes.push(
-        <g key={`p${n}`}>
+        <g key={`p${n}`} {...taskButton(n, partnerBoxes.length, onPartner)}>
+          {onPartner && <rect x={x - 56} y={y + 50} width={112} height={partnerLabel ? 64 : 42} fill="transparent" />}
           <line x1={x} y1={y + 36} x2={x} y2={y + 54} stroke="#173f2a" strokeWidth={1.5} />
           <PartnerBox x={x} y={y + 72} s={36} />
+          {partnerLabel && <text x={x} y={y + 107} textAnchor="middle" fontFamily={FONT_TEXT} fontWeight={800} fontSize={14} fill={textColor} opacity={0.85}>{partnerLabel}</text>}
         </g>,
       );
     }
   }
 
   return (
-    <svg viewBox={segment === undefined ? `0 0 1312 ${H}` : `${segment * SW - 8} 0 ${SW + 50} ${H}`} className="lights" aria-hidden="true" style={segment === undefined ? undefined : { overflow: 'hidden' }}>
+    <svg viewBox={segment === undefined ? `0 0 1312 ${H}` : `${segment * SW - 8} 0 ${SW + 50} ${H}`} className="lights" aria-hidden={onPartner ? undefined : 'true'} role={onPartner ? 'group' : undefined} aria-label={onPartner ? 'Гирлянда круга из 30 шагов' : undefined} style={segment === undefined ? undefined : { overflow: 'hidden' }}>
       <defs>
         <filter id={shadowId} x="-30%" y="-30%" width="160%" height="180%">
           <feDropShadow dx={0} dy={4} stdDeviation={4} floodColor="#000" floodOpacity={0.25} />
