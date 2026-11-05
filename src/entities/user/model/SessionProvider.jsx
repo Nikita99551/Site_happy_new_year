@@ -19,7 +19,7 @@ export function SessionProvider({ children }) {
       const shopFromServer = api.stores.find(s => s.id === String(me.shops_id));
       if (shopFromServer) setSelectedStore(shopFromServer);
     }
-  }, []);
+  }, [selectedStore]);
 
   useEffect(() => {
     let alive = true;

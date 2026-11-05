@@ -69,19 +69,7 @@ export function HomePage() {
   const { user, participants } = useSession();
   const mobile = useIsMobile();
   const { state: modal } = useModal();
-
-  /*Заглушка*/
-  const me = user ?? {
-    circle: 1,
-    step: 0,
-    circlesDone: 0,
-    chances: 0,
-    receipts: [],
-    receiptsTotal: 0,
-    totalSteps: 0,
-    name: 'Гость',
-  };
-
+  const me = user ?? api.sample();
   // Открытка «Ваш путь»: новые шаги зажигаются, когда открытка появляется на экране; цифры считают вместе с гирляндой
   const postcardRef = useRef(null);
   // Гирлянды откликаются на курсор: в шапке первого экрана и на открытке

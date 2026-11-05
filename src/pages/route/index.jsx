@@ -22,26 +22,11 @@ const d = (ms) => ({ '--d': `${ms}ms` });
 export default function RoutePage() {
 
   const { user, ready, selectedStore } = useSession();
+  console.log("RoutePage, user:", user);
   const { open, state: modal } = useModal();
   const reduced = useReducedMotion();
   const guest = !user;
-
-  /*Заглушка*/
-  const shown = useMemo(() => {
-    if (user) return user;
-
-    return {
-      name: 'Гость',
-      receipts: [],
-      receiptsTotal: 0,
-      totalSteps: 0,
-      circle: 1,
-      step: 0,
-      circlesDone: 0,
-      chances: 0,
-      partnerStops: [4, 8, 12, 16, 24, 28],
-    };
-  }, [user]);
+  const shown = useMemo(() => user ?? { ...api.sample(), name: 'Гость' }, [user]);
 
   // Новые шаги зажигаются по очереди с того места, где человек был в прошлый раз; цифры считают вместе с гирляндой.
   // Пока открыто окно (например, «Чек зарегистрирован»), анимация ждёт, чтобы её было видно.
