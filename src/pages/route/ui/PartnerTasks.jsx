@@ -1,4 +1,5 @@
 import { useRef, useState } from 'react';
+import { getPartner, partnerPath } from '@/entities/partner';
 import { useModal } from '@/features/modal';
 import { CAMPAIGN, PARTNER_STEPS_TEXT, PARTNER_TASKS, stepsCostText } from '@/shared/config/campaign';
 import { plural } from '@/shared/lib/text';
@@ -22,7 +23,10 @@ export function PartnerTasks({ step, circle, guest }) {
   const opened = STOPS.filter(isOpen);
   const [picked, setPicked] = useState(null);
   const sel = picked ?? opened[opened.length - 1] ?? STOPS[0];
-  const { partner, task, prize, url } = PARTNER_TASKS[sel];
+  // Страница партнёра скрыта (в показе видны не все) — задание ещё «скоро появится», ссылки нет
+  const t = getPartner(PARTNER_TASKS[sel].slug) ? PARTNER_TASKS[sel] : null;
+  const partner = t ? getPartner(t.slug).title : 'С родной земли';
+  const prize = t?.prize;
   const on = isOpen(sel);
   const left = sel - step;
   const tabs = useRef(null);
@@ -40,8 +44,9 @@ export function PartnerTasks({ step, circle, guest }) {
   let body;
   let action = null;
   if (on) {
-    body = task ? <p>{task}</p> : <><b>Скоро появится здесь</b><p>Партнёр готовит задание. Когда оно будет готово, здесь появится, что нужно сделать.</p></>;
-    if (task && url) action = <Button href={url} target="_blank" rel="noopener">Выполнить задание</Button>;
+    body = t ? <><b>{t.title}</b><p>{t.task}</p></> : <><b>Скоро появится здесь</b><p>Партнёр готовит задание. Когда оно будет готово, здесь появится, что нужно сделать.</p></>;
+    // Ответ — на странице партнёра (правка 08.11): там форма и ответы других участников
+    action = t ? <Button to={`${partnerPath(t.slug)}#task`}>Выполнить задание</Button> : null;
   } else if (guest) {
     body = <><b>Откроется на&nbsp;{sel}‑м шаге</b><p>Войдите, чтобы видеть свои шаги и&nbsp;открытые задания.</p></>;
     action = <Button onClick={() => open('auth')}>Войти или зарегистрироваться</Button>;
@@ -84,7 +89,7 @@ export function PartnerTasks({ step, circle, guest }) {
             </div>
             <div className="ptasks__info">
               <div className="ptasks__task"><small>Задание</small>{body}</div>
-              <p className="ptasks__prize"><small>Разыгрывает партнёр</small>{prize ?? 'Приз партнёр объявит вместе с заданием'}</p>
+              <p className="ptasks__prize"><small>Разыгрывает партнёр</small>{prize ?? 'Приз партнёр объявит позже'}</p>
               {action && <div className="ptasks__action">{action}</div>}
             </div>
           </div>

@@ -1,5 +1,6 @@
 import { useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
+import { PartnerLogo, PARTNERS, partnerPath } from '@/entities/partner';
 import { PrizeCard, WEEKLY_PRIZES } from '@/entities/prize';
 import { getProgress, useSeenStart, useSession, useStepAnimation } from '@/entities/user';
 import { OpenModalButton, useModal } from '@/features/modal';
@@ -13,7 +14,6 @@ import { CountUp } from '@/shared/ui/count-up/CountUp';
 import { HeaderLights, Lights, StepRow, useGarlandSway } from '@/shared/ui/lights';
 import { useParallax } from '@/shared/ui/parallax/useParallax';
 import { Snow, SNOW_PUFF } from '@/shared/ui/snow/Snow';
-import { SoonLink } from '@/shared/ui/soon-link/SoonLink';
 import { CircleScale } from '@/widgets/circle-scale/CircleScale';
 import { CtaBanner } from '@/widgets/cta-banner/CtaBanner';
 import { PageLayout } from '@/widgets/page-layout/PageLayout';
@@ -45,7 +45,6 @@ const HERO_FLAKES = [
 ];
 
 /** Логотипы партнёров демонстрационные. ЗАПОЛНИТЬ: реальные партнёры и ссылки на их страницы. */
-const PARTNERS = ['Молочный луг', 'Хлебный дом', 'Таёжный чай', 'Сладкий вечер', 'Сибирская ягода', 'Золотой колос', 'Родной источник'];
 
 /** Блок «Победители прошлых акций» скрыт до появления победителей этой акции (правка 02.11): вернуть — true */
 const SHOW_WINNERS = false;
@@ -244,7 +243,7 @@ export function HomePage() {
           <div className="postcard-stack reveal" style={d(120)}>
             <div className="postcard-stack__red" aria-hidden="true" />
             <img className="postcard-stack__stamp" src="/img/stamp.webp" alt="" width={150} height={190} loading="lazy" decoding="async" />
-            <div className="postcard-stack__tag"><img src="/img/tag.webp" alt="" width={150} height={196} /><span>С Новым годом!</span></div>
+            <div className="postcard-stack__tag"><img src="/img/tag.webp" alt="" width={150} height={196} /><span>С&nbsp;Новым<br />годом!</span></div>
             <div className="postcard" ref={postcardRef}>
               {/* Пунктирная строчка по краю: прошивается при прокрутке (маска рисует линию, сама линия — пунктир) */}
               <svg className="postcard__stitch" aria-hidden="true">
@@ -307,10 +306,10 @@ export function HomePage() {
           <div className="partners__paper-wrap reveal"><div className="partners__paper">
             <h2>Партнёры акции</h2>
             <p className="lead">5&nbsp;товаров партнёров в&nbsp;одном чеке дают ещё 1&nbsp;шаг сверх шагов за&nbsp;сумму покупки. А&nbsp;на&nbsp;{PARTNER_STEPS_TEXT}‑м шагах маршрута вас ждут задания от&nbsp;партнёров: выполните задание и&nbsp;участвуйте в&nbsp;розыгрыше призов партнёра.</p>
-            <div className="partners__logos">
-              {PARTNERS.map((name, i) => <SoonLink key={name}><img src={`/img/partner-${i + 1}.webp`} alt={name} width={480} height={270} loading="lazy" /></SoonLink>)}
-            </div>
-            <p className="partners__note">Примеры оформления партнёров · логотипы демонстрационные</p>
+            <ul className="partner-tiles">
+              {PARTNERS.map((p) => <li key={p.slug}><Link className="partner-tile" to={partnerPath(p.slug)} aria-label={p.title}><PartnerLogo partner={p} compact /></Link></li>)}
+            </ul>
+            <p className="partners__note">Нажмите на&nbsp;логотип, чтобы посмотреть товары партнёра.</p>
           </div></div>
         </div>
       </section>

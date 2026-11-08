@@ -47,3 +47,14 @@ export function formatWhen(iso, now = new Date()) {
   if (diffDays === 1) return `Вчера · ${hm}`;
   return `${t.getDate()} ${MONTHS[t.getMonth()]} · ${hm}`;
 }
+
+/** День ответа на задание: «Сегодня», «Вчера», «2 декабря» */
+export function formatDay(iso, now = new Date()) {
+  const t = new Date(iso);
+  if (Number.isNaN(t.getTime())) return '';
+  const day = (d) => new Date(d.getFullYear(), d.getMonth(), d.getDate()).getTime();
+  const diffDays = Math.round((day(now) - day(t)) / 86400000);
+  if (diffDays <= 0) return 'Сегодня';
+  if (diffDays === 1) return 'Вчера';
+  return `${t.getDate()} ${MONTHS[t.getMonth()]}`;
+}

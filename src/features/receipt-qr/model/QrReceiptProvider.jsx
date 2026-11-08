@@ -4,6 +4,7 @@ import { useModal } from '@/features/modal';
 import { useToast } from '@/shared/ui/toast/context';
 import { readPending, takeFreshScan, writePending } from '../lib/pending';
 import { QrReceiptContext } from './context';
+import { errorText } from '@/shared/lib/errors';
 
 /** Окна, которые сами показывают итог чека по QR: уведомление поверх них не нужно */
 const SHOWS_RESULT = ['qr', 'registered'];
@@ -79,7 +80,7 @@ export function QrReceiptProvider({ children }) {
           return;
         }
         keep(null);
-        setResult({ status: 'error', code, message: err instanceof Error ? err.message : 'Не удалось зарегистрировать чек' });
+        setResult({ status: 'error', code, message: errorText(err, 'Не удалось зарегистрировать чек. Попробуйте ещё раз') });
         if (!SHOWS_RESULT.includes(modalRef.current?.name)) open('qr');
       })
       .finally(() => {

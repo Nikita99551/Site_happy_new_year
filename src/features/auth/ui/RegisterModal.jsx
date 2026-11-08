@@ -8,6 +8,7 @@ import { Button } from '@/shared/ui/button/Button';
 import { Check, Field } from '@/shared/ui/field/Field';
 import { IconPin } from '@/shared/ui/icons/Icons';
 import { Modal } from '@/shared/ui/modal/Modal';
+import { errorText } from '@/shared/lib/errors';
 
 /** Окно 06: регистрация. Два обязательных согласия — тексты из документа юристов. */
 export function RegisterModal({ open }) {
@@ -51,7 +52,7 @@ export function RegisterModal({ open }) {
       // Окно «Вы зарегистрированы»: видно, что всё получилось; оттуда — к чеку или на маршрут (правка 27.10)
       openModal('registered');
     } catch (err) {
-      setErrors({ phone: err instanceof Error ? err.message : 'Не удалось зарегистрироваться' });
+      setErrors({ phone: errorText(err, 'Не удалось зарегистрироваться. Попробуйте ещё раз') });
     } finally {
       setBusy(false);
     }

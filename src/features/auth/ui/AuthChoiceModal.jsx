@@ -14,8 +14,8 @@ export function AuthChoiceModal({ open }) {
       id="m-auth"
       open={open}
       onClose={close}
-      ribbon="Новогодняя игра Аникс"
-      title={<>Добро пожаловать в&nbsp;новогоднюю игру Аникс</>}
+      ribbon="Год Козы — лови призы"
+      title={<>Добро пожаловать в&nbsp;акцию «Год Козы&nbsp;— лови призы»</>}
       lead={qrWaits
         ? <>Вы отсканировали QR-код с&nbsp;чека. Войдите или создайте личный кабинет&nbsp;— чек зарегистрируется сам, вводить номер не&nbsp;нужно.</>
         : afterAuth === 'receipt'

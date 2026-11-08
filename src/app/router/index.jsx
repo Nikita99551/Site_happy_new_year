@@ -1,5 +1,5 @@
 import { lazy, Suspense, useEffect } from 'react';
-import { Route, Routes } from 'react-router-dom';
+import { Navigate, Route, Routes } from 'react-router-dom';
 import { HomePage } from '@/pages/home';
 import { PageLoader } from '@/shared/ui/page-loader/PageLoader';
 import { ROUTES } from './routes';
@@ -32,6 +32,7 @@ const RoutePage = lazy(withReload(() => import('@/pages/route')));
 const ConditionsPage = lazy(withReload(() => import('@/pages/conditions')));
 const PrizesPage = lazy(withReload(() => import('@/pages/prizes')));
 const RulesPage = lazy(() => withReload(() => import('@/pages/document'))().then((m) => ({ default: m.RulesPage })));
+const PartnerPage = lazy(withReload(() => import('@/pages/partner')));
 const NotFoundPage = lazy(withReload(() => import('@/pages/not-found')));
 
 /**
@@ -42,7 +43,7 @@ function usePrefetchPages() {
   useEffect(() => {
     const run = () => {
       // Фоновая подгрузка: если файлов уже нет (вышла новая версия) — молча пропускаем, перезагрузка будет при переходе
-      for (const f of [() => import('@/pages/route'), () => import('@/pages/conditions'), () => import('@/pages/prizes'), () => import('@/pages/document')]) f().catch(() => {});
+      for (const f of [() => import('@/pages/route'), () => import('@/pages/conditions'), () => import('@/pages/prizes'), () => import('@/pages/document'), () => import('@/pages/partner')]) f().catch(() => {});
     };
     const idle = window.requestIdleCallback ?? ((cb) => window.setTimeout(cb, 2000));
     const cancel = window.cancelIdleCallback ?? window.clearTimeout;
@@ -67,6 +68,8 @@ export function AppRouter() {
         <Route path={ROUTES.conditions} element={<ConditionsPage />} />
         <Route path={ROUTES.prizes} element={<PrizesPage />} />
         <Route path={ROUTES.rules} element={<RulesPage />} />
+        <Route path={ROUTES.partner} element={<Navigate to="/#partners" replace />} />
+        <Route path={`${ROUTES.partner}/:slug`} element={<PartnerPage />} />
         {/* Другие адреса (и ещё не показанные страницы) — своя страница 404 */}
         <Route path="*" element={<NotFoundPage />} />
       </Routes>

@@ -77,3 +77,16 @@ export const IconTicket = (p) => (
     <polygon points="21,4.5 22.7,8.4 26.9,8.8 23.7,11.6 24.7,15.7 21,13.5 17.3,15.7 18.3,11.6 15.1,8.8 19.3,8.4" fill="#e31e24" />
   </svg>
 );
+/* Ответы на задания партнёров (правка 08.11) */
+export const IconHeart = (p) => (
+  <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" {...p}><path d="M12 21s-7.5-4.6-9.6-9.3C.9 8.3 2.9 4.5 6.6 4.5c2.2 0 3.7 1.2 5.4 3.1 1.7-1.9 3.2-3.1 5.4-3.1 3.7 0 5.7 3.8 4.2 7.2C19.5 16.4 12 21 12 21z" /></svg>
+);
+export const IconPlay = (p) => (
+  <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" {...p}><path d="M8 5.5v13a1 1 0 0 0 1.5.86l10.4-6.5a1 1 0 0 0 0-1.72L9.5 4.64A1 1 0 0 0 8 5.5z" /></svg>
+);
+export const IconPhoto = (p) => (
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.2} strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" {...p}><rect x={3} y={5} width={18} height={14} rx={2.5} /><circle cx={9} cy={10} r={1.8} /><path d="M21 16l-5-5-7.5 7.5" /></svg>
+);
+export const IconVideo = (p) => (
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.2} strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" {...p}><rect x={2.5} y={6} width={13.5} height={12} rx={2.5} /><path d="M16 10.5l5.5-3v9l-5.5-3z" /></svg>
+);
