@@ -12,6 +12,9 @@ import { PageLayout } from '@/widgets/page-layout/PageLayout';
 import './PrizesPage.scss';
 
 const d = (ms) => ({ '--d': `${ms}ms` });
+// Плитки первого экрана — маленькие копии из img/thumbs (скрипты/миниатюры-призов.py, 08.11: страница грузилась долго).
+// Размытое превью Алтая 48×24 (оттуда же): видно сразу, пока грузится большое фото, — вместо белой карточки
+const ALTAI_BLUR = 'data:image/webp;base64,UklGRl4BAABXRUJQVlA4IFIBAABwBwCdASowABgAPsFUoUwnpKMiKqoA8BgJYwC9i7AKWRyHmSfBgVpig+H82A/m5rHqRinhkcf13909UT1xu2zUrTmIiAD+/VQ7E7fs/L/hW+12unQy+Xu/bz65F+qaSx/V9+WYIJEiIgwfZYLBrvlavFZv9QT28iDs+shYhwXLNM8tqKYSe8mZ05Mqk7O9R3+1Dj0BKMiEAgH00eL/idCQ41/TQAX+dQciDRGEyGxUvkXMNIEeKjQrOWPbuPA+2rcQsGk8aNOWyerEttjb+AQtC75etPKlJzJdIgvICSLo9wZu71M7CCDjaaf2k2tW4bgXw7EcbUe5EItiQx89HwCCobXN/8NYZm+j8Jz8oOZ380QOhPhWPLFsTsWtDVBCZivj8hFdq3xFt69un4SF3sPgjr4qzwUmG10OA47lnUNR9zkeSs5c4LFNLsc855A9YxAAAA==';
 
 export default function PrizesPage() {
   // Бирки недель висят на верёвке и чуть покачиваются, когда мимо проводят мышью
@@ -38,21 +41,21 @@ export default function PrizesPage() {
             </Link>
             <Link className="pfact" to="#weekly">
               <span className="pfact__pic pfact__pic--weekly" aria-hidden="true">
-                <img src="/img/prize-w2-airfryer-kitfort.webp" alt="" width={800} height={820} />
-                <img src="/img/prize-w4-coffee-delonghi.webp" alt="" width={581} height={820} />
-                <img src="/img/prize-w1-yandex-station.webp" alt="" width={802} height={683} />
-                <img src="/img/prize-w7-robot-dreame.webp" alt="" width={820} height={599} />
+                <img src="/img/thumbs/prize-w2-airfryer-kitfort.webp" alt="" width={429} height={440} />
+                <img src="/img/thumbs/prize-w4-coffee-delonghi.webp" alt="" width={312} height={440} />
+                <img src="/img/thumbs/prize-w1-yandex-station.webp" alt="" width={440} height={375} />
+                <img src="/img/thumbs/prize-w7-robot-dreame.webp" alt="" width={440} height={321} />
               </span>
               <span className="pfact__tag">5&nbsp;призов × 7&nbsp;недель</span>
               <span className="pfact__text"><CountUp value={35} /><small>еженедельных призов</small></span>
             </Link>
             <Link className="pfact" to="#main-prize">
               <span className="pfact__pic pfact__pic--final" aria-hidden="true">
-                <img src="/img/final-tv-xiaomi.webp" alt="" width={900} height={561} />
-                <img src="/img/final-dyson.webp" alt="" width={500} height={900} />
-                <img src="/img/final-ps5.webp" alt="" width={464} height={900} />
-                <span className="pfact__photo"><img src="/img/altai.webp" alt="" width={1400} height={700} /><i>Манжерок</i></span>
-                <img src="/img/final-iphone.webp" alt="" width={746} height={900} />
+                <img src="/img/thumbs/final-tv-xiaomi.webp" alt="" width={440} height={274} />
+                <img src="/img/thumbs/final-dyson.webp" alt="" width={244} height={440} />
+                <img src="/img/thumbs/final-ps5.webp" alt="" width={227} height={440} />
+                <span className="pfact__photo"><img src="/img/thumbs/altai.webp" alt="" width={400} height={300} /><i>Манжерок</i></span>
+                <img src="/img/thumbs/final-iphone.webp" alt="" width={365} height={440} />
               </span>
               <span className="pfact__text"><CountUp value={5} duration={800} /><small>суперпризов в&nbsp;финале</small></span>
             </Link>
@@ -73,7 +76,7 @@ export default function PrizesPage() {
             <img className="main-prize__branch" src="/img/branch.webp" alt="" width={200} height={214} loading="lazy" decoding="async" />
             <figure className="photo-card" style={{ margin: 0 }}>
               <span className="photo-card__tape" aria-hidden="true" />
-              <img src="/img/altai.webp" alt="Зимний Алтай: горы, река и ели" width={1400} height={700} />
+              <img src="/img/altai.webp" alt="Зимний Алтай: горы, река и ели" width={1400} height={700} decoding="async" style={{ background: `center / cover url(${ALTAI_BLUR})` }} />
               <figcaption>Алтай</figcaption>
             </figure>
             <span className="seal seal--red main-prize__badge"><span className="num">1</span><small>главный<br />приз</small></span>
