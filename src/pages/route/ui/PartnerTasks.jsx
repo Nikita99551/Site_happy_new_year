@@ -27,7 +27,7 @@ export function PartnerTasks({ step, circle, guest }) {
   const shown = (n) => !!getPartner(PARTNER_TASKS[n]?.slug);
   const sel = picked ?? opened.filter(shown).pop() ?? opened[opened.length - 1] ?? STOPS.find(shown) ?? STOPS[0];
   // Страница партнёра скрыта (в показе видны не все) — задание ещё «скоро появится», ссылки нет
-  const t = getPartner(PARTNER_TASKS[sel].slug) ? PARTNER_TASKS[sel] : null;
+  const t = getPartner(PARTNER_TASKS[sel]?.slug) ? PARTNER_TASKS[sel] : null;
   const partner = t ? getPartner(t.slug).title : 'С родной земли';
   const prize = t?.prize;
   const on = isOpen(sel);
