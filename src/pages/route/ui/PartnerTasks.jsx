@@ -15,14 +15,17 @@ const IconLock = (p) => <svg viewBox="0 0 24 24" fill="none" stroke="currentColo
 /**
  * Задания партнёров на «Моём маршруте» (правка 03.11, переделано по просьбе Никиты: вместо шести бумажных карточек —
  * одна плашка с переключателем). Сверху коробки шагов 4, 8, 12…: нажал — ниже задание этого шага, партнёр и его приз.
- * Открыто: шаг пройден в этом круге или уже пройден целый круг. По умолчанию выбран последний открытый шаг, иначе первый.
+ * Открыто: шаг пройден в этом круге или уже пройден целый круг. По умолчанию выбран последний открытый шаг с видимым партнёром, иначе первый.
  */
 export function PartnerTasks({ step, circle, guest }) {
   const { open } = useModal();
   const isOpen = (n) => !guest && (circle > 1 || step >= n);
   const opened = STOPS.filter(isOpen);
   const [picked, setPicked] = useState(null);
-  const sel = picked ?? opened[opened.length - 1] ?? STOPS[0];
+  // По умолчанию — последнее открытое задание партнёра, чья страница есть на сайте (правка 08.11: в показе видны
+  // не все партнёры, и на 28-м шаге стояло «скоро появится»)
+  const shown = (n) => !!getPartner(PARTNER_TASKS[n]?.slug);
+  const sel = picked ?? opened.filter(shown).pop() ?? opened[opened.length - 1] ?? STOPS.find(shown) ?? STOPS[0];
   // Страница партнёра скрыта (в показе видны не все) — задание ещё «скоро появится», ссылки нет
   const t = getPartner(PARTNER_TASKS[sel].slug) ? PARTNER_TASKS[sel] : null;
   const partner = t ? getPartner(t.slug).title : 'С родной земли';
