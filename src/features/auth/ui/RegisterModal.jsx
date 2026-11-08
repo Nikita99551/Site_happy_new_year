@@ -9,6 +9,7 @@ import { Check, Field } from '@/shared/ui/field/Field';
 import { IconPin } from '@/shared/ui/icons/Icons';
 import { Modal } from '@/shared/ui/modal/Modal';
 import { getImage } from '@/shared/lib/images';
+import { errorText } from '@/shared/lib/errors';
 
 /** Окно 06: регистрация. Два обязательных согласия — тексты из документа юристов. */
 export function RegisterModal({ open }) {
@@ -52,7 +53,7 @@ export function RegisterModal({ open }) {
             setPd(false);
             openModal('registered');
         } catch (err) {
-            setErrors({ phone: err instanceof Error ? err.message : 'Не удалось зарегистрироваться' });
+            setErrors({ phone: errorText(err, 'Не удалось зарегистрироваться. Попробуйте ещё раз') });
         } finally {
             setBusy(false);
         }
@@ -65,7 +66,7 @@ export function RegisterModal({ open }) {
             onClose={back}
             ribbon="Регистрация"
             width={680}
-            title={<>Создайте кабинет для&nbsp;чеков и&nbsp;подарков</>}
+            title={<>Создайте кабинет<span className="modal__title-more"> для&nbsp;чеков и&nbsp;подарков</span></>}
             lead={<>Телефон&nbsp;— 10&nbsp;цифр, без&nbsp;8 и&nbsp;+7.</>}
             decor={<img className="modal__goat modal__goat--right" src={getImage('goat-scroll.webp')} alt="" width={460} height={962} loading="lazy" decoding="async" />}
         >
@@ -79,11 +80,11 @@ export function RegisterModal({ open }) {
                     <span className="field__label">Ваш магазин <button type="button" className="link" onClick={() => openModal('store', { returnTo: 'register' })}>Изменить</button></span>
                     <button className="field__box" type="button" style={{ width: '100%', textAlign: 'left' }} onClick={() => openModal('store', { returnTo: 'register' })}>
                         <IconPin />
-                        <span style={{ fontWeight: 600, fontSize: 20 }}>
+                        <span className="field__value">
               {selectedStore?.name ? `${selectedStore.name.replace('Аникс ', '')} · ${selectedStore.address}` : 'Выберите магазин'}
             </span>
                     </button>
-                    <span className="field__hint field__hint--optional">Магазин нужен, чтобы показывать его новости и&nbsp;сообщество.</span>
+                    <span className="field__hint field__hint--optional">В&nbsp;этом магазине вы получите приз, если выиграете.</span>
                     <span className="field__error" aria-live="polite">{errors.store}</span>
                 </div>
                 <Check name="consentRules" required checked={rules} onChange={(e) => setRules(e.target.checked)} error={errors.rules}>

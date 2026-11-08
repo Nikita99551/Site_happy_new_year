@@ -1,11 +1,11 @@
 import { useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
+import { PartnerLogo, PARTNERS, partnerPath } from '@/entities/partner';
 import { PrizeCard, WEEKLY_PRIZES } from '@/entities/prize';
 import { getProgress, useSeenStart, useSession, useStepAnimation } from '@/entities/user';
 import { OpenModalButton, useModal } from '@/features/modal';
 import { api } from '@/shared/api';
 import { CAMPAIGN_WEEKS, PARTNER_STEPS_TEXT } from '@/shared/config/campaign';
-import { getImage } from '@/shared/lib/images'; // <-- Импорт на месте
 import { formatNumber } from '@/shared/lib/text';
 import { useInView, useIsMobile } from '@/shared/lib/hooks';
 import { Button } from '@/shared/ui/button/Button';
@@ -14,11 +14,10 @@ import { CountUp } from '@/shared/ui/count-up/CountUp';
 import { HeaderLights, Lights, StepRow, useGarlandSway } from '@/shared/ui/lights';
 import { useParallax } from '@/shared/ui/parallax/useParallax';
 import { Snow, SNOW_PUFF } from '@/shared/ui/snow/Snow';
-import { SoonLink } from '@/shared/ui/soon-link/SoonLink';
+import { CircleScale } from '@/widgets/circle-scale/CircleScale';
 import { CtaBanner } from '@/widgets/cta-banner/CtaBanner';
 import { PageLayout } from '@/widgets/page-layout/PageLayout';
 import { useCoverHero } from './lib/useCoverHero';
-import { CircleScale } from '@/widgets/circle-scale/CircleScale';
 import { HowCards } from './ui/HowCards';
 import { WINNERS } from './model/winners';
 import { PrizeArt } from './ui/Winners';
@@ -38,291 +37,291 @@ const HERO_LIFT = { 'data-speed': -0.3 };
  * ближние (крупные, ярче) улетают вверх быстрее страницы, дальние (мелкие, бледнее) отстают. Положение и размер — в HomePage.scss (.hero__flake--*)
  */
 const HERO_FLAKES = [
-    { k: 'a', speed: -0.45 },
-    { k: 'b', speed: -0.2 },
-    { k: 'c', speed: 0.3 },
-    { k: 'd', speed: 0.35 },
-    { k: 'e', speed: 0.2 },
+  { k: 'a', speed: -0.45 },
+  { k: 'b', speed: -0.2 },
+  { k: 'c', speed: 0.3 },
+  { k: 'd', speed: 0.35 },
+  { k: 'e', speed: 0.2 },
 ];
 
 /** Логотипы партнёров демонстрационные. ЗАПОЛНИТЬ: реальные партнёры и ссылки на их страницы. */
-const PARTNERS = ['Молочный луг', 'Хлебный дом', 'Таёжный чай', 'Сладкий вечер', 'Сибирская ягода', 'Золотой колос', 'Родной источник'];
 
 /** Блок «Победители прошлых акций» скрыт до появления победителей этой акции (правка 02.11): вернуть — true */
 const SHOW_WINNERS = false;
 
 const winnersHead = (
-    <div className="section-head reveal">
-        <span className="ribbon ribbon--green">Победители прошлых акций</span>
-        <h2>Они уже получили свои подарки</h2>
-        <p className="lead">Это настоящие покупатели Аникс. Следующим можете стать вы.</p>
-    </div>
+  <div className="section-head reveal">
+    <span className="ribbon ribbon--green">Победители прошлых акций</span>
+    <h2>Они уже получили свои подарки</h2>
+    <p className="lead">Это настоящие покупатели Аникс. Следующим можете стать вы.</p>
+  </div>
 );
 
 /** Карточки победителей: вместо фото — рисунок приза с номером билета на «полароиде» */
 const winnerCards = WINNERS.map((w, i) => (
-    <article key={w.ticket} className="note-card reveal" style={d(i * 70)}>
-
-        <img className="note-card__clip" src={getImage('paperclip.webp')} alt="" width={56} height={86} />
-        <div className="note-card__photo"><PrizeArt kind={w.kind} label={w.prize} /><span>билет №&nbsp;{w.ticket}</span></div>
-        <span className="note-card__badge burst">приз<br />получен</span>
-        <h3>{w.name}</h3>
-        <p className="note-card__city">{w.store}</p>
-        <p className="note-card__prize"><small>Приз</small>{w.prize}</p>
-    </article>
+  <article key={w.ticket} className="note-card reveal" style={d(i * 70)}>
+    <img className="note-card__clip" src="/img/paperclip.webp" alt="" width={56} height={86} />
+    <div className="note-card__photo"><PrizeArt kind={w.kind} label={w.prize} /><span>билет №&nbsp;{w.ticket}</span></div>
+    <span className="note-card__badge burst">приз<br />получен</span>
+    <h3>{w.name}</h3>
+    <p className="note-card__city">{w.store}</p>
+    <p className="note-card__prize"><small>Приз</small>{w.prize}</p>
+  </article>
 ));
 
 export function HomePage() {
-    const { user, participants } = useSession();
-    const mobile = useIsMobile();
-    const { state: modal } = useModal();
-
-    const me = user ?? {
-        circle: 1,
-        step: 0,
-        circlesDone: 0,
-        chances: 0,
-        receipts: [],
-        receiptsTotal: 0,
-        totalSteps: 0,
-        name: 'Гость',
+  const { user, participants } = useSession();
+  const mobile = useIsMobile();
+  const { state: modal } = useModal();
+  const me = user ?? api.sample();
+  // Открытка «Ваш путь»: новые шаги зажигаются, когда открытка появляется на экране; цифры считают вместе с гирляндой
+  const postcardRef = useRef(null);
+  // Гирлянды откликаются на курсор: в шапке первого экрана и на открытке
+  const heroRef = useRef(null);
+  useGarlandSway(heroRef);
+  useGarlandSway(postcardRef);
+  // Параллакс: первый экран (фон и снег отстают, заголовок улетает быстрее, коза «выходит вперёд»), коллаж открытки,
+  // коза из-за карточек, карточка графика «Акции в цифрах»
+  useParallax(heroRef, { origin: 'top' });
+  // Первый экран замирает, а блок «Как участвовать» наезжает на него рваным краем
+  useCoverHero(heroRef);
+  // Коза первого экрана подпрыгивает от нажатия, при приземлении из-под копыт летит снег
+  const goatRef = useRef(null);
+  useEffect(() => {
+    const goat = goatRef.current;
+    const hero = heroRef.current;
+    if (!goat || !hero) return;
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches || /noanim/.test(location.search)) return;
+    let timer = 0;
+    const onClick = () => {
+      if (goat.classList.contains('hero__goat--jump')) return;
+      goat.classList.add('hero__goat--jump');
+      // Приземление — на 68 % анимации goat-jump (750 мс)
+      timer = window.setTimeout(() => {
+        const r = goat.getBoundingClientRect();
+        const detail = { x: r.left + r.width / 2, y: r.bottom - Math.min(60, r.height * 0.08), spread: r.width * 0.3 };
+        hero.dispatchEvent(new CustomEvent(SNOW_PUFF, { detail }));
+      }, 510);
     };
+    const onEnd = (e) => {
+      if (e.animationName === 'goat-jump') goat.classList.remove('hero__goat--jump');
+    };
+    goat.classList.add('hero__goat--toy');
+    goat.addEventListener('click', onClick);
+    goat.addEventListener('animationend', onEnd);
+    return () => {
+      window.clearTimeout(timer);
+      goat.classList.remove('hero__goat--toy', 'hero__goat--jump');
+      goat.removeEventListener('click', onClick);
+      goat.removeEventListener('animationend', onEnd);
+    };
+  }, []);
+  const postcardInView = useInView(postcardRef);
+  const start = useSeenStart(user, 'home');
+  const { pos, moving } = useStepAnimation({ from: start, to: { circle: me.circle, step: me.step }, run: postcardInView && !modal });
+  const step = pos.step;
+  const progress = getProgress(step);
+  // Настоящая статистика с сервера приходит на все недели сразу, у будущих — 0 (правка Егора 05.11): «сейчас» — последняя неделя с участниками
+  let now = participants.length;
+  while (now > 0 && participants[now - 1] === 0) now -= 1;
+  const max = Math.max(...participants.filter((v) => v > 0), 1);
 
-    const postcardRef = useRef(null);
-    const heroRef = useRef(null);
-    useGarlandSway(heroRef);
-    useGarlandSway(postcardRef);
-    // Параллакс: первый экран (фон и снег отстают, заголовок улетает быстрее, коза «выходит вперёд»), коллаж открытки,
-    // коза из-за карточек, карточка графика «Акции в цифрах»
-    useParallax(heroRef, { origin: 'top' });
-    // Первый экран замирает, а блок «Как участвовать» наезжает на него рваным краем
-    useCoverHero(heroRef);
-    // Коза первого экрана подпрыгивает от нажатия, при приземлении из-под копыт летит снег
-    const goatRef = useRef(null);
-    useEffect(() => {
-        const goat = goatRef.current;
-        const hero = heroRef.current;
-        if (!goat || !hero) return;
-        if (window.matchMedia('(prefers-reduced-motion: reduce)').matches || /noanim/.test(location.search)) return;
-        let timer = 0;
-        const onClick = () => {
-            if (goat.classList.contains('hero__goat--jump')) return;
-            goat.classList.add('hero__goat--jump');
-            // Приземление — на 68 % анимации goat-jump (750 мс)
-            timer = window.setTimeout(() => {
-                const r = goat.getBoundingClientRect();
-                const detail = { x: r.left + r.width / 2, y: r.bottom - Math.min(60, r.height * 0.08), spread: r.width * 0.3 };
-                hero.dispatchEvent(new CustomEvent(SNOW_PUFF, { detail }));
-            }, 510);
-        };
-        const onEnd = (e) => {
-            if (e.animationName === 'goat-jump') goat.classList.remove('hero__goat--jump');
-        };
-        goat.classList.add('hero__goat--toy');
-        goat.addEventListener('click', onClick);
-        goat.addEventListener('animationend', onEnd);
-        return () => {
-            window.clearTimeout(timer);
-            goat.classList.remove('hero__goat--toy', 'hero__goat--jump');
-            goat.removeEventListener('click', onClick);
-            goat.removeEventListener('animationend', onEnd);
-        };
-    }, []);
-
-    const postcardInView = useInView(postcardRef);
-    const start = useSeenStart(user, 'home');
-    const { pos, moving } = useStepAnimation({ from: start, to: { circle: me.circle, step: me.step }, run: postcardInView && !modal });
-    const step = pos.step;
-    const progress = getProgress(step);
-    const weeksTotal = 8;
-    let now = participants.length;
-    while (now > 0 && participants[now - 1] === 0) {
-        now--;
-    }
-    const max = Math.max(...participants.filter(v => v > 0), 1);
-
-    return (
-        <PageLayout title="Год козы — лови призы · Новогодняя акция Аникс 2027" hero revealDeps={[user, mobile]}>
-            <div className="hero-stack">
-                <section className="hero" ref={heroRef}>
-                    <div className="hero__bg" aria-hidden="true" data-speed={0.35} />
-                    <div className="hero__flakes" aria-hidden="true">
-                        {HERO_FLAKES.map((f) => <span key={f.k} className={`hero__flake hero__flake--${f.k}`} data-speed={f.speed} />)}
-                    </div>
-                    <Snow speed={0.45} />
-                    <HeaderLights className="hero__lights" />
-                    <div className="container hero__inner">
-                        <div className="hero__text">
-                            <span className="ribbon hero__dates reveal" {...HERO_LIFT}>16 ноября 2026 — 10 января 2027</span>
-                            <h1 className="reveal" style={d(80)} {...HERO_LIFT}>Год козы&nbsp;—<br />лови&nbsp;призы</h1>
-                            <p className="lead reveal" style={d(160)} {...HERO_LIFT}>Покупайте в&nbsp;Аникс и&nbsp;проходите новогодний маршрут из&nbsp;30&nbsp;шагов вместе с&nbsp;нашей Козой.</p>
-                            <div className="hero__actions reveal" style={d(240)} {...HERO_LIFT}>
-                                <OpenModalButton modal="receipt">Зарегистрировать чек</OpenModalButton>
-                                <Link className="link tap-area" to="/conditions">Условия акции</Link>
-                            </div>
-                            <span className="hero__year reveal" style={d(320)} aria-label="2027 год" data-speed={-0.15}>2027</span>
-                        </div>
-                        <div className="hero__goat reveal" style={d(200)} ref={goatRef} data-grow={0.1}>
-                            <img src={getImage('goat-dance.webp')} alt="Коза в красном шарфе танцует" width={608} height={939} fetchPriority="high" />
-                        </div>
-                    </div>
-                </section>
-
-                <section className="section section--cream torn-top how" id="how">
-                    <div className="container">
-                        <div className="steps-strip reveal">
-                            <div className="ticket steps-strip__ticket"><span className="ticket__stitch" /><span className="num">600&nbsp;₽</span><b>= 1&nbsp;шаг</b></div>
-                            <div className="milestone"><span className="seal"><span className="num">10</span></span><div><b>10‑й шаг</b><p>Розыгрыш сертификата Аникс на&nbsp;1&nbsp;500&nbsp;₽</p></div></div>
-                            <div className="milestone"><span className="seal"><span className="num">20</span></span><div><b>20‑й шаг</b><p>Розыгрыш сертификата Аникс на&nbsp;3&nbsp;000&nbsp;₽</p></div></div>
-                            <div className="milestone"><span className="seal seal--red"><span className="num">30</span></span><div><b>30‑й шаг — финиш</b><p>Билет на&nbsp;розыгрыш, главный&nbsp;— сертификат в&nbsp;«Манжерок»</p></div></div>
-                        </div>
-                        <div className="section-head reveal">
-                            <span className="ribbon ribbon--green">Как участвовать</span>
-                            <h2>Три шага до&nbsp;подарков</h2>
-                            <p className="lead">Регистрировать можно каждый чек от&nbsp;600&nbsp;₽.</p>
-                        </div>
-                        <div className="how__cards-wrap">
-
-                            <img className="how__peek reveal" src={getImage('goat-peek.webp')} alt="" width={230} height={266} loading="lazy" decoding="async" />
-                            <HowCards />
-                        </div>
-                        <p className="how__more reveal"><Link className="link" to="/conditions#calc">Подробно о&nbsp;том, как начисляются шаги&nbsp;→</Link></p>
-                    </div>
-                </section>
+  return (
+    <PageLayout title="Год козы — лови призы · Новогодняя акция Аникс 2027" hero revealDeps={[user, mobile]}>
+      {/* ===== Первый экран + «Как участвовать»: обёртка ограничивает, сколько первый экран стоит на месте, пока на него наезжает следующий блок ===== */}
+      <div className="hero-stack">
+        <section className="hero" ref={heroRef}>
+          <div className="hero__bg" aria-hidden="true" data-speed={0.35} />
+          <div className="hero__flakes" aria-hidden="true">
+            {HERO_FLAKES.map((f) => <span key={f.k} className={`hero__flake hero__flake--${f.k}`} data-speed={f.speed} />)}
+          </div>
+          <Snow speed={0.45} />
+          <HeaderLights className="hero__lights" />
+          <div className="container hero__inner">
+            <div className="hero__text">
+              <span className="ribbon hero__dates reveal" {...HERO_LIFT}>16 ноября 2026 — 10 января 2027</span>
+              <h1 className="reveal" style={d(80)} {...HERO_LIFT}>Год козы&nbsp;—<br />лови&nbsp;призы</h1>
+              <p className="lead reveal" style={d(160)} {...HERO_LIFT}>Покупайте в&nbsp;Аникс и&nbsp;проходите новогодний маршрут из&nbsp;30&nbsp;шагов вместе с&nbsp;нашей Козой.</p>
+              <div className="hero__actions reveal" style={d(240)} {...HERO_LIFT}>
+                <OpenModalButton modal="receipt">Зарегистрировать чек</OpenModalButton>
+                <Link className="link tap-area" to="/conditions">Условия акции</Link>
+              </div>
+              <span className="hero__year reveal" style={d(320)} aria-label="2027 год" data-speed={-0.15}>2027</span>
             </div>
+            <div className="hero__goat reveal" style={d(200)} ref={goatRef} data-grow={0.1}>
+              <img src="/img/goat-dance.webp" alt="Коза в красном шарфе танцует" width={608} height={939} fetchPriority="high" />
+            </div>
+          </div>
+        </section>
+  
+        {/* ===== Как участвовать ===== */}
+        <section className="section section--cream torn-top how" id="how">
+          <div className="container">
+            <div className="steps-strip reveal">
+              <div className="ticket steps-strip__ticket"><span className="ticket__stitch" /><span className="num">600&nbsp;₽</span><b>= 1&nbsp;шаг</b></div>
+              <div className="milestone"><span className="seal"><span className="num">10</span></span><div><b>10‑й шаг</b><p>Розыгрыш сертификата Аникс на&nbsp;1&nbsp;500&nbsp;₽</p></div></div>
+              <div className="milestone"><span className="seal"><span className="num">20</span></span><div><b>20‑й шаг</b><p>Розыгрыш сертификата Аникс на&nbsp;3&nbsp;000&nbsp;₽</p></div></div>
+              <div className="milestone"><span className="seal seal--red"><span className="num">30</span></span><div><b>30‑й шаг — финиш</b><p>Билет в&nbsp;финал, где главный приз&nbsp;— отдых на&nbsp;курорте «Манжерок»</p></div></div>
+            </div>
+            <div className="section-head reveal">
+              <span className="ribbon ribbon--green">Как участвовать</span>
+              <h2>Три шага до&nbsp;подарков</h2>
+              <p className="lead">Регистрировать можно каждый чек от&nbsp;600&nbsp;₽.</p>
+            </div>
+            <div className="how__cards-wrap">
+              {/* Коза поднимается из-за карточки по мере прокрутки и выше задуманного места не выходит */}
+              <img className="how__peek reveal" src="/img/goat-peek.webp" alt="" width={230} height={266} loading="lazy" decoding="async" />
+              <HowCards />
+            </div>
+            <p className="how__more reveal"><Link className="link" to="/conditions#calc">Подробно о&nbsp;том, как начисляются шаги&nbsp;→</Link></p>
+          </div>
+        </section>
+      </div>
 
-            <section className="section section--green torn-top" id="numbers">
-                <div className="container numbers">
-                    <div className="reveal">
-                        <span className="ribbon">Акция в&nbsp;цифрах</span>
-                        <h2 style={{ marginTop: 24 }}>Восемь недель новогодних подарков</h2>
-                        <div className="numbers__rows">
-                            <div className="numbers__row"><div><b>Столько длится акция</b><p>С&nbsp;16&nbsp;ноября 2026 по&nbsp;10&nbsp;января 2027&nbsp;года.</p></div><div className="numbers__val"><CountUp value={8} /><small>недель</small></div></div>
-                            <div className="numbers__row"><div><b>Один круг маршрута</b><p>Каждые полные 600&nbsp;₽ в&nbsp;чеке&nbsp;— один шаг.</p></div><div className="numbers__val"><CountUp value={30} /><small>шагов</small></div></div>
-                            <div className="numbers__row"><div><b>Еженедельные розыгрыши</b><p>7&nbsp;недель по&nbsp;5&nbsp;призов, каждый до&nbsp;15&nbsp;000&nbsp;₽.</p></div><div className="numbers__val"><CountUp value={35} /><small>призов</small></div></div>
-                            <div className="numbers__row"><div><b>Финал 12&nbsp;января</b><p>Главный&nbsp;— сертификат на&nbsp;250&nbsp;000&nbsp;₽ на&nbsp;отдых на&nbsp;курорте «Манжерок» (Алтай).</p></div><div className="numbers__val"><CountUp value={5} /><small>призов</small></div></div>
-                        </div>
+      {/* ===== Акция в цифрах ===== */}
+      <section className="section section--green torn-top" id="numbers">
+        <div className="container numbers">
+          <div className="reveal">
+            <span className="ribbon">Акция в&nbsp;цифрах</span>
+            <h2 style={{ marginTop: 24 }}>Восемь недель новогодних подарков</h2>
+            <div className="numbers__rows">
+              <div className="numbers__row"><div><b>Столько длится акция</b><p>С&nbsp;16&nbsp;ноября 2026 по&nbsp;10&nbsp;января 2027&nbsp;года.</p></div><div className="numbers__val"><CountUp value={8} /><small>недель</small></div></div>
+              <div className="numbers__row"><div><b>Один круг маршрута</b><p>Каждые полные 600&nbsp;₽ в&nbsp;чеке&nbsp;— один шаг.</p></div><div className="numbers__val"><CountUp value={30} /><small>шагов</small></div></div>
+              <div className="numbers__row"><div><b>Еженедельные розыгрыши</b><p>7&nbsp;недель по&nbsp;5&nbsp;призов, каждый до&nbsp;15&nbsp;000&nbsp;₽. Участвуют все, у&nbsp;кого есть хотя&nbsp;бы один шаг.</p></div><div className="numbers__val"><CountUp value={35} /><small>призов</small></div></div>
+              <div className="numbers__row"><div><b>Финал 12&nbsp;января</b><p>Главный приз&nbsp;— сертификат на&nbsp;250&nbsp;000&nbsp;₽ на&nbsp;отдых на&nbsp;курорте «Манжерок» (Алтай). Билет в&nbsp;финал даёт каждый пройденный круг из&nbsp;30&nbsp;шагов.</p></div><div className="numbers__val"><CountUp value={5} /><small>призов</small></div></div>
+            </div>
+          </div>
+          {/* Карточка графика отстаёт от текста слева (дальний слой), скрепка на ней едет быстрее (ближний) */}
+          <div className="paper chart-card reveal" style={d(120)}>
+            <img className="chart-card__clip" src="/img/paperclip.webp" alt="" width={110} height={169} />
+            <h3>Уже <CountUp value={participants[now - 1] ?? 0} duration={1400} /> покупателей в&nbsp;пути</h3>
+            <p className="chart-card__sub">Участников с&nbsp;начала акции, по&nbsp;неделям</p>
+            {/* Под столбиками — даты недель (правка 02.11). На телефоне столбики не вмещают даты: график ложится набок, дата слева от полоски */}
+            <div className="chart-wrap" role="img" aria-label={`Участники по неделям: ${participants.map((v, i) => `${CAMPAIGN_WEEKS[i]?.aria} — ${formatNumber(v)}`).join('; ')}`}>
+              <div className="chart">
+                {CAMPAIGN_WEEKS.map((_, i) => {
+                  const value = participants[i];
+                  if (value === undefined || value === 0) return <div key={i} className="chart__bar chart__bar--future"><div className="chart__fill" /></div>;
+                  const share = (value / max) * 0.92;
+                  const h = `${Math.round(share * 100)}%`;
+                  return (
+                    <div key={i} className={`chart__bar${i === now - 1 ? ' chart__bar--now' : ''}`} style={{ '--h': h, '--hn': share.toFixed(3), '--i': i }}>
+                      <span className="chart__val">{formatNumber(value)}</span><div className="chart__fill" />
                     </div>
-                    <div className="paper chart-card reveal" style={d(120)}>
+                  );
+                })}
+              </div>
+              <div className="chart__labels">
+                {CAMPAIGN_WEEKS.map((w, i) => {
+                  const n = i + 1;
+                  const cls = n < now ? 'is-past' : n === now ? 'is-now' : undefined;
+                  const mark = n === now ? <small className="chart__mark">сейчас</small> : n === CAMPAIGN_WEEKS.length ? <small className="chart__mark chart__mark--final">финал</small> : null;
+                  return mobile
+                    ? <span key={n} className={cls}><span className="chart__date">{w.full}</span>{mark}</span>
+                    : <span key={n} className={cls}><span className="chart__days">{w.days}</span><span className="chart__month">{w.months}</span>{mark}</span>;
+                })}
+              </div>
+            </div>
+            <p className="chart-card__note">Цифры обновляются раз в&nbsp;неделю.</p>
+          </div>
+        </div>
+      </section>
 
-                        <img className="chart-card__clip" src={getImage('paperclip.webp')} alt="" width={110} height={169} />
-                        <h3>Уже <CountUp value={participants[now - 1] ?? 0} duration={1400} /> покупателей в&nbsp;пути</h3>
-                        <p className="chart-card__sub">Участников с&nbsp;начала акции, по&nbsp;неделям</p>
-                        <div className="chart" role="img" aria-label={`Участники по неделям: ${participants.map(formatNumber).join(', ')}; недели ${now + 1}–${weeksTotal} впереди`}>
-                            {Array.from({ length: weeksTotal }, (_, i) => {
-                                const value = participants[i];
-                                if (value === undefined || value === 0) return <div key={i} className="chart__bar chart__bar--future"><div className="chart__fill" /></div>;
-                                const h = `${Math.round((value / max) * 92)}%`;
-                                return (
-                                    <div key={i} className={`chart__bar${i === now - 1 ? ' chart__bar--now' : ''}`} style={{ '--h': h, '--i': i }}>
-                                        <span className="chart__val">{formatNumber(value)}</span><div className="chart__fill" style={{ '--h': h }} />
-                                    </div>
-                                );
-                            })}
-                        </div>
-                        <div className="chart__labels">
-                            {Array.from({ length: weeksTotal }, (_, i) => {
-                                const n = i + 1;
-                                const cls = n < now ? 'is-past' : n === now ? 'is-now' : undefined;
-                                return <span key={n} className={cls}>{n}{n === now && <small>сейчас</small>}{n === weeksTotal && <small style={{ color: '#b98a2e' }}>финал</small>}</span>;
-                            })}
-                        </div>
-                        <p className="chart-card__note">Пример. Настоящие цифры появятся и&nbsp;будут обновляться каждую неделю акции.</p>
-                    </div>
-                </div>
-            </section>
+      {/* ===== Один круг — 30 шагов: тот же блок, что на «Условиях», без карточек под ним (правка 02.11) ===== */}
+      <section className="section section--cream torn-top home-circle" id="circle">
+        <div className="container"><CircleScale tasks /></div>
+      </section>
 
-            {/* ===== Один круг — 30 шагов: тот же блок, что на «Условиях», без карточек под ним (правка 02.11) ===== */}
-            <section className="section section--cream torn-top home-circle" id="circle">
-                <div className="container"><CircleScale tasks /></div>
-            </section>
-
-            {/* ===== Ваш путь к подаркам ===== */}
-            <section className="section section--white torn-top" id="path">
-                <div className="container postcard-sec">
-                    <div className="reveal">
-                        <span className="ribbon ribbon--green">Мой маршрут</span>
-                        <h2 style={{ marginTop: 24 }}>Ваш путь к&nbsp;подаркам</h2>
-                        <p className="lead" style={{ marginTop: 20, maxWidth: 500 }}>За&nbsp;каждый чек вы получаете шаги по&nbsp;новогодней ёлке. Свои чеки, шаги и&nbsp;ближайшие розыгрыши смотрите на&nbsp;странице «Мой маршрут».</p>
-                        <Button to="/route">Посмотреть мой маршрут</Button>
-                    </div>
-                    <div className="postcard-stack reveal" style={d(120)}>
-                        <div className="postcard-stack__red" aria-hidden="true" />
-                        <img className="postcard-stack__stamp" src={getImage('stamp.webp')} alt="" width={150} height={190} loading="lazy" decoding="async" />
-                        <div className="postcard-stack__tag"><img src={getImage('tag.webp')} alt="" width={150} height={196} /><span>С Новым годом!</span></div>
-                        <div className="postcard" ref={postcardRef}>
-                            <svg className="postcard__stitch" aria-hidden="true">
-                                <defs><mask id="postcard-stitch" maskUnits="userSpaceOnUse"><rect className="postcard__stitch-draw" width="100%" height="100%" pathLength={1} /></mask></defs>
-                                <rect className="postcard__stitch-line" width="100%" height="100%" mask="url(#postcard-stitch)" />
-                            </svg>
-                            <span className="postcard__label">{user ? 'Ваш маршрут' : 'Пример маршрута'}</span>
-                            <div className="postcard__big"><span key={step} className={`num${moving ? ' num--tick' : ''}`}>{step}</span><b>из 30 шагов</b></div>
-                            <p className="postcard__next">{step >= 30 ? <>Круг пройден&nbsp;— <em>билет в&nbsp;финал ваш!</em></> : <>До {progress.goalGen} на&nbsp;{progress.next}‑м шаге&nbsp;— <em>{progress.leftText}</em></>}</p>
-                            <div className="postcard__lights">
-                                {mobile ? (
-                                    <div className="postcard__rows">
-                                        {[0, 1, 2].map((i) => <StepRow key={i} row={i} step={step} here={step > 0} labels moving={moving} />)}
-                                    </div>
-                                ) : (
-                                    <Lights count={30} lit={step} swags={3} labels={{ 10: '10', 20: '20', 30: '30 · финиш' }} here={step} start plain labelColor="#e2b24a" wire="#0b2417" fs={1.5} bulb={1} moving={moving} />
-                                )}
-                            </div>
-                        </div>
-                        <img className="postcard-stack__branch" src={getImage('branch.webp')} alt="" width={230} height={246} loading="lazy" decoding="async" />
-                        <img className="postcard__seal" src={getImage('seal.webp')} alt="" width={120} height={131} />
-                    </div>
-                </div>
-            </section>
-
-            <section className="section section--red torn-top" id="weekly">
-                <Carousel
-                    label="Еженедельные призы"
-                    head={
-                        <div className="section-head reveal" style={{ marginBottom: 0 }}>
-                            <span className="ribbon ribbon--cream">Еженедельные призы</span>
-                            <h2>5&nbsp;призов каждую неделю</h2>
-                            <p className="lead" style={{ color: 'rgba(255,248,232,.92)' }}>Участвуют все, кто прошёл круг. Каждый круг&nbsp;— ещё один билет.</p>
-                        </div>
-                    }
-                    after={<><p className="prize-note reveal">Изображения призов носят иллюстративный характер: внешний вид, цвет и&nbsp;комплектация призов могут отличаться.</p><div className="final-strip reveal"><span className="star-shape" /><p><b>А&nbsp;12&nbsp;января&nbsp;— финал</b>5&nbsp;суперпризов, главный&nbsp;— <span className="final-strip__prize">сертификат на&nbsp;250&nbsp;000&nbsp;₽</span> на&nbsp;отдых на&nbsp;курорте «Манжерок»</p><Button to="/prizes">Посмотреть все призы</Button></div></>}
-                >
-                    {WEEKLY_PRIZES.map((p, i) => <PrizeCard key={p.id} prize={p} badge={`${i + 1} неделя`} />)}
-                </Carousel>
-            </section>
-
-            <section className="section section--cream torn-top winners" id="winners">
-
-                <img className="winners__goat reveal" src={getImage('goat-gifts.webp')} alt="" width={220} height={427} loading="lazy" decoding="async" />
+      {/* ===== Ваш путь к подаркам ===== */}
+      <section className="section section--white torn-top" id="path">
+        <div className="container postcard-sec">
+          <div className="reveal">
+            <span className="ribbon ribbon--green">Мой маршрут</span>
+            <h2 style={{ marginTop: 24 }}>Ваш путь к&nbsp;подаркам</h2>
+            <p className="lead" style={{ marginTop: 20, maxWidth: 500 }}>За&nbsp;каждый чек вы получаете шаги по&nbsp;новогодней ёлке. Свои чеки, шаги и&nbsp;ближайшие розыгрыши смотрите на&nbsp;странице «Мой маршрут».</p>
+            <Button to="/route">Посмотреть мой маршрут</Button>
+          </div>
+          {/* Коллаж разложен по слоям: красная бумага дальше открытки, марка, бирка, ветка и печать ближе — едут быстрее и сильнее следуют за курсором */}
+          <div className="postcard-stack reveal" style={d(120)}>
+            <div className="postcard-stack__red" aria-hidden="true" />
+            <img className="postcard-stack__stamp" src="/img/stamp.webp" alt="" width={150} height={190} loading="lazy" decoding="async" />
+            <div className="postcard-stack__tag"><img src="/img/tag.webp" alt="" width={150} height={196} /><span>С&nbsp;Новым<br />годом!</span></div>
+            <div className="postcard" ref={postcardRef}>
+              {/* Пунктирная строчка по краю: прошивается при прокрутке (маска рисует линию, сама линия — пунктир) */}
+              <svg className="postcard__stitch" aria-hidden="true">
+                <defs><mask id="postcard-stitch" maskUnits="userSpaceOnUse"><rect className="postcard__stitch-draw" width="100%" height="100%" pathLength={1} /></mask></defs>
+                <rect className="postcard__stitch-line" width="100%" height="100%" mask="url(#postcard-stitch)" />
+              </svg>
+              <span className="postcard__label">{user ? 'Ваш маршрут' : 'Пример маршрута'}</span>
+              <div className="postcard__big"><span key={step} className={`num${moving ? ' num--tick' : ''}`}>{step}</span><b>из 30 шагов</b></div>
+              <p className="postcard__next">{step >= 30 ? <>Круг пройден&nbsp;— <em>билет в&nbsp;финал ваш!</em></> : <>До {progress.goalGen} на&nbsp;{progress.next}‑м шаге&nbsp;— <em>{progress.leftText}</em></>}</p>
+              <div className="postcard__lights">
                 {mobile ? (
-                    <Carousel label="Победители прошлых акций" head={winnersHead}>{winnerCards}</Carousel>
+                  // Телефон: три ряда по 10 шагов, лампочки и подписи крупнее (правка 24.10)
+                  <div className="postcard__rows">
+                    {[0, 1, 2].map((i) => <StepRow key={i} row={i} step={step} here={step > 0} labels moving={moving} />)}
+                  </div>
                 ) : (
-                    <div className="container">
-                        {winnersHead}
-                        <div className="winners__grid">{winnerCards}</div>
-                    </div>
+                  <Lights count={30} lit={step} swags={3} labels={{ 10: '10', 20: '20', 30: '30 · финиш' }} here={step} start plain labelColor="#e2b24a" wire="#0b2417" fs={1.5} bulb={1} moving={moving} />
                 )}
-            </section>
+              </div>
+            </div>
+            <img className="postcard-stack__branch" src="/img/branch.webp" alt="" width={230} height={246} loading="lazy" decoding="async" />
+            <img className="postcard__seal" src="/img/seal.webp" alt="" width={120} height={131} />
+          </div>
+        </div>
+      </section>
 
-            <section className="section section--plaid torn-top partners" id="partners">
-                <div className="container">
-                    <div className="partners__paper-wrap reveal"><div className="partners__paper">
-                        <h2>Вместе с&nbsp;любимыми брендами</h2>
-                        <p className="lead">5&nbsp;товаров партнёров в&nbsp;чеке&nbsp;— ещё 1&nbsp;шаг к&nbsp;шагам за&nbsp;сумму покупки. Нажмите на&nbsp;логотип, чтобы открыть площадку партнёра.</p>
-                        <div className="partners__logos">
-                            {PARTNERS.map((name, i) => <SoonLink key={name}><img src={getImage(`partner-${i + 1}.webp`)} alt={name} width={480} height={270} loading="lazy" /></SoonLink>)}
-                        </div>
-                        <p className="partners__note">Примеры оформления партнёров · логотипы демонстрационные</p>
-                    </div></div>
-                </div>
-            </section>
+      {/* ===== 5 призов каждую неделю ===== */}
+      <section className="section section--red torn-top" id="weekly">
+        <Carousel
+          label="Еженедельные призы"
+          head={
+            <div className="section-head reveal" style={{ marginBottom: 0 }}>
+              <span className="ribbon ribbon--cream">Еженедельные призы</span>
+              <h2>5&nbsp;призов каждую неделю</h2>
+              <p className="lead" style={{ color: 'rgba(255,248,232,.92)' }}>Участвует каждый, у&nbsp;кого есть хотя&nbsp;бы один шаг. Для&nbsp;этого хватит одного чека от&nbsp;600&nbsp;₽.</p>
+            </div>
+          }
+          after={<><p className="prize-note reveal">Изображения призов носят иллюстративный характер: внешний вид, цвет и&nbsp;комплектация призов могут отличаться.</p><div className="final-strip reveal"><span className="star-shape" /><p><b>А&nbsp;12&nbsp;января&nbsp;— финал</b>5&nbsp;суперпризов, главный&nbsp;— <span className="final-strip__prize">сертификат на&nbsp;250&nbsp;000&nbsp;₽</span> на&nbsp;отдых на&nbsp;курорте «Манжерок». Каждый пройденный круг из&nbsp;30&nbsp;шагов&nbsp;— билет в&nbsp;финал: чем больше билетов, тем больше шансов.</p><Button to="/prizes">Посмотреть все призы</Button></div></>}
+        >
+          {WEEKLY_PRIZES.map((p, i) => <PrizeCard key={p.id} prize={p} badge={`${i + 1} неделя`} />)}
+        </Carousel>
+      </section>
 
-            <CtaBanner
-                title={<>Пусть Новый год начнётся с&nbsp;подарка</>}
-                lead={<>Сохраните чек после покупки в&nbsp;Аникс. Каждые 600&nbsp;₽&nbsp;— ещё один шаг по&nbsp;маршруту.</>}
-                actions={<OpenModalButton modal="receipt" className="btn--shine">Зарегистрировать чек</OpenModalButton>}
-                /* ЗАМЕНИЛИ ЗДЕСЬ */
-                goat={{ src: getImage('goat-jump.webp'), width: 627, height: 829 }}
-            />
-        </PageLayout>
-    );
+      {/* ===== Победители прошлых акций ===== */}
+      {SHOW_WINNERS && <section className="section section--cream torn-top winners" id="winners">
+        <img className="winners__goat reveal" src="/img/goat-gifts.webp" alt="" width={220} height={427} loading="lazy" decoding="async" />
+        {mobile ? (
+          <Carousel label="Победители прошлых акций" head={winnersHead}>{winnerCards}</Carousel>
+        ) : (
+          <div className="container">
+            {winnersHead}
+            <div className="winners__grid">{winnerCards}</div>
+          </div>
+        )}
+      </section>}
+
+      {/* ===== Партнёры ===== */}
+      <section className="section section--plaid torn-top partners" id="partners">
+        <div className="container">
+          <div className="partners__paper-wrap reveal"><div className="partners__paper">
+            <h2>Партнёры акции</h2>
+            <p className="lead">5&nbsp;товаров партнёров в&nbsp;одном чеке дают ещё 1&nbsp;шаг сверх шагов за&nbsp;сумму покупки. А&nbsp;на&nbsp;{PARTNER_STEPS_TEXT}‑м шагах маршрута вас ждут задания от&nbsp;партнёров: выполните задание и&nbsp;участвуйте в&nbsp;розыгрыше призов партнёра.</p>
+            <ul className="partner-tiles">
+              {PARTNERS.map((p) => <li key={p.slug}><Link className="partner-tile" to={partnerPath(p.slug)} aria-label={p.title}><PartnerLogo partner={p} compact /></Link></li>)}
+            </ul>
+            <p className="partners__note">Нажмите на&nbsp;логотип, чтобы посмотреть товары партнёра.</p>
+          </div></div>
+        </div>
+      </section>
+
+      <CtaBanner
+        title={<>Пусть Новый год начнётся с&nbsp;подарка</>}
+        lead={<>Сохраните чек после покупки в&nbsp;Аникс. Каждые 600&nbsp;₽&nbsp;— ещё один шаг по&nbsp;маршруту.</>}
+        actions={<OpenModalButton modal="receipt" className="btn--shine">Зарегистрировать чек</OpenModalButton>}
+        goat={{ src: '/img/goat-jump.webp', width: 627, height: 829 }}
+      />
+    </PageLayout>
+  );
 }

@@ -20,15 +20,17 @@ class ApiError extends Error {
 /** Сколько ждать ответа сервера, мс: дольше — кнопка не должна висеть в «Секунду…» */
 const TIMEOUT_MS = 20000;
 
-export async function request(path, init = {}) {
+export async function request(path, { timeout = TIMEOUT_MS, ...init } = {}) {
   const ctrl = new AbortController();
-  const timer = window.setTimeout(() => ctrl.abort(), TIMEOUT_MS);
+  const timer = window.setTimeout(() => ctrl.abort(), timeout);
+  // Файлы (ответы на задания) уходят как multipart/form-data: заголовок с границей частей браузер ставит сам
+  const json = !(init.body instanceof FormData);
   let res;
   try {
     res = await fetch(BASE + path, {
       credentials: 'include',
-      headers: { 'Content-Type': 'application/json', Accept: 'application/json', ...init.headers },
       ...init,
+      headers: { ...(json && { 'Content-Type': 'application/json' }), Accept: 'application/json', ...init.headers },
       signal: ctrl.signal,
     });
   } catch {
@@ -227,5 +229,26 @@ export const httpApi = {
   cookieConsent(value) {
     if (value !== undefined) writeLocal(LOCAL_COOKIE_KEY, value);
     return readLocal(LOCAL_COOKIE_KEY);
+  },
+
+  // Ответы на задания партнёров (правка 08.11, README «Ответы на задания партнёров»)
+  answers(slug, { sort = 'popular', type = 'all', cursor = null, limit = 20 } = {}) {
+    const q = new URLSearchParams({ sort, type, limit: String(limit) });
+    if (cursor) q.set('cursor', cursor);
+    return request(`/partners/${encodeURIComponent(slug)}/answers?${q}`);
+  },
+
+  sendAnswer(slug, input) {
+    const form = new FormData();
+    form.set('text', input.text ?? '');
+    if (input.photo) form.set('photo', input.photo);
+    if (input.video) form.set('video', input.video);
+    form.set('consent', '1');
+    // Видео до 100 МБ с телефона грузится долго: ждём до 5 минут
+    return request(`/partners/${encodeURIComponent(slug)}/answers`, { method: 'POST', body: form, timeout: 5 * 60000 });
+  },
+
+  likeAnswer(id, like) {
+    return request(`/answers/${encodeURIComponent(id)}/like`, { method: like ? 'PUT' : 'DELETE' });
   },
 };

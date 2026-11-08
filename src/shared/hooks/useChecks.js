@@ -1,5 +1,20 @@
 import { useState, useRef, useCallback } from "react";
 import { request } from '@/shared/api/http.js';
+import { API_MODE, api } from '@/shared/api';
+
+/**
+ * Порция чеков. На сервере — GET /checks/me; в демо (GitHub Pages собирается с VITE_API_MODE=mock, сервера нет) —
+ * те же поля из демо-хранилища, иначе история чеков в демо всегда пустая (правка 08.11, Никита).
+ */
+async function fetchChecks(limit, offset, isModerated) {
+    if (API_MODE === 'mock') {
+        const me = await api.me();
+        const all = (me?.receipts ?? []).filter((r) => (r.status === 'done') === isModerated);
+        return all.slice(offset, offset + limit).map((r) => ({ guid: r.id, raw_code_check: r.last4, datetime_create: r.at, steps_count: r.steps }));
+    }
+    const res = await request(`/checks/me?limit=${limit}&offset=${offset}&is_moderated=${isModerated}`, { method: 'GET' });
+    return Array.isArray(res?.data) ? res.data : [];
+}
 
 export function useChecks() {
     const [checksPending, setChecksPending] = useState([]);
@@ -29,8 +44,7 @@ export function useChecks() {
 
         const offset = reset ? 0 : s.offset;
         try {
-            const res = await request(`/checks/me?limit=${limit}&offset=${offset}&is_moderated=false`, { method: 'GET' });
-            const raw = Array.isArray(res?.data) ? res.data : [];
+            const raw = await fetchChecks(limit, offset, false);
 
             if (raw.length < limit) s.hasMore = false;
             s.offset = offset + limit;
@@ -54,8 +68,7 @@ export function useChecks() {
 
         const offset = reset ? 0 : s.offset;
         try {
-            const res = await request(`/checks/me?limit=${limit}&offset=${offset}&is_moderated=true`, { method: 'GET' });
-            const raw = Array.isArray(res?.data) ? res.data : [];
+            const raw = await fetchChecks(limit, offset, true);
 
             if (raw.length < limit) s.hasMore = false;
             s.offset = offset + limit;

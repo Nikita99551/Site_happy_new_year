@@ -88,7 +88,8 @@ export function Header({ hero = false }) {
     };
   }, []);
 
-  const isPartners = location.pathname === '/' && location.hash === '#partners';
+  // «Партнёры» горит и на списке партнёров на главной, и на странице любого партнёра (/partner/<slug>)
+  const isPartners = (location.pathname === '/' && location.hash === '#partners') || location.pathname.startsWith('/partner/');
   return (
     <header ref={headerRef} className={`header${hero ? ' header--hero' : ''}${menuOpen ? ' menu-open' : ''}`}>
       <div className="container">

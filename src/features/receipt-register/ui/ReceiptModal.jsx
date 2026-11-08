@@ -9,6 +9,7 @@ import { useToast } from '@/shared/ui/toast/context';
 import { DeliveryHint } from './DeliveryHint';
 import { ReceiptHint } from './ReceiptHint';
 import './ReceiptModal.scss';
+import { errorText } from '@/shared/lib/errors';
 
 /** Русские буквы, похожие на латинские: в коде с чека меняем их на латиницу (на телефоне часто включена русская раскладка) */
 const LOOKALIKE = { А: 'A', В: 'B', Е: 'E', К: 'K', М: 'M', Н: 'H', О: 'O', Р: 'P', С: 'C', Т: 'T', У: 'Y', Х: 'X', а: 'a', е: 'e', к: 'k', м: 'm', о: 'o', р: 'p', с: 'c', т: 't', у: 'y', х: 'x' };
@@ -76,7 +77,7 @@ export function ReceiptModal({ open }) {
       setNumber('');
       openModal('processing');
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Не удалось зарегистрировать чек');
+      setError(errorText(err, 'Не удалось зарегистрировать чек. Попробуйте ещё раз'));
     } finally {
       setBusy(false);
     }

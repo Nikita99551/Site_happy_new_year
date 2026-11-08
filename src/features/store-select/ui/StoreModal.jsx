@@ -75,7 +75,7 @@ export function StoreModal({ open, returnTo }) {
           ribbon="Ваш магазин"
           width={960}
           title="Выберите магазин"
-          lead={<>Выберите свой магазин или откройте его группу MAX. В&nbsp;нём вы получите приз и&nbsp;сможете вступить в&nbsp;чат.</>}
+          lead={<>Выберите магазин, в&nbsp;котором заберёте приз, если выиграете. Кнопка «Группа MAX» открывает чат этого магазина в&nbsp;мессенджере MAX.</>}
           decor={<img className="modal__goat modal__goat--peek" src="/img/goat-peek.webp" alt="" width={230} height={266} style={{ right: 'auto', left: 90 }} />}
       >
         <Field

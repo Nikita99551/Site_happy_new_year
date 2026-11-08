@@ -1,0 +1,99 @@
+@use '@/shared/styles/tokens' as *;
+
+/* ===== Карточка ответа на задание партнёра (правка 08.11) ===== */
+.answer {
+  position: relative; display: flex; flex-direction: column; min-width: 0;
+  background: #fff; border-radius: 14px; box-shadow: 0 10px 24px rgba(5, 20, 12, 0.22); color: var(--ink); overflow: hidden;
+}
+/* Свой ответ — в золотой рамке */
+.answer--mine { box-shadow: 0 0 0 3px var(--go), 0 10px 24px rgba(5, 20, 12, 0.22); }
+
+.answer__media {
+  position: relative; display: block; flex: none; width: 100%; aspect-ratio: 4 / 3; padding: 0; border: 0;
+  background: #e9e2d3; cursor: zoom-in; overflow: hidden;
+}
+.answer__media img { width: 100%; height: 100%; object-fit: cover; transition: transform var(--dur) var(--ease-out); }
+.answer__media--video { cursor: pointer; }
+.answer__media:focus-visible { outline: 3px solid var(--go); outline-offset: -3px; }
+@include hover { .answer__media:hover img { transform: scale(1.03); } }
+.answer__play {
+  position: absolute; left: 50%; top: 50%; display: grid; place-items: center; width: 64px; height: 64px; margin: -32px 0 0 -32px;
+  border-radius: 50%; background: rgba(227, 30, 36, 0.92); color: #fff; box-shadow: 0 6px 18px rgba(0, 0, 0, 0.3);
+}
+.answer__play svg { width: 28px; height: 28px; margin-left: 4px; }
+.answer__dur {
+  position: absolute; right: 10px; bottom: 10px; padding: 2px 10px; border-radius: 999px;
+  background: rgba(9, 23, 15, 0.78); color: #fff; font-weight: 700; font-size: 14px; line-height: 1.5;
+}
+
+.answer__body { display: flex; flex-direction: column; flex: 1; min-width: 0; padding: 16px 18px 14px; }
+.answer__badge {
+  align-self: flex-start; margin-bottom: 10px; padding: 4px 12px; border-radius: 999px;
+  background: var(--g); color: var(--cr); font-weight: 800; font-size: 14px; line-height: 1.3;
+}
+.answer__badge--review { background: #fff1c9; color: #6e5110; }
+.answer__badge--rejected { background: #fde3e3; color: var(--rdd); }
+.answer__text {
+  display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: var(--lines, 5); overflow: hidden;
+  font-size: 17px; line-height: 1.5; white-space: pre-line; overflow-wrap: anywhere;
+}
+.answer__text.is-open { display: block; -webkit-line-clamp: unset; }
+/* Ответ без фото на странице партнёра — как записка на кремовой бумаге с большой кавычкой: рядом с карточками
+   с фото не выглядит пустой, хоть текст и короче */
+.answer--column.answer--text {
+  background: linear-gradient(rgba(255, 248, 232, 0.5), rgba(255, 248, 232, 0.5)), var(--cr) url('/img/paper-cream.webp') center/cover;
+}
+.answer--column.answer--text::after {
+  content: '”'; position: absolute; right: 18px; top: 4px; pointer-events: none;
+  font-family: var(--font-display); font-weight: 900; font-size: 96px; line-height: 1; color: var(--go); opacity: 0.55;
+}
+.answer--column.answer--text .answer__body { padding-top: 26px; }
+.answer--column.answer--text .answer__text { padding-right: 34px; font-size: 19px; line-height: 1.55; }
+.answer__more {
+  align-self: flex-start; margin-top: 4px; padding: 6px 0; border: 0; background: none;
+  font: inherit; font-weight: 800; font-size: 16px; color: var(--rd); text-decoration: underline; text-underline-offset: 3px; cursor: pointer;
+}
+.answer__foot { display: flex; align-items: center; gap: 12px; margin-top: auto; padding-top: 14px; }
+.answer__avatar {
+  flex: none; display: grid; place-items: center; width: 40px; height: 40px; border-radius: 50%;
+  background: var(--c, var(--g)); color: #fff; font-weight: 800; font-size: 18px;
+}
+.answer__who { flex: 1; min-width: 0; display: grid; line-height: 1.3; }
+.answer__who b, .answer__who small { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.answer__who b { font-weight: 800; font-size: 16px; }
+.answer__who small { font-size: 14px; color: var(--mu); }
+
+/* Сердечко: крупная кнопка (не меньше 44 px), для пожилых — с числом рядом */
+.like {
+  flex: none; display: inline-flex; align-items: center; gap: 6px; min-height: 44px; padding: 0 14px;
+  border: 2px solid #ecdcc2; border-radius: 999px; background: #fff; color: var(--mu);
+  font: inherit; font-weight: 800; font-size: 16px; cursor: pointer;
+  transition: border-color var(--dur-fast) ease, background-color var(--dur-fast) ease, color var(--dur-fast) ease;
+}
+.like svg { width: 20px; height: 20px; color: #c9b79b; transition: color var(--dur-fast) ease; }
+.like.is-on { border-color: #f5bfc1; background: #fff0f0; color: var(--rd); }
+.like.is-on svg { color: var(--rd); }
+.like:focus-visible { outline: 3px solid var(--go); outline-offset: 2px; }
+.like:active { transform: scale(0.95); }
+@include hover { .like:hover { border-color: var(--rd); } }
+.like.is-pop svg { animation: like-pop 0.42s var(--ease-out); }
+@keyframes like-pop { 35% { transform: scale(1.4); } 100% { transform: scale(1); } }
+@media (prefers-reduced-motion: reduce) { .like.is-pop svg { animation: none; } }
+.like--static { border-color: transparent; padding-inline: 4px; cursor: default; }
+.like--static svg { color: #e9a3a5; }
+
+/* Окно «Все ответы»: фото слева, текст справа; на телефоне — как на странице, фото сверху */
+.answer--row { flex-direction: row; }
+.answer--row .answer__media { width: 260px; align-self: flex-start; border-radius: 0 0 14px 0; }
+.answer--row .answer__body { padding: 18px 22px 16px; }
+
+@include below-md {
+  .answer--row { flex-direction: column; }
+  .answer--row .answer__media { width: 100%; border-radius: 0; }
+  .answer--row .answer__body { padding: 16px 18px 14px; }
+}
+@include below-sm {
+  .answer__body { padding: 14px 16px 12px; }
+  .answer__text { font-size: 16px; }
+  .answer__play { width: 56px; height: 56px; margin: -28px 0 0 -28px; }
+}

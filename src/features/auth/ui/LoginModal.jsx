@@ -7,6 +7,7 @@ import { Button } from '@/shared/ui/button/Button';
 import { Field } from '@/shared/ui/field/Field';
 import { Modal } from '@/shared/ui/modal/Modal';
 import { useToast } from '@/shared/ui/toast/context';
+import { errorText } from '@/shared/lib/errors';
 
 /** Окно 05: вход по номеру телефона без SMS */
 export function LoginModal({ open }) {
@@ -43,7 +44,7 @@ export function LoginModal({ open }) {
       // Пришёл из кнопки чека — сразу окно чека на этой же странице; иначе — на свой маршрут
       if (!finishAuth() && location.pathname !== '/route') navigate('/route');
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Не удалось войти');
+      setError(errorText(err, 'Не удалось войти. Попробуйте ещё раз'));
     } finally {
       setBusy(false);
     }

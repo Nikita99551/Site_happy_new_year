@@ -2,7 +2,9 @@
  * ДЕМО-реализация API: отвечает сама, состояние хранит в localStorage (ключ anix_demo).
  * Персональные данные никуда не отправляются. Сброс: открыть сайт с ?demo-reset в адресе.
  */
-import { CAMPAIGN } from '@/shared/config/campaign';
+import { CAMPAIGN, isTaskOpen, PARTNER_TASKS } from '@/shared/config/campaign';
+import { MEDIA_LIMITS, readVideo, shrinkPhoto } from '@/shared/lib/media';
+import { demoAnswers } from './answers.demo';
 import { toUser } from './progress';
 import { STORES } from './stores.data';
 
@@ -140,7 +142,54 @@ function profileOf(s) {
   return (s.profiles[s.phone] ??= {});
 }
 
+/* ---------- Ответы на задания партнёров (правка 08.11) ---------- */
 
+/** Сколько демо-ответ «на проверке»: потом публикуется сам (на сервере — когда его проверит модератор) */
+const ANSWER_REVIEW_MS = 60000;
+/** Видео, выбранные в этой вкладке. Файл в localStorage не помещается: в демо видео играет до перезагрузки страницы */
+const demoVideos = new Map();
+const answerKind = (a) => (a.video ? 'video' : a.photo ? 'photo' : 'text');
+const byNew = (a, b) => Date.parse(b.at) - Date.parse(a.at);
+const byPopular = (a, b) => b.likes - a.likes || byNew(a, b);
+const slugStep = (slug) => CAMPAIGN.partnerStops.find((n) => PARTNER_TASKS[n]?.slug === slug);
+
+/** Подпись ответа: имя и первая буква фамилии («Анна К.») и город магазина */
+function authorOf(s, phone) {
+  const p = s.profiles?.[phone];
+  const name = (p?.user?.name ?? (isDemoPhone(phone) ? DEMO_ME.name : 'Участник')).split(/\s+/)[0];
+  const initial = p?.initial ?? (isDemoPhone(phone) ? 'К' : '');
+  const storeId = p?.user?.storeId ?? (isDemoPhone(phone) ? DEMO_ME.storeId : null);
+  const address = STORES.find((st) => st.id === storeId)?.address ?? '';
+  return { author: initial ? `${name} ${initial}.` : name, place: address.split(',')[0].trim() };
+}
+
+/** Ответ из демо-хранилища в том виде, в каком его отдал бы сервер: через минуту «на проверке» становится опубликованным */
+function settleAnswer(a, now) {
+  const { readyAt, ...rest } = a;
+  const out = { ...rest };
+  if (out.status === 'review' && readyAt && Date.parse(readyAt) <= now) out.status = 'published';
+  if (out.video) out.video = { ...out.video, src: demoVideos.get(out.id) ?? '' };
+  return out;
+}
+
+/** Все ответы на задание: готовые демо + отправленные в демо (у каждого номера свой), с сердечками и пометкой «мой» */
+function allAnswers(s, slug, now) {
+  const likes = s.likes ?? {};
+  const own = Object.entries(s.answers?.[slug] ?? {}).map(([phone, a]) => ({ ...settleAnswer(a, now), likes: 0, owner: phone }));
+  return [...own, ...demoAnswers(slug)].map(({ owner, ...a }) => {
+    const by = likes[a.id] ?? [];
+    return { ...a, likes: a.likes + by.length, liked: Boolean(s.phone) && by.includes(s.phone), mine: Boolean(s.phone) && owner === s.phone };
+  });
+}
+
+/** Сколько сердечек у ответа без голосов, поставленных в демо */
+function baseLikes(id) {
+  for (const t of Object.values(PARTNER_TASKS)) {
+    const a = demoAnswers(t.slug).find((x) => x.id === id);
+    if (a) return a.likes;
+  }
+  return 0;
+}
 
 export const mockApi = {
 
@@ -185,7 +234,9 @@ export const mockApi = {
     // В профиле храним «Имя Отчество» для приветствия (как отдаёт GET /me), а не ФИО целиком
     const words = input.fullName.trim().split(/\s+/);
     const name = words.length >= 3 ? words.slice(1, 3).join(' ') : input.fullName.trim();
-    s.profiles = { ...s.profiles, [input.phone]: { fresh: true, user: { name, phone: input.phone, storeId: input.storeId } } };
+    // Первая буква фамилии — для подписи ответов на задания («Анна К.»); сервер собирает подпись так же
+    const initial = words.length >= 2 ? words[0][0].toUpperCase() : '';
+    s.profiles = { ...s.profiles, [input.phone]: { fresh: true, user: { name, phone: input.phone, storeId: input.storeId }, initial } };
     s.phone = input.phone;
     s.selectedStore = input.storeId;
     save(s);
@@ -275,5 +326,77 @@ export const mockApi = {
       save(s);
     }
     return s.cookies;
+  },
+
+  async answers(slug, { sort = 'popular', type = 'all', cursor = null, limit = 20 } = {}) {
+    await delay(cursor ? 400 : 250);
+    // Ответы видят только дошедшие до шага с коробкой (правка 08.11); сервер в этом случае отвечает 403
+    const step = slugStep(slug);
+    if (!isTaskOpen(currentUser(), step)) throw new Error(`Ответы видны тем, кто дошёл до ${step}‑го шага`);
+    const s = load();
+    const all = allAnswers(s, slug, Date.now());
+    const pub = all.filter((a) => a.status === 'published');
+    const counts = { all: pub.length, text: 0, photo: 0, video: 0 };
+    for (const a of pub) counts[answerKind(a)] += 1;
+    const list = (type === 'all' ? pub : pub.filter((a) => answerKind(a) === type)).sort(sort === 'new' ? byNew : byPopular);
+    const from = Number(cursor) || 0;
+    return {
+      items: clone(list.slice(from, from + limit)),
+      next: from + limit < list.length ? String(from + limit) : null,
+      counts,
+      mine: clone(all.find((a) => a.mine) ?? null),
+    };
+  },
+
+  async sendAnswer(slug, input) {
+    await delay(900);
+    const s = load();
+    if (!s.phone) throw new Error('Сначала войдите или зарегистрируйтесь');
+    const step = slugStep(slug);
+    const task = PARTNER_TASKS[step];
+    if (!task) throw new Error('У этого партнёра нет задания');
+    if (!isTaskOpen(currentUser(), step)) throw new Error(`Задание откроется, когда вы дойдёте до ${step}‑го шага`);
+    const prev = s.answers?.[slug]?.[s.phone];
+    if (prev && prev.status !== 'rejected') throw new Error('Вы уже ответили на это задание');
+    const text = String(input.text ?? '').trim().slice(0, MEDIA_LIMITS.textMax);
+    const { accepts } = task;
+    if (accepts.text === 'required' && !text) throw new Error('Напишите ответ');
+    if (accepts.photo === 'required' && !input.photo) throw new Error('Добавьте фото');
+    if (accepts.video === 'required' && !input.video) throw new Error('Добавьте видео');
+    if (!text && !input.photo && !input.video) throw new Error('Добавьте фото, видео или напишите пару слов');
+    const now = Date.now();
+    const id = `my-${slug}-${now}`;
+    const a = { id, ...authorOf(s, s.phone), at: new Date(now).toISOString(), likes: 0, status: 'review', readyAt: new Date(now + ANSWER_REVIEW_MS).toISOString() };
+    if (text) a.text = text;
+    if (input.photo) {
+      try {
+        a.photo = await shrinkPhoto(input.photo);
+      } catch {
+        // На сервере подойдёт и HEIC с iPhone; в демо браузер не всё умеет открыть
+        throw new Error('Не получилось открыть фото. Попробуйте JPEG или PNG');
+      }
+    }
+    if (input.video) {
+      const v = await readVideo(input.video);
+      demoVideos.set(id, URL.createObjectURL(input.video));
+      a.video = { src: '', poster: v.poster, duration: Number.isFinite(v.duration) ? Math.round(v.duration) : 0 };
+    }
+    s.answers = { ...s.answers, [slug]: { ...s.answers?.[slug], [s.phone]: a } };
+    save(s);
+    return { ...settleAnswer(a, now), liked: false, mine: true };
+  },
+
+  async likeAnswer(id, like) {
+    await delay(150);
+    const s = load();
+    if (!s.phone) throw new Error('Войдите, чтобы ставить сердечки');
+    const own = Object.values(s.answers ?? {}).some((m) => m[s.phone]?.id === id);
+    if (own) throw new Error('За свой ответ голосовать нельзя');
+    const by = new Set(s.likes?.[id] ?? []);
+    if (like) by.add(s.phone);
+    else by.delete(s.phone);
+    s.likes = { ...s.likes, [id]: [...by] };
+    save(s);
+    return { likes: baseLikes(id) + by.size, liked: like };
   },
 };

@@ -47,16 +47,65 @@ export const PROMO_STEPS_TEXT = (() => {
   return even ? `${s[0]}, ${s[1]}, ${s[2]} и так до ${last}` : `${s.slice(0, -1).join(', ')} и ${last}`;
 })();
 /**
- * Задания партнёров на шагах CAMPAIGN.partnerStops (правка 02.11, вместо «площадки партнёра: видео и отзывы»).
- * Дошёл до коробки — открывается задание партнёра; выполнять не обязательно; выполнил — участвует в розыгрыше призов партнёра.
- * ЗАПОЛНИТЬ: партнёр на каждом шаге, текст задания и приз. Пока у всех один партнёр-заглушка, задания и приза нет (null)
+ * Задания партнёров на шагах CAMPAIGN.partnerStops (правка 02.11; 08.11 — ответы на странице партнёра).
+ * Дошёл до коробки (или уже прошёл целый круг) — открывается задание партнёра этого шага. Отвечают на странице партнёра
+ * (/partner/<slug>#task): текст, фото или видео — что именно, решает задание (accepts). Ответ виден всем после проверки,
+ * лучшие — по сердечкам. Один участник — один ответ на задание. Выполнять не обязательно; выполнил — участвует в розыгрыше приза партнёра.
+ * ЗАПОЛНИТЬ: какой партнёр на каком шаге, текст задания и приз. Сейчас всё — ЗАГЛУШКИ (партнёры выбраны условно, 08.11).
+ * @typedef {'required' | 'optional'} AnswerNeed
+ * @typedef {Object} PartnerTask
+ * @property {string} slug — Партнёр (entities/partner, адрес /partner/<slug>)
+ * @property {string} title — Коротко, для заголовка: «Новогодняя история»
+ * @property {string} task — Что сделать
+ * @property {{ text?: AnswerNeed; photo?: AnswerNeed; video?: AnswerNeed }} accepts — Что можно прислать. Нет ни одного required — нужно хоть что-то одно
+ * @property {string | null} prize — Что разыгрывает партнёр; null — объявит позже
  */
-// task — текст задания, prize — что разыгрывает партнёр («Корзина фермерских продуктов»), url — где выполнить; null — пока неизвестно
-export const PARTNER_TASKS = Object.fromEntries(CAMPAIGN.partnerStops.map((n) => [n, { partner: 'С родной земли', task: null, prize: null, url: null }]));
+/** @type {Record<number, PartnerTask>} */
+export const PARTNER_TASKS = {
+  4: {
+    slug: 'salnikov', title: 'Новогодняя история', prize: null,
+    task: 'Придумайте короткую новогоднюю историю: смешную, добрую или волшебную. Можно про свою семью, а можно сказку про козу и пельмени.',
+    accepts: { text: 'required', photo: 'optional' },
+  },
+  8: {
+    slug: 'zarechensky', title: 'Отзыв о нас', prize: null,
+    task: 'Расскажите, какие наши продукты вы покупаете и что готовите из них к праздничному столу.',
+    accepts: { text: 'required', photo: 'optional' },
+  },
+  12: {
+    slug: 'prostokvashino', title: 'Праздничный стол', prize: null,
+    task: 'Сфотографируйте новогодний стол, на котором есть продукты «Простоквашино». Пара слов к фото — по желанию.',
+    accepts: { photo: 'required', text: 'optional' },
+  },
+  16: {
+    slug: 'melenka', title: 'Видеопоздравление', prize: null,
+    task: 'Снимите короткое поздравление с Новым годом — до одной минуты. Можно всей семьёй.',
+    accepts: { video: 'required', text: 'optional' },
+  },
+  24: {
+    slug: 'pomidorka', title: 'Рецепт к празднику', prize: null,
+    task: 'Поделитесь рецептом праздничного блюда с кетчупом, соусом или томатной пастой «Помидорка».',
+    accepts: { text: 'required', photo: 'optional' },
+  },
+  28: {
+    slug: 'almak', title: 'Нарядная ёлка', prize: null,
+    task: 'Покажите свою новогоднюю ёлку: пришлите фото или короткое видео. Пара слов — по желанию.',
+    accepts: { photo: 'optional', video: 'optional', text: 'optional' },
+  },
+};
+/** Задание партнёра и шаг, на котором оно открывается; у партнёра без задания — null */
+export function taskOfPartner(slug) {
+  const step = CAMPAIGN.partnerStops.find((n) => PARTNER_TASKS[n]?.slug === slug);
+  return step === undefined ? null : { step, ...PARTNER_TASKS[step] };
+}
+/** Задание открыто участнику: дошёл до шага в этом круге или уже прошёл целый круг (как коробки на ёлке) */
+export function isTaskOpen(user, step) {
+  return Boolean(user) && (user.step >= step || user.circlesDone > 0);
+}
 /** Шаги с заданиями партнёров для текстов: «4, 8, 12, 16, 24 и 28» */
-export const PARTNER_STEPS_TEXT = `${CAMPAIGN.partnerStops.slice(0, -1).join(', ')} и ${CAMPAIGN.partnerStops.at(-1)}`;
-/** Подпись под коробками на гирлянде «Один круг», пока партнёр один на все шаги */
-export const PARTNER_LABEL = PARTNER_TASKS[CAMPAIGN.partnerStops[0]].partner;
+export const PARTNER_STEPS_TEXT = `${CAMPAIGN.partnerStops.slice(0, -1).join(', ')} и ${CAMPAIGN.partnerStops.at(-1)}`;
+/** Подпись под коробками на гирлянде «Один круг» (общая: у каждой коробки свой партнёр, его название — в окне задания) */
+export const PARTNER_LABEL = 'С родной земли';
 
 /** Приложение доставки «Торнадо»: там вводится промокод */
 export const TORNADO_APP_URL = 'https://clck.ru/3ExQW2';

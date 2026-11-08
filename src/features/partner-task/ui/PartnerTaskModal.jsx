@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { getPartner, partnerPath } from '@/entities/partner';
 import { useSession } from '@/entities/user';
 import { useModal } from '@/features/modal';
 import { CAMPAIGN, PARTNER_TASKS, stepsCostText } from '@/shared/config/campaign';
@@ -11,7 +12,7 @@ import './PartnerTaskModal.scss';
 /**
  * Задание партнёра на шаге с коробкой (правка 02.11). Открывается нажатием на коробку на ёлке «Моего маршрута».
  * Дошёл до шага — видно задание; не дошёл — сколько осталось; гость — приглашение войти.
- * Заданий пока нет (PARTNER_TASKS[n].task === null): вместо текста задания — заглушка «скоро появится».
+ * Задание выполняют на странице партнёра (правка 08.11): кнопка «Выполнить задание» ведёт туда, к ответам участников.
  */
 export function PartnerTaskModal({ open }) {
   const { state, open: openModal, close } = useModal();
@@ -20,7 +21,10 @@ export function PartnerTaskModal({ open }) {
   const [step, setStep] = useState(CAMPAIGN.partnerStops[0]);
   const asked = state?.name === 'task' ? state.payload?.step : undefined;
   if (asked !== undefined && asked !== step) setStep(asked);
-  const { partner, task, prize } = PARTNER_TASKS[step] ?? { partner: '', task: null, prize: null };
+  // Страница партнёра скрыта (в показе видны не все) — задание ещё «скоро появится», ссылки нет
+  const t = getPartner(PARTNER_TASKS[step]?.slug) ? PARTNER_TASKS[step] : null;
+  const partner = getPartner(t?.slug)?.title ?? 'С родной земли';
+  const prize = t?.prize;
   // Пройденный круг открывает задания на всех шагах
   const reached = Boolean(user) && (user.step >= step || user.circlesDone > 0);
   const left = step - (user?.step ?? 0);
@@ -31,7 +35,7 @@ export function PartnerTaskModal({ open }) {
   if (reached) {
     title = 'Вам открыто задание';
     lead = <>Вы дошли до&nbsp;{step}‑го шага, и&nbsp;партнёр акции «{partner}» приготовил для&nbsp;вас задание.</>;
-    action = <Button block onClick={close}>Понятно</Button>;
+    action = t ? <Button block to={`${partnerPath(t.slug)}#task`}>Выполнить задание</Button> : <Button block onClick={close}>Понятно</Button>;
   } else if (user) {
     lead = <>Дойдите до&nbsp;{step}‑го шага, и&nbsp;откроется задание от&nbsp;партнёра акции «{partner}». До&nbsp;него {left}&nbsp;{plural(left, 'шаг', 'шага', 'шагов')}: это {stepsCostText(left)}.</>;
     action = <Button block onClick={() => openModal('receipt')}>Зарегистрировать чек</Button>;
@@ -54,12 +58,12 @@ export function PartnerTaskModal({ open }) {
       {reached && (
         <div className="task-card">
           <small>Задание</small>
-          {task ? <p>{task}</p> : <><b>Скоро появится здесь</b><p>Партнёр готовит задание. Когда оно будет готово, здесь появится, что нужно сделать и&nbsp;какие призы разыгрываются.</p></>}
+          {t ? <><b>{t.title}</b><p>{t.task}</p></> : <><b>Скоро появится здесь</b><p>Партнёр готовит задание. Когда оно будет готово, здесь появится, что нужно сделать и&nbsp;какие призы разыгрываются.</p></>}
         </div>
       )}
-      <p className="task-prize"><small>Разыгрывает партнёр</small>{prize ?? 'Приз партнёр объявит вместе с заданием'}</p>
+      <p className="task-prize"><small>Разыгрывает партнёр</small>{prize ?? 'Приз партнёр объявит позже'}</p>
       {/* Вместо списка 1-2-3 одна строка (правка 03.11): окно помещается и на невысоком телефоне */}
-      <p className="task-note">Выполнять задание не&nbsp;обязательно. Выполнили&nbsp;— участвуете в&nbsp;розыгрыше призов партнёра.</p>
+      <p className="task-note">Выполнять не&nbsp;обязательно. Ответ отправляют на&nbsp;странице партнёра, там&nbsp;же ответы других участников.</p>
       <div className="modal__actions">{action}</div>
     </Modal>
   );

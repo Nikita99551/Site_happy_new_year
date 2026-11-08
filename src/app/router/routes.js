@@ -5,4 +5,5 @@ export const ROUTES = {
   conditions: '/conditions',
   prizes: '/prizes',
   rules: '/rules',
+  partner: '/partner',
 };

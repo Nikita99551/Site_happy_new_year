@@ -131,7 +131,7 @@
 .postcard__lights { margin-top: 28px; padding-right: 70px; }
 .postcard__seal { position: absolute; z-index: 4; right: -20px; bottom: -30px; width: 124px; }
 .postcard-stack__tag { position: absolute; z-index: 3; left: -6%; top: 10px; width: 150px; rotate: -12deg; }
-.postcard-stack__tag span { position: absolute; left: 50%; top: 56%; transform: translate(-50%, -50%) rotate(4deg); width: 80%; text-align: center; font-family: var(--font-display); font-style: italic; font-size: 17px; line-height: 1.1; color: var(--rdd); }
+.postcard-stack__tag span { position: absolute; left: 56%; top: 60%; transform: translate(-50%, -50%) rotate(4deg); text-align: center; white-space: nowrap; font-family: var(--font-display); font-style: italic; font-size: 14px; line-height: 1.1; color: var(--rdd); }
 .postcard-stack__branch { position: absolute; z-index: 3; right: -70px; bottom: -160px; width: 230px; rotate: 0deg; }
 
 .final-strip { display: flex; flex-wrap: wrap; align-items: center; gap: 16px 32px; margin-top: 20px; padding: 14px 28px; background: var(--g); color: var(--cr); border-radius: 14px; }
@@ -242,7 +242,7 @@
   .postcard-stack__stamp { width: 80px; right: 2%; top: 64px; z-index: 3; }
   .postcard-stack__tag { width: 84px; left: -1%; top: 26px; }
   .postcard__label { display: block; padding-left: 62px; }
-  .postcard-stack__tag span { font-size: 9px; }
+  .postcard-stack__tag span { font-size: 7px; }
   /* Ветка на правом краю зелёной открытки, над печатью (правка 24.10) */
   /* Ветка — в левый нижний угол открытки, под «Старт» третьего ряда: справа она закрывала звезду «30» и «финиш»
      (правка 02.11, iPhone 16 Pro Max). Печать — ниже подписи «финиш», свисает с края открытки */

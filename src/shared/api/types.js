@@ -80,4 +80,50 @@
  * @property {(storeId: string) => Promise<void>} selectStore — Выбор магазина (и до входа тоже). PATCH /me { storeId }
  * @property {() => string | null} selectedStore — Выбранный магазин: из профиля или сохранённый локально до входа
  * @property {(value?: boolean) => boolean | undefined} cookieConsent — Согласие на cookie: undefined — ещё не отвечал
+ * @property {(slug: string, query: AnswersQuery) => Promise<AnswersPage>} answers — Ответы на задание партнёра. GET /partners/:slug/answers?sort=&type=&cursor=&limit=
+ * @property {(slug: string, input: AnswerInput) => Promise<TaskAnswer>} sendAnswer — Отправить ответ. POST /partners/:slug/answers (multipart/form-data: text, photo, video, consent=1).
+ *   401 — не вошёл, 403 — задание ещё не открыто (не дошёл до шага), 409 — уже отвечал на это задание, 413 — файл больше лимита
+ * @property {(id: string, like: boolean) => Promise<{ likes: number; liked: boolean }>} likeAnswer — Сердечко: PUT /answers/:id/like — поставить, DELETE — снять; 401 — не вошёл
+ */
+
+/**
+ * Ответ участника на задание партнёра (правка 08.11). Чужие ответы сервер отдаёт только проверенные (status 'published'),
+ * свой — участнику в любом статусе. Ответ показывается текстом (React экранирует), разметку не присылать.
+ * @typedef {Object} TaskAnswer
+ * @property {string} id
+ * @property {string} author — Подпись: имя и первая буква фамилии («Анна К.»). Формирует сервер; полное ФИО и телефон не отдавать
+ * @property {string} [place] — Город или посёлок магазина участника («Бийск»), можно пусто
+ * @property {string} at — Когда отправлен, ISO 8601
+ * @property {string} [text]
+ * @property {{ src: string; w: number; h: number }} [photo] — Фото после проверки, уменьшенное сервером (до 1600 px) и без геометок EXIF
+ * @property {{ src: string; poster: string; duration: number }} [video] — Видео (mp4 H.264), кадр-обложка и длительность в секундах
+ * @property {number} likes — Сколько сердечек
+ * @property {boolean} liked — Текущий участник уже поставил сердечко
+ * @property {boolean} mine — Ответ текущего участника
+ * @property {'published' | 'review' | 'rejected'} status — review — на проверке, rejected — не прошёл проверку (видит только автор)
+ */
+
+/**
+ * @typedef {'popular' | 'new'} AnswersSort — popular: больше сердечек выше (при равенстве — новее выше), new: новые выше
+ * @typedef {'all' | 'text' | 'photo' | 'video'} AnswersType — text: ответы без фото и видео
+ * @typedef {Object} AnswersQuery
+ * @property {AnswersSort} sort
+ * @property {AnswersType} type
+ * @property {string | null} [cursor] — Продолжение списка: next из прошлой порции; нет — с начала
+ * @property {number} [limit] — Сколько ответов за раз (сайт просит 20, на странице партнёра — 3)
+ */
+
+/**
+ * @typedef {Object} AnswersPage
+ * @property {TaskAnswer[]} items — Опубликованные ответы по запросу (свой опубликованный — тоже среди них)
+ * @property {string | null} next — Курсор следующей порции; null — больше нет
+ * @property {{ all: number; text: number; photo: number; video: number }} counts — Сколько опубликованных ответов всего и по видам (для фильтров)
+ * @property {TaskAnswer | null} mine — Свой ответ в любом статусе; у гостя и у того, кто не отвечал, — null
+ */
+
+/**
+ * @typedef {Object} AnswerInput
+ * @property {string} text — Можно пустую строку, если задание принимает только фото или видео
+ * @property {File | null} photo — JPEG, PNG, HEIC или WebP до 10 МБ
+ * @property {File | null} video — MP4 или MOV до 1 минуты и до 100 МБ
  */
