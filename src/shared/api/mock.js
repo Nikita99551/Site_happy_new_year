@@ -169,8 +169,14 @@ export const mockApi = {
     return currentUser();
   },
 
-  async register(input) {
+  async register(raw) {
     await delay(700);
+    // Форма шлёт поля сервера (fio, phone_number «900 555 44 33», shops_id числом) — демо приводит их к своим (правка 06.11)
+    const input = {
+      fullName: String(raw.fullName ?? raw.fio ?? ''),
+      phone: String(raw.phone ?? raw.phone_number ?? '').replace(/\D/g, '').slice(-10),
+      storeId: raw.storeId ?? (raw.shops_id != null ? String(raw.shops_id) : undefined),
+    };
     if (input.fullName.trim().length < 5) throw new Error('Введите фамилию, имя и отчество');
     if (!PHONE_RE.test(input.phone)) throw new Error('Введите 10 цифр номера, начиная с 9');
     if (!input.storeId) throw new Error('Выберите свой магазин');
@@ -192,8 +198,10 @@ export const mockApi = {
     save(s);
   },
 
-  async registerReceipt(number, channel) {
+  async registerReceipt(number, channelOrTornado) {
     await delay(900);
+    // Форма шлёт is_tornado (true/false) вместо 'store'/'delivery' (правка 06.11)
+    const channel = channelOrTornado === true ? 'delivery' : channelOrTornado === false ? 'store' : channelOrTornado;
     // Код с чека — латиница и цифры (правка 29.10), номер заказа доставки — цифры
     const code = String(number).replace(/[^0-9A-Za-z]/g, '');
     if (code.length < 4) throw new Error('Введите номер чека полностью');
@@ -236,7 +244,9 @@ export const mockApi = {
     return { status: 'processing' };
   },
 
-  async selectStore(storeId) {
+  async selectStore(storeOrId) {
+    // Окно магазинов передаёт магазин целиком, остальные места — номер (правка 06.11)
+    const storeId = storeOrId && typeof storeOrId === 'object' ? storeOrId.id : storeOrId;
     const store = STORES.find((s) => s.id === storeId);
     const s = load();
     if (s.phone) {

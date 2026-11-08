@@ -2,6 +2,12 @@ import { useCallback, useEffect, useMemo, useState } from 'react';
 import { api, bootstrapApi } from '@/shared/api';
 import { SessionContext } from './context';
 
+/**
+ * Магазин всегда объектом: демо (mock) хранит номер магазина, сервер (http) — магазин целиком.
+ * Без этого у вошедшего в демо шапка падала на selectedStore.name (правка 06.11)
+ */
+const toStore = (v) => (v && typeof v === 'object' ? v : api.stores.find((s) => s.id === String(v)) ?? null);
+
 /** Сессия пользователя и справочники. Единственное место, которое ходит в api. */
 export function SessionProvider({ children }) {
 
@@ -9,7 +15,7 @@ export function SessionProvider({ children }) {
   const [ready, setReady] = useState(false);
   const [stores, setStores] = useState(api.stores);
   const [participants, setParticipants] = useState(api.participants);
-  const [selectedStore, setSelectedStore] = useState(() => api.selectedStore());
+  const [selectedStore, setSelectedStore] = useState(() => toStore(api.selectedStore()));
 
   const refresh = useCallback(async () => {
     const me = await api.me();
@@ -18,6 +24,10 @@ export function SessionProvider({ children }) {
     if (me?.shops_id && !selectedStore) {
       const shopFromServer = api.stores.find(s => s.id === String(me.shops_id));
       if (shopFromServer) setSelectedStore(shopFromServer);
+    } else if (!selectedStore) {
+      // Демо: после входа магазин участника лежит в api.selectedStore() номером
+      const local = toStore(api.selectedStore());
+      if (local) setSelectedStore(local);
     }
   }, [selectedStore]);
 
@@ -71,7 +81,7 @@ export function SessionProvider({ children }) {
 
   const selectStore = useCallback(async (store) => {
     await api.selectStore(store);
-    setSelectedStore(store);
+    setSelectedStore(toStore(store));
     if (user) await refresh();
   }, [refresh, user]);
 
