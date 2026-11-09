@@ -8,7 +8,7 @@ import './CircleScale.scss';
 const MILESTONES = [
   { n: 10, Icon: IconCert, title: <>10‑й шаг</>, text: <>Розыгрыш сертификата Аникс на&nbsp;1&nbsp;500&nbsp;₽: получит каждый 30‑й</> },
   { n: 20, Icon: IconCert, title: <>20‑й шаг</>, text: <>Розыгрыш сертификата Аникс на&nbsp;3&nbsp;000&nbsp;₽: получит каждый 100‑й</> },
-  { n: 30, Icon: IconTicket, title: <>30‑й шаг&nbsp;— финиш</>, text: <>Билет в&nbsp;финальный розыгрыш главного приза. Дальше круг начинается заново</> },
+  { n: 30, Icon: IconTicket, title: <>30‑й шаг&nbsp;— финиш</>, text: <>Билет в&nbsp;финальный розыгрыш 5&nbsp;суперпризов. Дальше круг начинается заново</> },
 ];
 
 /**
@@ -25,7 +25,7 @@ export function CircleScale({ tasks = false }) {
       <div className="section-head reveal">
         <span className="ribbon ribbon--green">Один круг</span>
         <h2>Один круг&nbsp;— 30&nbsp;шагов</h2>
-        <p className="lead">На&nbsp;10‑м и&nbsp;20‑м шагах разыгрываем сертификаты Аникс. На&nbsp;30‑м вы получаете билет в&nbsp;финальный розыгрыш 12&nbsp;января, где главный приз&nbsp;— отдых на&nbsp;курорте «Манжерок».</p>
+        <p className="lead">На&nbsp;10‑м и&nbsp;20‑м шагах разыгрываем сертификаты Аникс. На&nbsp;30‑м вы получаете билет в&nbsp;финальный розыгрыш 12&nbsp;января. В&nbsp;финале 5&nbsp;суперпризов: отдых на&nbsp;курорте «Манжерок», iPhone, стайлер Dyson, телевизор и&nbsp;PlayStation&nbsp;5.</p>
       </div>
       <div className={`scale reveal${tasks ? ' scale--tasks' : ''}`}>
         <div className="scale__lights"><StepGarland step={30} labels={false} partners={partners} partnerLabel={PARTNER_LABEL} onPartner={onPartner} wire="#173f2a" textColor="#173f2a" startSolid /></div>

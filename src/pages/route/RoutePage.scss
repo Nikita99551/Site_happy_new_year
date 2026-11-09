@@ -18,7 +18,7 @@
 .counter .num { font-size: 64px; line-height: 1.15; color: var(--g); }
 .counter small { display: block; width: 100%; margin-top: 6px; padding-top: 8px; border-top: 1.5px dashed var(--kr); font-weight: 700; font-size: 15px; line-height: 1.15; color: var(--mu); }
 .counter--red .num { color: var(--rd); }
-/* «билет на главный приз»: на компьютере в две строки, на узком телефоне можно в три (правка 03.11) */
+/* «билет на суперпризы»: на компьютере в две строки, на узком телефоне можно в три (правка 03.11) */
 .counter__nb { white-space: nowrap; }
 @media (max-width: 600px) { .counter__nb { white-space: normal; } }
 /* Коза привязана к счётчикам, а не к краю экрана: на широких экранах не уезжает вправо (правка 24.10).

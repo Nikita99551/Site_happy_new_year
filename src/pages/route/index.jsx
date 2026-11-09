@@ -74,7 +74,7 @@ export default function RoutePage() {
             <div className="counters reveal" style={d(200)}>
               <div className="ticket ticket--cream counter"><span className="num">{shown.receiptsTotal}</span><small>{plural(shown.receiptsTotal, 'чек', 'чека', 'чеков')}</small></div>
               <div className="ticket ticket--cream counter"><span key={circlesDone} className={`num${tick}`}>{circlesDone}</span><small>{plural(circlesDone, 'круг', 'круга', 'кругов')}<br />{plural(circlesDone, 'пройден', 'пройдено', 'пройдено')}</small></div>
-              <div className="ticket ticket--cream counter counter--red"><span key={chances} className={`num${tick}`}>{chances}</span><small>{plural(chances, 'билет', 'билета', 'билетов')} на<br /><span className="counter__nb">главный приз</span></small></div>
+              <div className="ticket ticket--cream counter counter--red"><span key={chances} className={`num${tick}`}>{chances}</span><small>{plural(chances, 'билет', 'билета', 'билетов')} на<br /><span className="counter__nb">суперпризы</span></small></div>
             </div>
           </div>
           {/* Гирлянда шагов — на компьютере и планшете. На телефоне её нет (правка 29.10): ниже ёлка с теми же шагами */}
@@ -136,7 +136,7 @@ export default function RoutePage() {
             <div className="ticket ticket--cream ticket-card reveal" style={{ color: '#173f2a' }}>
               <img className="ticket-card__seal" src="/img/seal-check.svg" alt="" width={100} height={100} />
               <span className="ticket-card__divider" />
-              <div><b>{circlesDone === 0 ? 'Первый круг впереди' : circlesDone === 1 ? 'Первый круг пройден' : `Пройдено ${circlesDone} ${plural(circlesDone, 'круг', 'круга', 'кругов')}`}</b><p>Каждый круг из&nbsp;30&nbsp;шагов&nbsp;— билет в&nbsp;финальный розыгрыш 12&nbsp;января. Чем больше билетов, тем больше шансов на&nbsp;главный приз.</p></div>
+              <div><b>{circlesDone === 0 ? 'Первый круг впереди' : circlesDone === 1 ? 'Первый круг пройден' : `Пройдено ${circlesDone} ${plural(circlesDone, 'круг', 'круга', 'кругов')}`}</b><p>Каждый круг из&nbsp;30&nbsp;шагов&nbsp;— билет в&nbsp;финальный розыгрыш 12&nbsp;января. Чем больше билетов, тем больше шансов выиграть суперприз.</p></div>
             </div>
             <div className="ticket ticket--gold ticket-card reveal" style={d(80)}>
               <img className="ticket-card__seal" src="/img/seal-star.svg" alt="" width={100} height={100} />

@@ -64,13 +64,13 @@ export default function PrizesPage() {
         </div>
       </section>
 
-      {/* ===== Главный приз ===== */}
+      {/* ===== Суперприз «Манжерок» — самый крупный из 5 (правка 09.11: главных призов пять, не один) ===== */}
       <section className="section section--cream torn-top" id="main-prize">
         <div className="container main-prize">
           <div className="reveal">
-            <span className="ribbon ribbon--green">Главный приз · финал</span>
+            <span className="ribbon ribbon--green">Суперприз · финал</span>
             <h2 style={{ marginTop: 24 }}>Сертификат на&nbsp;250&nbsp;000&nbsp;₽ на&nbsp;курорт «Манжерок»</h2>
-            <p className="lead">Главный приз финального розыгрыша 12&nbsp;января 2027&nbsp;года&nbsp;— отдых на&nbsp;всесезонном курорте «Манжерок» в&nbsp;Горном Алтае. Участвуют все, кто прошёл 30&nbsp;шагов.</p>
+            <p className="lead">Самый крупный из&nbsp;5&nbsp;суперпризов финального розыгрыша 12&nbsp;января 2027&nbsp;года&nbsp;— отдых на&nbsp;всесезонном курорте «Манжерок» в&nbsp;Горном Алтае. Участвуют все, кто прошёл 30&nbsp;шагов.</p>
           </div>
           <div className="main-prize__wrap reveal" style={d(120)}>
             <img className="main-prize__branch" src="/img/branch.webp" alt="" width={200} height={214} loading="lazy" decoding="async" />
@@ -79,7 +79,7 @@ export default function PrizesPage() {
               <img src="/img/altai.webp" alt="Зимний Алтай: горы, река и ели" width={1400} height={700} decoding="async" style={{ background: `center / cover url(${ALTAI_BLUR})` }} />
               <figcaption>Алтай</figcaption>
             </figure>
-            <span className="seal seal--red main-prize__badge"><span className="num">1</span><small>главный<br />приз</small></span>
+            <span className="seal seal--red main-prize__badge"><span className="num">1</span><small>из&nbsp;5<br />призов</small></span>
             <img className="main-prize__stamp" src="/img/stamp.webp" alt="" width={150} height={190} loading="lazy" decoding="async" />
           </div>
         </div>
@@ -133,7 +133,7 @@ export default function PrizesPage() {
           <div className="section-head reveal">
             <span className="ribbon">Календарь розыгрышей</span>
             <h2>Один шаг&nbsp;—<br /> и&nbsp;вы в&nbsp;розыгрыше</h2>
-            <p className="lead">В&nbsp;еженедельных розыгрышах участвует каждый, у&nbsp;кого есть хотя&nbsp;бы один шаг. В&nbsp;финал 12&nbsp;января попадают те, кто прошёл круг из&nbsp;30&nbsp;шагов. Каждый новый круг даёт ещё один билет в&nbsp;финал, и&nbsp;шансов на&nbsp;главный приз становится больше.</p>
+            <p className="lead">В&nbsp;еженедельных розыгрышах участвует каждый, у&nbsp;кого есть хотя&nbsp;бы один шаг. В&nbsp;финал 12&nbsp;января попадают те, кто прошёл круг из&nbsp;30&nbsp;шагов. Каждый новый круг даёт ещё один билет в&nbsp;финал, и&nbsp;шансов выиграть суперприз становится больше.</p>
           </div>
           <div className="calendar reveal" ref={calendarRef}>
             <svg className="calendar__wire" viewBox="0 0 1312 40" preserveAspectRatio="none" aria-hidden="true"><path d="M0 8 C 220 44 440 44 656 8 C 872 44 1092 44 1312 8" fill="none" stroke="#e2b24a" strokeWidth={2.5} /></svg>
@@ -141,7 +141,7 @@ export default function PrizesPage() {
               {CAMPAIGN.weeklyDraws.map((date, i) => (
                 <div key={date} className="cal-tag"><span className="cal-tag__hole" /><small>Неделя</small><span className="num">{i + 1}</span><b>5 призов</b></div>
               ))}
-              <div className="cal-tag cal-tag--final"><span className="cal-tag__hole" /><span className="cal-tag__frame" aria-hidden="true" /><span className="cal-tag__date"><span className="star-shape" />12&nbsp;января · финал</span><b>5&nbsp;суперпризов, главный&nbsp;— сертификат на&nbsp;250&nbsp;000&nbsp;₽ на&nbsp;курорт «Манжерок»</b></div>
+              <div className="cal-tag cal-tag--final"><span className="cal-tag__hole" /><span className="cal-tag__frame" aria-hidden="true" /><span className="cal-tag__date"><span className="star-shape" />12&nbsp;января · финал</span><b>5&nbsp;суперпризов: отдых на&nbsp;курорте «Манжерок», iPhone, стайлер Dyson, телевизор и&nbsp;PlayStation&nbsp;5</b></div>
             </div>
             <div className="calendar__notes">
               <p>Еженедельный приз стоит до&nbsp;15&nbsp;000&nbsp;₽. Участвуют все, у&nbsp;кого к&nbsp;дате розыгрыша есть хотя&nbsp;бы один шаг. В&nbsp;финале участвуют билеты: один пройденный круг&nbsp;— один билет.</p>

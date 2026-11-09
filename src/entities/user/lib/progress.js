@@ -12,7 +12,7 @@ import { formatRub, plural } from '@/shared/lib/text';
  * @property {string} leftCost — «покупки на 1 800 ₽, а с товарами партнёров — меньше: …» (stepsCostText)
  * @property {string} certRub — Номинал сертификата на вехе, если это 10 или 20
  * @property {string} goalGen — «розыгрыша сертификата» или «билета в финал» (родительный падеж)
- * @property {string} goalText — «каждый 30‑й получает сертификат Аникс на 1 500 ₽» или «билет в финальный розыгрыш главного приза»
+ * @property {string} goalText — «каждый 30‑й получает сертификат Аникс на 1 500 ₽» или «билет в финальный розыгрыш суперпризов»
  */
 
 export function getProgress(step) {
@@ -29,7 +29,7 @@ export function getProgress(step) {
     leftCost: stepsCostText(left),
     certRub,
     goalGen: next === 30 ? 'билета в финал' : 'розыгрыша сертификата',
-    goalText: next === 30 ? 'билет в финальный розыгрыш главного приза' : `каждый ${every}‑й получает сертификат Аникс на ${certRub}`,
+    goalText: next === 30 ? 'билет в финальный розыгрыш суперпризов' : `каждый ${every}‑й получает сертификат Аникс на ${certRub}`,
   };
 }
 

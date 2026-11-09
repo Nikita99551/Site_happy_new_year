@@ -126,7 +126,7 @@ export default function ConditionsPage() {
             </div>
             <div className="more-circles reveal" style={d(100)}>
               <h3>Больше кругов&nbsp;— больше шансов</h3>
-              <p>Каждый круг из&nbsp;30&nbsp;шагов&nbsp;— билет в&nbsp;финальный розыгрыш 12&nbsp;января. Кругов может быть сколько угодно: ёлка начинается заново, а&nbsp;билеты копятся. Чем больше билетов, тем больше шансов на&nbsp;главный приз.</p>
+              <p>Каждый круг из&nbsp;30&nbsp;шагов&nbsp;— билет в&nbsp;финальный розыгрыш 12&nbsp;января. Кругов может быть сколько угодно: ёлка начинается заново, а&nbsp;билеты копятся. Чем больше билетов, тем больше шансов выиграть суперприз.</p>
               <div className="more-circles__row"><div><span className="num">1&nbsp;круг</span><small>30 шагов</small></div><span className="ticket ticket--gold">билет</span></div>
               <div className="more-circles__row"><div><span className="num">2&nbsp;круга</span><small>60 шагов</small></div><span className="ticket ticket--gold">билет</span><span className="ticket ticket--gold">билет</span></div>
             </div>
