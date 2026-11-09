@@ -63,6 +63,8 @@ dialog#m-answers { padding: 30px 0 14px; }
 .answer-form__count { display: block; margin-top: 6px; text-align: right; font-size: 14px; }
 .answer-form__error { margin: -6px 0 12px; font-weight: 700; font-size: 15px; color: var(--rd); }
 .answer-form__note { margin: 2px 0 4px; font-size: 15px; color: var(--mu); }
+/* Приписка-согласие под кнопкой (вместо галочки, 09.11): мелко, но читаемо — 14 px, не светлее подписей */
+.answer-form__agree { margin: 10px 0 0; font-size: 14px; line-height: 1.35; color: var(--mu); text-align: center; text-wrap: pretty; }
 .answer-sent__icon { display: grid; place-items: center; border-radius: 50%; background: var(--g); color: var(--cr); }
 
 .media-pick { position: relative; }

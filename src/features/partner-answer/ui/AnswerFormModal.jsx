@@ -5,7 +5,6 @@ import { useModal } from '@/features/modal';
 import { taskOfPartner } from '@/shared/config/campaign';
 import { MEDIA_LIMITS } from '@/shared/lib/media';
 import { Button } from '@/shared/ui/button/Button';
-import { Check } from '@/shared/ui/field/Field';
 import { Modal } from '@/shared/ui/modal/Modal';
 import { MediaPick } from './MediaPick';
 import './PartnerAnswers.scss';
@@ -13,7 +12,8 @@ import { errorText } from '@/shared/lib/errors';
 
 /**
  * Окно «Ответ на задание партнёра» (правка 08.11). Поля — по заданию (PARTNER_TASKS[n].accepts): текст, фото, видео,
- * обязательные или по желанию. Отдельная галочка — согласие показать ответ на сайте с именем. После отправки — «Ответ
+ * обязательные или по желанию. Согласие показать ответ на сайте с именем — приписка под кнопкой, без галочки (решение Никиты
+ * 09.11 по вопросу программиста: на Озоне и ВБ галочку перед каждым отзывом не ставят). После отправки — «Ответ
  * отправлен»: ответ на проверке, пока его видит только автор. Один ответ на задание. payload: { slug }.
  */
 export function AnswerFormModal({ open }) {
@@ -24,7 +24,6 @@ export function AnswerFormModal({ open }) {
   const [slug, setSlug] = useState(payload?.slug ?? '');
   const [text, setText] = useState('');
   const [media, setMedia] = useState(null);
-  const [consent, setConsent] = useState(false);
   const [errors, setErrors] = useState({});
   const [busy, setBusy] = useState(false);
   const [sent, setSent] = useState(false);
@@ -36,7 +35,6 @@ export function AnswerFormModal({ open }) {
     if (payload?.slug) setSlug(payload.slug);
     setText('');
     setMedia(null);
-    setConsent(false);
     setErrors({});
     setSent(false);
   }
@@ -55,7 +53,6 @@ export function AnswerFormModal({ open }) {
     if (accepts.text === 'required' && !t) e.text = 'Напишите ответ';
     if (mediaRequired && !media) e.media = kinds.length > 1 ? 'Добавьте фото или видео' : kinds[0] === 'photo' ? 'Добавьте фото' : 'Добавьте видео';
     if (nothingRequired && !t && !media) e.media = 'Добавьте фото, видео или напишите пару слов';
-    if (!consent) e.consent = 'Без этого согласия ответ нельзя показать на сайте';
     return e;
   };
 
@@ -122,16 +119,12 @@ export function AnswerFormModal({ open }) {
             onError={(msg) => setErrors({ ...errors, media: msg })}
           />
         )}
-        <Check name="consentAnswer" checked={consent} error={errors.consent}
-          onChange={(e) => { setConsent(e.target.checked); if (errors.consent) setErrors({ ...errors, consent: '' }); }}>
-          Разрешаю показать мой ответ на&nbsp;сайте акции с&nbsp;моим именем и&nbsp;первой буквой фамилии
-        </Check>
-        {errors.consent && <p className="answer-form__error" aria-live="polite">{errors.consent}</p>}
         <p className="modal__note answer-form__note">Ответ появится после проверки. Изменить его потом нельзя.</p>
         {errors.form && <p className="answer-form__error" role="alert">{errors.form}</p>}
         <div className="modal__actions">
           <Button type="submit" block disabled={busy}>{busy ? 'Отправляем…' : 'Отправить ответ'}</Button>
         </div>
+        <p className="answer-form__agree">Нажимая «Отправить ответ», вы&nbsp;соглашаетесь, что&nbsp;ответ покажем на&nbsp;сайте акции с&nbsp;вашим именем и&nbsp;первой буквой фамилии.</p>
       </form>
     </Modal>
   );
