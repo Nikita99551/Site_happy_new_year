@@ -321,6 +321,8 @@ html.no-anim .tree .ball--current { animation: none; }
 .promos { padding-block: clamp(56px, 8vh, 88px); }
 .promos .section-head { max-width: 980px; }
 .promos .lead { color: rgba(255, 248, 232, 0.92); }
+/* Срок действия промокодов (правки «Торнадо» 09.11): под описанием, жирно, чтобы видели до копирования кода */
+.promos__terms { margin: 14px 0 0; font-weight: 800; font-size: 18px; line-height: 1.35; color: var(--cr); text-wrap: pretty; }
 .promos__list { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 28px; }
 /* Тень на обёртке: маска с вырезами у бумаги обрезала бы её */
 .coupon { container-type: inline-size; filter: drop-shadow(0 14px 22px rgba(60, 4, 6, 0.35)); }

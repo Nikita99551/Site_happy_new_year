@@ -166,7 +166,7 @@ export function HomePage() {
             <div className="section-head reveal">
               <span className="ribbon ribbon--green">Как участвовать</span>
               <h2>Три шага до&nbsp;подарков</h2>
-              <p className="lead">Регистрировать можно каждый чек от&nbsp;600&nbsp;₽.</p>
+              <p className="lead">Регистрировать можно каждый чек от&nbsp;600&nbsp;₽. Покупки, оформленные в&nbsp;приложении «Торнадо», регистрируются по&nbsp;номеру заказа.</p>
             </div>
             <div className="how__cards-wrap">
               {/* Коза поднимается из-за карточки по мере прокрутки и выше задуманного места не выходит */}

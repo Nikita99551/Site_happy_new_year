@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom';
 import { OpenModalButton } from '@/features/modal';
-import { DELIVERY_PROMOS, PROMO_STEPS_TEXT } from '@/shared/config/campaign';
+import { DELIVERY_PROMOS, PROMO_STEPS_TEXT, PROMO_TERMS } from '@/shared/config/campaign';
 import { formatRub, plural } from '@/shared/lib/text';
 import { IconBox, IconClose, IconCoupon, IconCrate } from '@/shared/ui/icons/Icons';
 import { CircleScale } from '@/widgets/circle-scale/CircleScale';
@@ -48,7 +48,7 @@ export default function ConditionsPage() {
           <div className="section-head reveal">
             <span className="ribbon ribbon--green">Как участвовать</span>
             <h2>Маршрут из&nbsp;четырёх остановок</h2>
-            <p className="lead">Регистрировать можно каждый чек от&nbsp;600&nbsp;₽.</p>
+            <p className="lead">Регистрировать можно каждый чек от&nbsp;600&nbsp;₽. Покупки, оформленные в&nbsp;приложении «Торнадо», регистрируются по&nbsp;номеру заказа.</p>
           </div>
           <StopsMap />
         </div>
@@ -136,7 +136,7 @@ export default function ConditionsPage() {
             <IconCoupon className="promo-strip__icon" />
             <div className="promo-strip__text">
               <b>Промокоды на&nbsp;доставку «Торнадо»&nbsp;— каждому</b>
-              <p>На&nbsp;каждом нечётном шаге&nbsp;— {PROMO_STEPS_TEXT}&nbsp;— промокод на&nbsp;заказ в&nbsp;приложении «Торнадо». Это не&nbsp;розыгрыш: дошли до&nbsp;шага&nbsp;— код ваш, он&nbsp;появится на&nbsp;странице <Link className="link" to="/route">«Мой маршрут»</Link>.</p>
+              <p>На&nbsp;каждом нечётном шаге&nbsp;— {PROMO_STEPS_TEXT}&nbsp;— промокод на&nbsp;заказ в&nbsp;приложении «Торнадо». Это не&nbsp;розыгрыш: дошли до&nbsp;шага&nbsp;— код ваш, он&nbsp;появится на&nbsp;странице <Link className="link" to="/route">«Мой маршрут»</Link>. {PROMO_TERMS}</p>
             </div>
             <ul className="promo-strip__deals">
               {DELIVERY_PROMOS.map((p) => (

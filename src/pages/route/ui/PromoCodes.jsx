@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { codeForStep, DELIVERY_PROMOS, PROMO_STEPS_TEXT, TORNADO_APP_URL } from '@/shared/config/campaign';
+import { codeForStep, DELIVERY_PROMOS, PROMO_STEPS_TEXT, PROMO_TERMS, TORNADO_APP_URL } from '@/shared/config/campaign';
 import { formatRub } from '@/shared/lib/text';
 import { Button } from '@/shared/ui/button/Button';
 import { IconCoupon } from '@/shared/ui/icons/Icons';
@@ -32,6 +32,8 @@ export function PromoCodes({ step, circle, guest, onLogin }) {
           <span className="ribbon ribbon--cream">Доставка «Торнадо»</span>
           <h2>Ваши промокоды на&nbsp;доставку</h2>
           <p className="lead">На&nbsp;каждом нечётном шаге&nbsp;— {PROMO_STEPS_TEXT}&nbsp;— свой промокод на&nbsp;заказ в&nbsp;приложении «Торнадо». Это не&nbsp;розыгрыш: дошли до&nbsp;шага&nbsp;— промокод ваш. Выберите шаг и&nbsp;скопируйте его код.</p>
+          {/* Срок действия — отдельной строкой, чтобы не потерялся в описании (правки «Торнадо» 09.11) */}
+          <p className="promos__terms">{PROMO_TERMS}</p>
         </div>
         <div className="promos__list">
           {DELIVERY_PROMOS.map((p, i) => {

@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { useStepAnimation } from '@/entities/user';
 import { useModal } from '@/features/modal';
-import { CAMPAIGN, nextMilestone, promoForStep } from '@/shared/config/campaign';
+import { CAMPAIGN, codeForStep, nextMilestone, promoForStep } from '@/shared/config/campaign';
 import { useInView, useReducedMotion } from '@/shared/lib/hooks';
 import { formatRub, plural } from '@/shared/lib/text';
 import { CouponMark, IconCoupon, IconCrate, IconGift } from '@/shared/ui/icons/Icons';
@@ -66,7 +66,8 @@ function TipContent({ n, step, partner, codesOpen }) {
   if (n === 10 || n === 20) items.push({ key: 'gift', icon: <IconGift />, kicker: 'Розыгрыш', title: `Сертификат «Аникс» на ${formatRub(CAMPAIGN.milestones[n])}`, text: `Получает каждый ${CAMPAIGN.milestoneEvery[n]}‑й участник недели, дошедший до шага` });
   // Промокод доставки — гарантированно каждому (правка 27.10): пройденный шаг отсылает к коду ниже, будущий — обещает
   const promo = promoForStep(n);
-  if (promo) items.push({ key: 'promo', icon: <IconCoupon />, kicker: 'Промокод «Торнадо»', title: `−${formatRub(promo.discount)} на доставку`, text: codesOpen ? `На заказ от ${formatRub(promo.minOrder)}. Код за этот шаг — ниже, в «Ваших промокодах»` : `На заказ от ${formatRub(promo.minOrder)} — каждому, кто дойдёт до шага` });
+  // Правки «Торнадо» 09.11: «Промокод «Торнадо»» читали как код «ТОРНАДО» — открытый шаг показывает сам код, закрытый — «Промокод в «Торнадо»»
+  if (promo) items.push({ key: 'promo', icon: <IconCoupon />, kicker: codesOpen ? `Промокод «${codeForStep(n)}»` : 'Промокод в «Торнадо»', title: `−${formatRub(promo.discount)} на доставку`, text: codesOpen ? `На заказ от ${formatRub(promo.minOrder)} в приложении «Торнадо». Скопировать код можно ниже, в «Ваших промокодах»` : `На заказ от ${formatRub(promo.minOrder)} в приложении «Торнадо» — каждому, кто дойдёт до шага` });
   // Задание партнёра (правка 02.11): дошёл до шага — задание открыто, выполнил — участвует в розыгрыше призов партнёра
   if (partner.includes(n)) items.push({ key: 'box', icon: <IconCrate />, kicker: 'Задание партнёра', title: 'Выполните задание и участвуйте в розыгрыше призов партнёра', text: codesOpen ? 'Нажмите на коробку, чтобы открыть задание' : 'Откроется, когда дойдёте до шага' });
 

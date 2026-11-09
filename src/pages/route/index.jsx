@@ -111,7 +111,7 @@ export default function RoutePage() {
                 <li><i className="i-dim" />Прозрачный шар&nbsp;— откроется после новых чеков</li>
                 <li><i className="i-gift"><IconGift /></i>Подарок&nbsp;— розыгрыш сертификата Аникс</li>
                 <li><i className="i-box"><IconCrate /></i>Коробка&nbsp;— задание партнёра: нажмите, чтобы открыть</li>
-                <li><i className="i-coupon"><IconCoupon /></i>Купон&nbsp;— промокод на&nbsp;доставку «Торнадо», каждому</li>
+                <li><i className="i-coupon"><IconCoupon /></i>Купон&nbsp;— промокод на&nbsp;доставку в&nbsp;«Торнадо», каждому</li>
                 <li><i className="i-star"><IconStar /></i>Звезда&nbsp;— финиш и&nbsp;билет в&nbsp;финал</li>
               </ul>
             </div>
