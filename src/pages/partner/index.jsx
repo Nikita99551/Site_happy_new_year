@@ -38,7 +38,8 @@ export default function PartnerPage() {
             <Link className="link link--green tap-area partner-hero__back reveal" to="/#partners">← Все партнёры</Link>
             <div className="partner-hero__logo reveal" style={d(40)}><PartnerLogo partner={partner} lazy={false} /></div>
             <span className="ribbon ribbon--green reveal" style={d(80)}>Партнёр новогодней акции</span>
-            <h1 className="reveal" style={d(120)}>{partner.title}</h1>
+            {/* --longest — букв в самом длинном слове: по нему CSS уменьшает заголовок, чтобы слово не рвалось (10.11) */}
+            <h1 className="reveal" style={{ ...d(120), '--longest': Math.max(...partner.title.split(/\s+/).map((w) => w.length)) }}>{partner.title}</h1>
             <p className="lead reveal" style={d(160)}>{partner.company}. Товары партнёра есть на&nbsp;полках магазинов Аникс&nbsp;— и&nbsp;они помогают быстрее пройти маршрут.</p>
             <div className="partner-rule ticket reveal" style={d(200)}>
               <span className="partner-rule__eq num">{N}&nbsp;=&nbsp;1</span>
