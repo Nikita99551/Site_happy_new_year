@@ -17,7 +17,7 @@
 
 .receipt-hint__text > b { display: block; font-size: 19px; font-weight: 800; color: var(--g); }
 .receipt-hint__text p { margin-top: 4px; font-size: 17px; font-weight: 600; line-height: 1.45; }
-.receipt-hint__text mark { padding: 0 5px; background: #ffd109; border-radius: 4px; box-shadow: 0 0 0 2px var(--rd); font-weight: 800; color: #1f2420; white-space: nowrap; }
+.receipt-hint__text mark { padding: 0 8px; background: #ffd109; border-radius: 4px; box-shadow: 0 0 0 2px var(--rd); font-weight: 800; color: #1f2420; white-space: nowrap; }
 .receipt-hint__text .receipt-hint__qr-tip { margin-top: 6px; font-size: 15px; font-weight: 600; color: var(--mu); }
 
 @include below-sm {

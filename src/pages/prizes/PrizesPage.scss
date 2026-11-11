@@ -256,3 +256,9 @@
 }
 /* Переход с бирок первого экрана: раздел встаёт чуть ниже липкой шапки, ленточка и значок «1» не прячутся под ней */
 #main-prize, #final, #weekly, #certs, #calendar { scroll-margin-top: clamp(40px, 6vh, 64px); }
+
+/* Бирки недель на узком телефоне: текст не впритык к краю бирки (11.11) */
+@media (max-width: 380px) {
+  .cal-tag:not(.cal-tag--final) { padding-inline: 6px; }
+  .cal-tag small, .cal-tag b { font-size: 12px; }
+}

@@ -12,7 +12,7 @@
 .delivery-hint__text li { position: relative; padding-left: 24px; font-size: 16px; font-weight: 600; line-height: 1.4; counter-increment: dh; }
 .delivery-hint__text li + li { margin-top: 2px; }
 .delivery-hint__text li::before { content: counter(dh); position: absolute; left: 0; top: 3px; display: grid; place-items: center; width: 18px; height: 18px; border-radius: 50%; background: var(--rd); color: var(--cr); font-weight: 800; font-size: 11px; line-height: 1; }
-.delivery-hint__text mark { padding: 0 4px; background: #ffd109; border-radius: 4px; box-shadow: 0 0 0 2px var(--rd); font-weight: 800; color: #1f2420; -webkit-box-decoration-break: clone; box-decoration-break: clone; }
+.delivery-hint__text mark { padding: 0 8px; background: #ffd109; border-radius: 4px; box-shadow: 0 0 0 2px var(--rd); font-weight: 800; color: #1f2420; -webkit-box-decoration-break: clone; box-decoration-break: clone; }
 .delivery-hint__text .link { display: inline-block; margin-top: 6px; font-weight: 700; font-size: 15px; }
 
 /* Телефон-схема: тёмная рамка, белый экран. --u — «пиксель» рисунка: всё внутри пропорционально ширине телефона (--ph-w) */

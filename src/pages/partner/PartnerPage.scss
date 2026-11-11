@@ -31,7 +31,7 @@
 /* Полароид с главным товаром (вместо видео — поставщики его не прислали) */
 .partner-photo {
   position: relative; margin: 0; justify-self: center; width: min(100%, 470px);
-  padding: 20px 20px 66px; background: #fff; box-shadow: var(--shadow-deep); rotate: 2.5deg;
+  padding: 20px 20px 18px; background: #fff; box-shadow: var(--shadow-deep); rotate: 2.5deg;
 }
 .partner-photo__pic {
   display: flex; align-items: center; justify-content: center; aspect-ratio: 1; padding: 8%;
@@ -39,9 +39,8 @@
 }
 .partner-photo__pic img { width: auto; height: auto; max-width: 100%; max-height: 100%; object-fit: contain; filter: drop-shadow(0 14px 18px rgba(5, 20, 12, 0.22)); }
 .partner-photo figcaption {
-  position: absolute; left: 24px; right: 24px; bottom: 16px;
+  margin: 14px 4px 0; min-height: 1.15em; text-wrap: balance;
   font-family: var(--font-display); font-style: italic; font-weight: 700; font-size: 21px; line-height: 1.15; color: var(--g);
-  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
 }
 .partner-photo__tape { position: absolute; left: -34px; top: 10px; width: 120px; height: 34px; background: rgba(243, 230, 200, 0.88); rotate: -32deg; z-index: 2; }
 .partner-photo__branch { position: absolute; right: -54px; top: -64px; width: 150px; z-index: 2; pointer-events: none; rotate: 8deg; }
@@ -93,7 +92,7 @@
 .good__title {
   display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 3; overflow: hidden;
   min-height: calc(3 * 1.25em); margin-top: 10px; padding-inline: 4px;
-  font-weight: 800; font-size: 15px; line-height: 1.25; text-wrap: pretty;
+  font-weight: 800; font-size: 15px; line-height: 1.25; text-wrap: pretty; hyphens: auto;
 }
 .good__weight { margin-top: 2px; padding-inline: 4px; font-weight: 600; font-size: 14px; color: var(--mu); }
 .partner-goods__soon { font-weight: 700; font-size: 20px; color: var(--cr); }
@@ -131,8 +130,8 @@
   .partner-rule { gap: 16px; padding: 16px 28px; }
   .partner-rule__eq { font-size: 44px; }
   .partner-rule__text b { font-size: 17px; }
-  .partner-photo { width: min(88%, 380px); padding: 14px 14px 56px; rotate: 1.5deg; }
-  .partner-photo figcaption { font-size: 18px; left: 18px; right: 18px; bottom: 14px; }
+  .partner-photo { width: min(88%, 380px); padding: 14px 14px 14px; rotate: 1.5deg; }
+  .partner-photo figcaption { font-size: 18px; margin-top: 12px; }
   .partner-photo__branch { width: 110px; right: -30px; top: -48px; }
   .goods { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
   .good { padding: 8px 8px 12px; border-radius: 12px; }
@@ -254,3 +253,8 @@
   .ptask__lock-badge svg { width: 20px; height: 20px; }
   .ptask__lock .btn { width: 100%; padding-inline: 16px; white-space: normal; text-align: center; }
 }
+
+/* Узкий телефон (11.11): самое длинное слово названия («Краснодарская») помещается целиком — размер по замеру, до 350 px товары в одну колонку */
+@media (max-width: 400px) { .good__title { -webkit-line-clamp: 4; min-height: calc(4 * 1.25em); font-size: 14px; } }
+@media (max-width: 374px) { .good__title { font-size: 13px; } }
+@media (max-width: 350px) { .goods { grid-template-columns: minmax(0, 1fr); } .good__title { min-height: 0; font-size: 15px; } }

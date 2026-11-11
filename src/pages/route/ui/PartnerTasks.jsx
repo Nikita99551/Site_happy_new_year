@@ -87,7 +87,7 @@ export function PartnerTasks({ step, circle, guest }) {
               <div>
                 <span className={`ptasks__state${on ? ' is-open' : ''}`}>{on ? 'Задание открыто' : 'Пока закрыто'}</span>
                 <small>Партнёр · шаг {sel}</small>
-                <b>«{partner}»</b>
+                <b style={{ '--longest': Math.max(...String(partner).split(/\s+/).map((w) => w.length)) + 2 }}>«{partner}»</b>
               </div>
             </div>
             <div className="ptasks__info">

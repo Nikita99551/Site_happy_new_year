@@ -75,7 +75,7 @@ export default function RoutePage() {
             <div className="counters reveal" style={d(200)}>
               <div className="ticket ticket--cream counter"><span className="num">{shown.receiptsTotal}</span><small>{plural(shown.receiptsTotal, 'чек', 'чека', 'чеков')}</small></div>
               <div className="ticket ticket--cream counter"><span key={circlesDone} className={`num${tick}`}>{circlesDone}</span><small>{plural(circlesDone, 'круг', 'круга', 'кругов')}<br />{plural(circlesDone, 'пройден', 'пройдено', 'пройдено')}</small></div>
-              <div className="ticket ticket--cream counter counter--red"><span key={chances} className={`num${tick}`}>{chances}</span><small>{plural(chances, 'билет', 'билета', 'билетов')} на<br /><span className="counter__nb">суперпризы</span></small></div>
+              <div className="ticket ticket--cream counter counter--red"><span key={chances} className={`num${tick}`}>{chances}</span><small>{plural(chances, 'билет', 'билета', 'билетов')} на<br /><span className="counter__nb">супер&shy;призы</span></small></div>
             </div>
           </div>
           {/* Гирлянда шагов — на компьютере и планшете. На телефоне её нет (правка 29.10): ниже ёлка с теми же шагами */}

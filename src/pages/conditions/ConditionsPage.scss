@@ -476,3 +476,10 @@
 @media (min-width: 1201px) {
   .cond-hero { display: flex; align-items: center; min-height: calc(100svh - var(--header-h, 164px)); }
 }
+
+/* Узкий телефон (11.11): цифра правила под текстом, иначе «самообслуживания» не помещалось и рвалось */
+@media (max-width: 374px) {
+  .rule { grid-template-columns: minmax(0, 1fr); }
+  .rule__val { text-align: left; }
+  .rule__val small { max-width: none; margin-left: 0; }
+}

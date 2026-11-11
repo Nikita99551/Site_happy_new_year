@@ -97,6 +97,11 @@ p { margin: 0; }
 .btn--yellow { background: #ffd109; color: #1f2420; }
 .btn--small { min-height: 48px; padding: 0 20px; font-size: 16px; }
 .btn--block { width: 100%; }
+/* Узкий экран: длинная надпись кнопки переносится на вторую строку, а не вылезает за края (Никита 11.11) */
+@media (max-width: 480px) {
+  .btn { max-width: 100%; padding-inline: 18px; white-space: normal; text-align: center; line-height: 1.2; text-wrap: balance; }
+  .btn--small { padding-inline: 16px; }
+}
 @media (hover: hover) and (pointer: fine) {
   .btn:hover { background: var(--rdd); }
   .btn--secondary:hover { background: rgba(23, 63, 42, 0.08); }

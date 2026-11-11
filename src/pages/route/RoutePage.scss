@@ -21,6 +21,7 @@
 /* «билет на суперпризы»: на компьютере в две строки, на узком телефоне можно в три (правка 03.11) */
 .counter__nb { white-space: nowrap; }
 @media (max-width: 600px) { .counter__nb { white-space: normal; } }
+@media (max-width: 400px) { .counter { padding-inline: 5px; } .counter small { font-size: 13px; } }
 /* Коза привязана к счётчикам, а не к краю экрана: на широких экранах не уезжает вправо (правка 24.10).
    Левый край контента = 50% − половина контейнера; 1010 px = колонка прогресса 626 + счётчики 384 */
 .route-hero__goat { position: absolute; top: 34px; left: min(100% - 44px - 311px, 50% - min(50% - var(--gutter), var(--container) / 2) + 1010px + 24px); width: 311px; height: 430px; overflow: hidden; z-index: 0; }
@@ -316,6 +317,11 @@ html.no-anim .tree .ball--current { animation: none; }
   .ticket-card > div { min-width: 0; }
   .ticket-card .btn { width: 100%; padding-inline: 12px; white-space: normal; line-height: 1.2; }
 }
+/* До 400 px значок над текстом, иначе «Зарегистрировать» шире кнопки (11.11) */
+@media (max-width: 400px) {
+  .ticket-card { grid-template-columns: 1fr; gap: 12px; }
+  .ticket-card__seal { width: 52px; height: 52px; }
+}
 
 /* ---- Промокоды доставки «Торнадо» (правка 27.10): купоны с отрывным корешком на красном картоне ---- */
 .promos { padding-block: clamp(56px, 8vh, 88px); }
@@ -430,7 +436,8 @@ html.no-anim .tree .ball--current { animation: none; }
 .ptasks__state.is-open { background: var(--g); color: var(--cr); }
 .ptasks__who small, .ptasks__task small, .ptasks__prize small { display: block; font-weight: 800; font-size: 13px; line-height: 1.3; letter-spacing: 0.08em; text-transform: uppercase; color: var(--mu); }
 .ptasks__who small { margin-top: 14px; }
-.ptasks__who b { display: block; margin-top: 4px; font-family: var(--font-display); font-weight: 900; font-size: 34px; line-height: 1.1; color: var(--g); }
+.ptasks__who b { display: block; margin-top: 4px; font-family: var(--font-display); font-weight: 900; font-size: min(34px, calc(100cqi / (var(--longest, 12) * 0.66))); line-height: 1.1; color: var(--g); }
+.ptasks__who > div { flex: 1; min-width: 0; container-type: inline-size; }
 .ptasks__task { padding: 20px 24px; border: 2px dashed var(--kr); border-radius: 14px; background: var(--cr); }
 .ptasks__task small { color: var(--rd); }
 .ptasks__task b { display: block; margin-top: 4px; font-size: 22px; font-weight: 800; line-height: 1.3; }
@@ -459,10 +466,25 @@ html.no-anim .tree .ball--current { animation: none; }
   .ptasks__who { gap: 16px; }
   .ptasks__big { width: 72px; height: 72px; }
   .ptasks__who small { margin-top: 10px; }
-  .ptasks__who b { font-size: 26px; }
+  .ptasks__who b { font-size: min(26px, calc(100cqi / (var(--longest, 12) * 0.66))); }
   .ptasks__task { padding: 16px 18px; }
   .ptasks__task b { font-size: 19px; }
   .ptasks__task p { font-size: 16px; }
   .ptasks__prize { margin-top: 14px; font-size: 17px; }
   .ptasks__action .btn { width: 100%; }
+}
+
+/* Узкий телефон (11.11): «+6 шагов» не вылезает за бумагу чека, промокод «ВОЛШЕБСТВО» — за купон */
+@media (max-width: 420px) {
+  .receipt { padding-inline: 24px; }
+  .receipt__row { column-gap: 12px; }
+  .receipt__row b { font-size: 18px; }
+  .receipt__steps { font-size: 28px; white-space: nowrap; }
+}
+@media (max-width: 380px) {
+  .coupon__code { font-size: 24px; letter-spacing: 0.01em; }
+}
+@media (max-width: 350px) {
+  .receipt__row b { font-size: 16px; }
+  .receipt__steps { font-size: 22px; }
 }
