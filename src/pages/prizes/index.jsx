@@ -69,7 +69,7 @@ export default function PrizesPage() {
         <div className="container main-prize">
           <div className="reveal">
             <span className="ribbon ribbon--green">Суперприз · финал</span>
-            <h2 style={{ marginTop: 24 }}>Сертификат на&nbsp;250&nbsp;000&nbsp;₽ на&nbsp;отдых на&nbsp;Алтае</h2>
+            <h2 style={{ marginTop: 24 }}>Сертификат <span className="main-prize__sum">250&nbsp;000&nbsp;₽</span><br />отдых на&nbsp;Алтае</h2>
             <p className="lead">Самый крупный из&nbsp;5&nbsp;суперпризов финального розыгрыша 12&nbsp;января 2027&nbsp;года&nbsp;— семейное путешествие на&nbsp;Алтай. Сертификат с&nbsp;открытой датой, воспользоваться им можно до&nbsp;29&nbsp;декабря 2028&nbsp;года. Участвуют все, кто прошёл 30&nbsp;шагов.</p>
           </div>
           <div className="main-prize__wrap reveal" style={d(120)}>

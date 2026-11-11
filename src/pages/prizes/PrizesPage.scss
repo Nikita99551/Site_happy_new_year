@@ -8,6 +8,8 @@
 .prizes-hero__goat { position: absolute; right: var(--gutter); bottom: 0; width: 290px; z-index: 0; }
 .main-prize { display: grid; grid-template-columns: 1fr 1.1fr; gap: 64px; align-items: center; }
 .main-prize h2 { font-size: clamp(40px, 5.5vw, 80px); line-height: 1; }
+/* Цена в заголовке суперприза красным, как на баннерах «Сертификат 250 000 ₽ / отдых на Алтае» (11.11) */
+.main-prize__sum { color: var(--rd); white-space: nowrap; }
 .main-prize .lead { margin-top: 24px; max-width: 520px; }
 .photo-card { position: relative; padding: 22px 22px 56px; background: #fff; box-shadow: var(--shadow-card); rotate: 3deg; }
 .photo-card img { aspect-ratio: 616 / 452; object-fit: cover; width: 100%; }
