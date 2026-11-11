@@ -121,7 +121,7 @@ export default function ConditionsPage() {
               <h3>Кто получает сертификаты</h3>
               <div className="odds__grid">
                 <div><span className="odds__big">1 из 30</span><p className="odds__txt">Сертификат на&nbsp;1&nbsp;500&nbsp;₽&nbsp;— каждому 30‑му, дошедшему до&nbsp;10‑го шага за&nbsp;неделю.</p><Dots n={30} /></div>
-                <div><span className="odds__big">1 из 100</span><p className="odds__txt">Сертификат на&nbsp;3&nbsp;000&nbsp;₽&nbsp;— каждому 100‑му, дошедшему до&nbsp;20‑го шага за&nbsp;неделю.</p><Dots n={100} /></div>
+                <div><span className="odds__big">1 из 30</span><p className="odds__txt">Сертификат на&nbsp;3&nbsp;000&nbsp;₽&nbsp;— каждому 30‑му, дошедшему до&nbsp;20‑го шага за&nbsp;неделю.</p><Dots n={30} /></div>
               </div>
             </div>
             <div className="more-circles reveal" style={d(100)}>
@@ -154,7 +154,7 @@ export default function ConditionsPage() {
       <section className="section section--cream torn-top rules-full" id="rules">
         <div className="container reveal">
           <h2>Полные правила акции</h2>
-          <p className="lead">Организатор&nbsp;— ООО&nbsp;«Торговая сеть Аникс». Покупки и&nbsp;регистрация чеков&nbsp;— с&nbsp;16&nbsp;ноября 2026 по&nbsp;10&nbsp;января 2027&nbsp;года, выдача призов&nbsp;— до&nbsp;24&nbsp;января.</p>
+          <p className="lead">Организатор&nbsp;— ООО&nbsp;«Торговая сеть Аникс». Покупки и&nbsp;регистрация чеков&nbsp;— с&nbsp;16&nbsp;ноября 2026 по&nbsp;10&nbsp;января 2027&nbsp;года, выдача призов&nbsp;— до&nbsp;12&nbsp;февраля.</p>
           <p style={{ marginTop: 18 }}><Link className="link" to="/rules">Читать полные правила&nbsp;→</Link></p>
         </div>
       </section>

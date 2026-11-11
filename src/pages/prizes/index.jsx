@@ -117,11 +117,11 @@ export default function PrizesPage() {
           <div className="section-head reveal">
             <span className="ribbon ribbon--green">Сертификаты Аникс</span>
             <h2>Розыгрыш сертификатов<br /> ещё до&nbsp;финиша</h2>
-            <p className="lead">Дошли до&nbsp;10‑го или 20‑го шага&nbsp;— можете получить подарочный сертификат Аникс: его получает каждый 30‑й и&nbsp;каждый 100‑й участник недели.</p>
+            <p className="lead">Дошли до&nbsp;10‑го или 20‑го шага&nbsp;— можете получить подарочный сертификат Аникс: его получает каждый 30‑й участник недели.</p>
           </div>
           <div className="certs">
             <CertCard className="reveal" amount="1500" step={10} label="Подарочный сертификат Аникс на 1 500 ₽, каждому 30-му на 10-м шаге" />
-            <CertCard className="reveal" style={d(100)} amount="3000" step={20} label="Подарочный сертификат Аникс на 3 000 ₽, каждому 100-му на 20-м шаге" />
+            <CertCard className="reveal" style={d(100)} amount="3000" step={20} label="Подарочный сертификат Аникс на 3 000 ₽, каждому 30-му на 20-м шаге" />
           </div>
           <p className="certs__note">Счёт участников идёт внутри каждой недели и&nbsp;начинается заново. Подробнее&nbsp;— <Link className="link" to="/conditions#circle">на&nbsp;странице условий акции</Link>.</p>
         </div>
