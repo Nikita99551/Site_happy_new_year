@@ -25,7 +25,7 @@ export function CircleScale({ tasks = false }) {
       <div className="section-head reveal">
         <span className="ribbon ribbon--green">Один круг</span>
         <h2>Один круг&nbsp;— 30&nbsp;шагов</h2>
-        <p className="lead">На&nbsp;10‑м и&nbsp;20‑м шагах разыгрываем сертификаты Аникс. На&nbsp;30‑м вы получаете билет в&nbsp;финальный розыгрыш 12&nbsp;января. В&nbsp;финале 5&nbsp;суперпризов: сертификат на&nbsp;250&nbsp;000&nbsp;₽ на&nbsp;отдых на&nbsp;Алтае, iPhone, стайлер Dyson, телевизор и&nbsp;PlayStation&nbsp;5.</p>
+        <p className="lead">На&nbsp;10‑м и&nbsp;20‑м шагах разыгрываем сертификаты Аникс. На&nbsp;30‑м вы получаете билет в&nbsp;финальный розыгрыш 12&nbsp;января. В&nbsp;финале 5&nbsp;суперпризов: сертификат 250&nbsp;000&nbsp;₽&nbsp;— отдых на&nbsp;Алтае, iPhone, стайлер Dyson, телевизор и&nbsp;PlayStation&nbsp;5.</p>
       </div>
       <div className={`scale reveal${tasks ? ' scale--tasks' : ''}`}>
         <div className="scale__lights"><StepGarland step={30} labels={false} partners={partners} partnerLabel={PARTNER_LABEL} onPartner={onPartner} wire="#173f2a" textColor="#173f2a" startSolid /></div>

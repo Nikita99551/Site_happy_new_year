@@ -64,7 +64,7 @@ export default function PrizesPage() {
         </div>
       </section>
 
-      {/* ===== Суперприз «сертификат на 250 000 ₽ на отдых на Алтае» — самый крупный из 5 (09.11: главных призов пять, не один; 11.11: без «Манжерок», по правилам пп. 9.2, 9.5, 9.6) ===== */}
+      {/* ===== Суперприз «сертификат 250 000 ₽ — отдых на Алтае» — самый крупный из 5 (09.11: главных призов пять, не один; 11.11: без «Манжерок», по правилам пп. 9.2, 9.5, 9.6) ===== */}
       <section className="section section--cream torn-top" id="main-prize">
         <div className="container main-prize">
           <div className="reveal">
@@ -104,7 +104,7 @@ export default function PrizesPage() {
           <div className="section-head reveal" style={{ marginBottom: 0 }}>
             <span className="ribbon ribbon--cream">Еженедельные призы</span>
             <h2>5&nbsp;призов каждую неделю</h2>
-            <p className="lead" style={{ color: 'rgba(255,248,232,.92)' }}>Участвует каждый, у&nbsp;кого есть хотя&nbsp;бы один шаг. Для&nbsp;этого хватит одного чека от&nbsp;600&nbsp;₽.</p>
+            <p className="lead" style={{ color: 'rgba(255,248,232,.92)' }}>Участвует каждый, кто сделал хотя&nbsp;бы один шаг за&nbsp;неделю. Для&nbsp;этого хватит одного чека от&nbsp;600&nbsp;₽.</p>
           </div>
         } after={<p className="prize-note reveal">Изображения призов носят иллюстративный характер: внешний вид, цвет и&nbsp;комплектация призов могут отличаться.</p>}>
           {WEEKLY_PRIZES.map((p, i) => <PrizeCard key={p.id} prize={p} badge={`${i + 1} неделя`} />)}
@@ -132,8 +132,8 @@ export default function PrizesPage() {
         <div className="container">
           <div className="section-head reveal">
             <span className="ribbon">Календарь розыгрышей</span>
-            <h2>Один шаг&nbsp;—<br /> и&nbsp;вы в&nbsp;розыгрыше</h2>
-            <p className="lead">В&nbsp;еженедельных розыгрышах участвует каждый, у&nbsp;кого есть хотя&nbsp;бы один шаг. В&nbsp;финал 12&nbsp;января попадают те, кто прошёл круг из&nbsp;30&nbsp;шагов. Каждый новый круг даёт ещё один билет в&nbsp;финал, и&nbsp;шансов выиграть суперприз становится больше.</p>
+            <h2>Один шаг за&nbsp;неделю&nbsp;—<br /> и&nbsp;вы в&nbsp;розыгрыше</h2>
+            <p className="lead">В&nbsp;еженедельном розыгрыше участвует каждый, кто сделал хотя&nbsp;бы один шаг за&nbsp;неделю перед ним. В&nbsp;финал 12&nbsp;января попадают те, кто прошёл круг из&nbsp;30&nbsp;шагов. Каждый новый круг даёт ещё один билет в&nbsp;финал, и&nbsp;шансов выиграть суперприз становится больше.</p>
           </div>
           <div className="calendar reveal" ref={calendarRef}>
             <svg className="calendar__wire" viewBox="0 0 1312 40" preserveAspectRatio="none" aria-hidden="true"><path d="M0 8 C 220 44 440 44 656 8 C 872 44 1092 44 1312 8" fill="none" stroke="#e2b24a" strokeWidth={2.5} /></svg>
@@ -141,10 +141,10 @@ export default function PrizesPage() {
               {CAMPAIGN.weeklyDraws.map((date, i) => (
                 <div key={date} className="cal-tag"><span className="cal-tag__hole" /><small>Неделя</small><span className="num">{i + 1}</span><b>5 призов</b></div>
               ))}
-              <div className="cal-tag cal-tag--final"><span className="cal-tag__hole" /><span className="cal-tag__frame" aria-hidden="true" /><span className="cal-tag__date"><span className="star-shape" />12&nbsp;января · финал</span><b>5&nbsp;суперпризов: сертификат на&nbsp;250&nbsp;000&nbsp;₽ на&nbsp;отдых на&nbsp;Алтае, iPhone, стайлер Dyson, телевизор и&nbsp;PlayStation&nbsp;5</b></div>
+              <div className="cal-tag cal-tag--final"><span className="cal-tag__hole" /><span className="cal-tag__frame" aria-hidden="true" /><span className="cal-tag__date"><span className="star-shape" />12&nbsp;января · финал</span><b>5&nbsp;суперпризов: сертификат 250&nbsp;000&nbsp;₽&nbsp;— отдых на&nbsp;Алтае, iPhone, стайлер Dyson, телевизор и&nbsp;PlayStation&nbsp;5</b></div>
             </div>
             <div className="calendar__notes">
-              <p>Еженедельный приз стоит до&nbsp;15&nbsp;000&nbsp;₽. Участвуют все, у&nbsp;кого к&nbsp;дате розыгрыша есть хотя&nbsp;бы один шаг. В&nbsp;финале участвуют билеты: один пройденный круг&nbsp;— один билет.</p>
+              <p>Еженедельный приз стоит до&nbsp;15&nbsp;000&nbsp;₽. Участвуют все, кто сделал хотя&nbsp;бы один шаг за&nbsp;неделю перед розыгрышем, с&nbsp;понедельника по&nbsp;воскресенье. Например, для&nbsp;розыгрыша 24&nbsp;ноября засчитываются шаги с&nbsp;16 по&nbsp;22&nbsp;ноября. В&nbsp;финале участвуют билеты: один пройденный круг&nbsp;— один билет.</p>
               <p>Розыгрыши&nbsp;— по&nbsp;вторникам: 24&nbsp;ноября, 1, 8, 15, 22 и&nbsp;29&nbsp;декабря, 5&nbsp;января. Финал&nbsp;— 12&nbsp;января 2027&nbsp;года. Победителей выбирает программа случайным образом. Результаты публикуем на&nbsp;этом сайте на&nbsp;следующий день. <Link className="link" style={{ color: '#e2b24a' }} to="/rules">Полные правила&nbsp;→</Link></p>
             </div>
           </div>

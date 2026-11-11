@@ -21,7 +21,7 @@ export function HowCards() {
         <div className="wavy wavy--green"><span className="wavy__n">2</span><span className="wavy__icon"><IconReceipt /></span><h3>Регистрируйте чек</h3><p>У&nbsp;кассира, на&nbsp;кассе самообслуживания или на&nbsp;этом сайте. До&nbsp;5&nbsp;чеков в&nbsp;день.</p></div>
       </article>
       <article className="how__card reveal" style={d(160)}>
-        <div className="wavy wavy--gold"><span className="wavy__n">3</span><span className="wavy__icon"><IconSteps /></span><h3>Шагайте к&nbsp;призам</h3><p>Каждые 600&nbsp;₽&nbsp;— шаг по&nbsp;маршруту. С&nbsp;первого шага вы участвуете в&nbsp;еженедельных розыгрышах. На&nbsp;10‑м и&nbsp;20‑м шагах разыгрываем сертификаты Аникс, на&nbsp;30‑м вы получаете билет в&nbsp;финал.</p></div>
+        <div className="wavy wavy--gold"><span className="wavy__n">3</span><span className="wavy__icon"><IconSteps /></span><h3>Шагайте к&nbsp;призам</h3><p>Каждые 600&nbsp;₽&nbsp;— шаг по&nbsp;маршруту. Хотя&nbsp;бы один шаг за&nbsp;неделю&nbsp;— и&nbsp;вы в&nbsp;еженедельном розыгрыше. На&nbsp;10‑м и&nbsp;20‑м шагах разыгрываем сертификаты Аникс, на&nbsp;30‑м вы получаете билет в&nbsp;финал.</p></div>
       </article>
     </div>
   );

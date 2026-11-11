@@ -15,6 +15,7 @@ import { RouteTree } from '@/widgets/route-tree/RouteTree';
 import { PartnerTasks } from './ui/PartnerTasks';
 import { PromoCodes } from './ui/PromoCodes';
 import { ReceiptHistory } from './ui/ReceiptHistory';
+import { WeeklyDrawNote } from './ui/WeeklyDrawNote';
 import './RoutePage.scss';
 
 const d = (ms) => ({ '--d': `${ms}ms` });
@@ -141,10 +142,8 @@ export default function RoutePage() {
             <div className="ticket ticket--gold ticket-card reveal" style={d(80)}>
               <img className="ticket-card__seal" src="/img/seal-star.svg" alt="" width={100} height={100} />
               <span className="ticket-card__divider" />
-              {/* Еженедельный розыгрыш — с первого шага (правка 02.11) */}
-              {shown.step > 0 || circlesDone > 0
-                ? <div><b>Вы участвуете в&nbsp;еженедельных розыгрышах</b><p>Розыгрыши по&nbsp;вторникам, с&nbsp;24&nbsp;ноября по&nbsp;5&nbsp;января. Каждую неделю&nbsp;— 5&nbsp;призов.</p><OpenModalButton modal="receipt">Зарегистрировать чек</OpenModalButton></div>
-                : <div><b>Один чек от&nbsp;600&nbsp;₽&nbsp;— и&nbsp;вы в&nbsp;еженедельном розыгрыше</b><OpenModalButton modal="receipt">Зарегистрировать чек</OpenModalButton></div>}
+              {/* Еженедельный розыгрыш — нужен шаг за неделю перед ним (п. 8.3 правил, 11.11 вечер) */}
+              <WeeklyDrawNote user={user} />
             </div>
             <div className="share-tag reveal" style={d(160)}>
               <b>Поделитесь прогрессом в&nbsp;чате магазина</b>
