@@ -188,7 +188,7 @@ export function HomePage() {
               <div className="numbers__row"><div><b>Столько длится акция</b><p>С&nbsp;16&nbsp;ноября 2026 по&nbsp;10&nbsp;января 2027&nbsp;года.</p></div><div className="numbers__val"><CountUp value={8} /><small>недель</small></div></div>
               <div className="numbers__row"><div><b>Один круг маршрута</b><p>Каждые полные 600&nbsp;₽ в&nbsp;чеке&nbsp;— один шаг.</p></div><div className="numbers__val"><CountUp value={30} /><small>шагов</small></div></div>
               <div className="numbers__row"><div><b>Еженедельные розыгрыши</b><p>7&nbsp;недель по&nbsp;5&nbsp;призов, каждый до&nbsp;15&nbsp;000&nbsp;₽. Участвуют все, у&nbsp;кого есть хотя&nbsp;бы один шаг.</p></div><div className="numbers__val"><CountUp value={35} /><small>призов</small></div></div>
-              <div className="numbers__row"><div><b>Финал 12&nbsp;января</b><p>5&nbsp;суперпризов: сертификат на&nbsp;250&nbsp;000&nbsp;₽ на&nbsp;отдых на&nbsp;курорте «Манжерок» (Алтай), смартфон iPhone&nbsp;18&nbsp;Pro, стайлер Dyson, телевизор Xiaomi&nbsp;65″ и&nbsp;PlayStation&nbsp;5. Билет в&nbsp;финал даёт каждый пройденный круг из&nbsp;30&nbsp;шагов.</p></div><div className="numbers__val"><CountUp value={5} /><small>призов</small></div></div>
+              <div className="numbers__row"><div><b>Финал 12&nbsp;января</b><p>5&nbsp;суперпризов: сертификат на&nbsp;250&nbsp;000&nbsp;₽ на&nbsp;отдых на&nbsp;Алтае, смартфон iPhone&nbsp;18&nbsp;Pro, стайлер Dyson, телевизор Xiaomi&nbsp;65″ и&nbsp;PlayStation&nbsp;5. Билет в&nbsp;финал даёт каждый пройденный круг из&nbsp;30&nbsp;шагов.</p></div><div className="numbers__val"><CountUp value={5} /><small>призов</small></div></div>
             </div>
           </div>
           {/* Карточка графика отстаёт от текста слева (дальний слой), скрепка на ней едет быстрее (ближний) */}
@@ -283,7 +283,7 @@ export function HomePage() {
               <p className="lead" style={{ color: 'rgba(255,248,232,.92)' }}>Участвует каждый, у&nbsp;кого есть хотя&nbsp;бы один шаг. Для&nbsp;этого хватит одного чека от&nbsp;600&nbsp;₽.</p>
             </div>
           }
-          after={<><p className="prize-note reveal">Изображения призов носят иллюстративный характер: внешний вид, цвет и&nbsp;комплектация призов могут отличаться.</p><div className="final-strip reveal"><span className="star-shape" /><p><b>А&nbsp;12&nbsp;января&nbsp;— финал</b>5&nbsp;суперпризов: <span className="final-strip__prize">сертификат на&nbsp;250&nbsp;000&nbsp;₽</span> на&nbsp;отдых на&nbsp;курорте «Манжерок», iPhone, стайлер Dyson, телевизор и&nbsp;PlayStation&nbsp;5. Каждый пройденный круг из&nbsp;30&nbsp;шагов&nbsp;— билет в&nbsp;финал: чем больше билетов, тем больше шансов.</p><Button to="/prizes">Посмотреть все призы</Button></div></>}
+          after={<><p className="prize-note reveal">Изображения призов носят иллюстративный характер: внешний вид, цвет и&nbsp;комплектация призов могут отличаться.</p><div className="final-strip reveal"><span className="star-shape" /><p><b>А&nbsp;12&nbsp;января&nbsp;— финал</b>5&nbsp;суперпризов: <span className="final-strip__prize">сертификат на&nbsp;250&nbsp;000&nbsp;₽</span> на&nbsp;отдых на&nbsp;Алтае, iPhone, стайлер Dyson, телевизор и&nbsp;PlayStation&nbsp;5. Каждый пройденный круг из&nbsp;30&nbsp;шагов&nbsp;— билет в&nbsp;финал: чем больше билетов, тем больше шансов.</p><Button to="/prizes">Посмотреть все призы</Button></div></>}
         >
           {WEEKLY_PRIZES.map((p, i) => <PrizeCard key={p.id} prize={p} badge={`${i + 1} неделя`} />)}
         </Carousel>

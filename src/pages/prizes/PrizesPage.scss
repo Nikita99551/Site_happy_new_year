@@ -199,14 +199,14 @@
 .pfact__pic--weekly > img:nth-child(3) { left: 50%; height: 56%; }
 .pfact__pic--weekly > img:nth-child(4) { right: 0; height: 40%; }
 .pfact__tag { position: absolute; z-index: 2; left: 12px; top: -18px; padding: 6px 12px; background: var(--rd); color: var(--cr); font-weight: 800; font-size: 15px; line-height: 1.1; white-space: nowrap; rotate: -4deg; box-shadow: 0 6px 12px rgba(0, 10, 4, 0.3); }
-/* 5 — суперприз «Манжерок» (фото) и ещё четыре суперприза: телевизор сзади, стайлер, консоль, впереди смартфон */
+/* 5 — суперприз «отдых на Алтае» (фото) и ещё четыре суперприза: телевизор сзади, стайлер, консоль, впереди смартфон */
 .pfact__pic--final > img:nth-child(1) { left: 30%; bottom: 36%; height: 56%; }
 .pfact__pic--final > img:nth-child(2) { right: 18%; bottom: 3%; height: 84%; }
 .pfact__pic--final > img:nth-child(3) { right: -1%; height: 94%; }
 .pfact__pic--final > img:nth-child(5) { left: 38%; height: 58%; }
 .pfact__photo { left: 0; bottom: 3% !important; width: 40%; padding: 5px 5px 20px; background: #fff; box-shadow: 0 6px 12px rgba(0, 10, 4, 0.28); rotate: -7deg; container-type: inline-size; }
 .pfact__photo img { display: block; width: 100%; aspect-ratio: 4 / 3; object-fit: cover; }
-/* Подпись по ширине полароида: на планшете 1024 «Манжерок» вылезала за рамку на 9 px */
+/* Подпись по ширине полароида: на планшете 1024 прежняя подпись «Манжерок» вылезала за рамку на 9 px */
 .pfact__photo i { position: absolute; left: 7px; bottom: 1px; font-family: var(--font-display); font-size: min(15px, 15.5cqi); color: var(--g); white-space: nowrap; }
 
 @include hover {

@@ -54,7 +54,7 @@ export default function PrizesPage() {
                 <img src="/img/thumbs/final-tv-xiaomi.webp" alt="" width={440} height={274} />
                 <img src="/img/thumbs/final-dyson.webp" alt="" width={244} height={440} />
                 <img src="/img/thumbs/final-ps5.webp" alt="" width={227} height={440} />
-                <span className="pfact__photo"><img src="/img/thumbs/altai.webp" alt="" width={400} height={300} /><i>Манжерок</i></span>
+                <span className="pfact__photo"><img src="/img/thumbs/altai.webp" alt="" width={400} height={300} /><i>Алтай</i></span>
                 <img src="/img/thumbs/final-iphone.webp" alt="" width={365} height={440} />
               </span>
               <span className="pfact__text"><CountUp value={5} duration={800} /><small>суперпризов в&nbsp;финале</small></span>
@@ -64,13 +64,13 @@ export default function PrizesPage() {
         </div>
       </section>
 
-      {/* ===== Суперприз «Манжерок» — самый крупный из 5 (правка 09.11: главных призов пять, не один) ===== */}
+      {/* ===== Суперприз «сертификат на 250 000 ₽ на отдых на Алтае» — самый крупный из 5 (09.11: главных призов пять, не один; 11.11: без «Манжерок», по правилам пп. 9.2, 9.5, 9.6) ===== */}
       <section className="section section--cream torn-top" id="main-prize">
         <div className="container main-prize">
           <div className="reveal">
             <span className="ribbon ribbon--green">Суперприз · финал</span>
-            <h2 style={{ marginTop: 24 }}>Сертификат на&nbsp;250&nbsp;000&nbsp;₽ на&nbsp;курорт «Манжерок»</h2>
-            <p className="lead">Самый крупный из&nbsp;5&nbsp;суперпризов финального розыгрыша 12&nbsp;января 2027&nbsp;года&nbsp;— отдых на&nbsp;всесезонном курорте «Манжерок» в&nbsp;Горном Алтае. Участвуют все, кто прошёл 30&nbsp;шагов.</p>
+            <h2 style={{ marginTop: 24 }}>Сертификат на&nbsp;250&nbsp;000&nbsp;₽ на&nbsp;отдых на&nbsp;Алтае</h2>
+            <p className="lead">Самый крупный из&nbsp;5&nbsp;суперпризов финального розыгрыша 12&nbsp;января 2027&nbsp;года&nbsp;— семейное путешествие на&nbsp;Алтай. Сертификат с&nbsp;открытой датой, воспользоваться им можно до&nbsp;29&nbsp;декабря 2028&nbsp;года. Участвуют все, кто прошёл 30&nbsp;шагов.</p>
           </div>
           <div className="main-prize__wrap reveal" style={d(120)}>
             <img className="main-prize__branch" src="/img/branch.webp" alt="" width={200} height={214} loading="lazy" decoding="async" />
@@ -141,7 +141,7 @@ export default function PrizesPage() {
               {CAMPAIGN.weeklyDraws.map((date, i) => (
                 <div key={date} className="cal-tag"><span className="cal-tag__hole" /><small>Неделя</small><span className="num">{i + 1}</span><b>5 призов</b></div>
               ))}
-              <div className="cal-tag cal-tag--final"><span className="cal-tag__hole" /><span className="cal-tag__frame" aria-hidden="true" /><span className="cal-tag__date"><span className="star-shape" />12&nbsp;января · финал</span><b>5&nbsp;суперпризов: отдых на&nbsp;курорте «Манжерок», iPhone, стайлер Dyson, телевизор и&nbsp;PlayStation&nbsp;5</b></div>
+              <div className="cal-tag cal-tag--final"><span className="cal-tag__hole" /><span className="cal-tag__frame" aria-hidden="true" /><span className="cal-tag__date"><span className="star-shape" />12&nbsp;января · финал</span><b>5&nbsp;суперпризов: сертификат на&nbsp;250&nbsp;000&nbsp;₽ на&nbsp;отдых на&nbsp;Алтае, iPhone, стайлер Dyson, телевизор и&nbsp;PlayStation&nbsp;5</b></div>
             </div>
             <div className="calendar__notes">
               <p>Еженедельный приз стоит до&nbsp;15&nbsp;000&nbsp;₽. Участвуют все, у&nbsp;кого к&nbsp;дате розыгрыша есть хотя&nbsp;бы один шаг. В&nbsp;финале участвуют билеты: один пройденный круг&nbsp;— один билет.</p>
