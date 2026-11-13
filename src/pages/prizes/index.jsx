@@ -76,7 +76,7 @@ export default function PrizesPage() {
             <img className="main-prize__branch" src="/img/branch.webp" alt="" width={200} height={214} loading="lazy" decoding="async" />
             <figure className="photo-card" style={{ margin: 0 }}>
               <span className="photo-card__tape" aria-hidden="true" />
-              <img src="/img/altai.webp" alt="Зимний Алтай: горы, река и ели" width={1400} height={700} decoding="async" style={{ background: `center / cover url(${ALTAI_BLUR})` }} />
+              <img src="/img/altai.webp" srcSet={['/img/altai-800.webp 800w', '/img/altai.webp 1400w'].join(', ')} sizes="(max-width: 1024px) 90vw, 52vw" alt="Зимний Алтай: горы, река и ели" width={1400} height={700} decoding="async" style={{ background: `center / cover url(${ALTAI_BLUR})` }} />
               <figcaption>Алтай</figcaption>
             </figure>
             <span className="seal seal--red main-prize__badge"><span className="num">1</span><small>из&nbsp;5<br />призов</small></span>

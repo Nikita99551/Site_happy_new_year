@@ -46,7 +46,7 @@
 }
 @include below-md {
   .doc-hero { padding-top: 20px; padding-bottom: 48px; }
-  .doc-hero h1 { max-width: none; font-size: clamp(36px, 10vw, 44px); }
+  .doc-hero h1 { max-width: none; font-size: min(clamp(36px, 10vw, 44px), calc((100vw - 2 * var(--gutter)) / (var(--longest, 10) * 0.7))); }
   .doc-hero__goat { display: none; }
   .doc-hero__branch { display: none; }
   .doc { padding-block: 24px 40px; }

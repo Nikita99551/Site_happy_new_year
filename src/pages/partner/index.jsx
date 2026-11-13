@@ -9,6 +9,15 @@ import { TaskSection } from './ui/TaskSection';
 import './PartnerPage.scss';
 
 const d = (ms) => ({ '--d': `${ms}ms` });
+
+/**
+ * Значение в блоке цифр «О компании». Длинное слово («Боголюбово») на телефоне не помещалось в свою колонку
+ * и уходило за экран: слова длиннее 7 букв уменьшаются ровно настолько, чтобы занять то же место, что 7 букв (13.11).
+ */
+function FactValue({ value }) {
+  const longest = Math.max(...String(value).split(/\s+/).map((w) => w.length));
+  return <span style={longest > 7 ? { fontSize: `${(7 / longest).toFixed(3)}em` } : undefined}>{value}</span>;
+}
 const N = CAMPAIGN.partnerItemsPerStep;
 
 /**
@@ -91,7 +100,7 @@ export default function PartnerPage() {
             {partner.facts.length > 0 && (
               <div className="facts partner-about__facts reveal" style={d(120)}>
                 {partner.facts.map((f) => (
-                  <div className="fact" key={f.label}><span className="num num-red">{f.value}</span><small>{f.label}</small></div>
+                  <div className="fact" key={f.label}><span className="num num-red"><FactValue value={f.value} /></span><small>{f.label}</small></div>
                 ))}
               </div>
             )}

@@ -158,7 +158,6 @@ export const httpApi = {
   },
 
   sample() {
-    console.log("mok")
     return mockApi.sample();
   },
 
@@ -206,7 +205,6 @@ export const httpApi = {
 
   // ЗАГЛУШКА (согласовать с бэкендом): тот же адрес, что в QR-коде на чеке, но POST — GET этого адреса открывает сайт (README, «Чек по QR-коду»)
   registerReceiptQr(code) {
-    console.log("code",code)
     return request(`/checks/me`, { method: 'POST', body: JSON.stringify({ code }) });
   },
 

@@ -40,7 +40,8 @@ export function DocumentPage({ doc, title }) {
         <div className="container" style={{ position: 'relative', zIndex: 1 }}>
           <Link className="doc-hero__back reveal tap-area" to="/">←&nbsp; На главную</Link>
           <div><span className="ribbon reveal" style={{ '--d': '40ms' }}>Документ</span></div>
-          <h1 className="reveal" style={{ '--d': '80ms' }}>{doc.title}</h1>
+          {/* --longest — букв в самом длинном слове: на телефоне заголовок уменьшается, чтобы слово («распространение») не уходило за экран (13.11) */}
+          <h1 className="reveal" style={{ '--d': '80ms', '--longest': Math.max(...doc.title.split(/\s+/).map((w) => w.length)) }}>{doc.title}</h1>
           <p className="lead reveal" style={{ '--d': '120ms' }}>{doc.lead}</p>
         </div>
       </section>

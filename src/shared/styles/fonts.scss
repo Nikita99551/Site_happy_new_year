@@ -25,10 +25,8 @@ $lat: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0
 
 @include face('Fira Sans Extra Condensed', 'FiraSansExtraCondensed-700-normal', 700);
 @include face('Fira Sans Extra Condensed', 'FiraSansExtraCondensed-900-normal', 900);
-@include face('Manrope', 'Manrope-400-normal', 400);
-@include face('Manrope', 'Manrope-500-normal', 500);
-@include face('Manrope', 'Manrope-600-normal', 600);
-@include face('Manrope', 'Manrope-700-normal', 700);
-@include face('Manrope', 'Manrope-800-normal', 800);
+// Manrope — вариативный шрифт: файлы 400…800 побайтно одинаковые, а браузер качал каждый отдельно (до 5 раз по 40 КБ).
+// Теперь один файл на все начертания 400–800 (правка 13.11, итоговая проверка скорости).
+@include face('Manrope', 'Manrope-400-normal', 400 800);
 @include face('Playfair Display', 'PlayfairDisplay-900-normal', 900);
 @include face('Playfair Display', 'PlayfairDisplay-900-italic', 900, italic);

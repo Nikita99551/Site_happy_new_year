@@ -24,7 +24,6 @@ const d = (ms) => ({ '--d': `${ms}ms` });
 export default function RoutePage() {
 
   const { user, ready, selectedStore } = useSession();
-  console.log("RoutePage, user:", user);
   const { open, state: modal } = useModal();
   const reduced = useReducedMotion();
   const guest = !user;
