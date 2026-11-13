@@ -2,7 +2,6 @@ import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useSession } from '@/entities/user';
 import { useModal } from '@/features/modal';
-import { SoonLink } from '@/shared/ui/soon-link/SoonLink';
 import { formatPhone, isValidPhone, normalizePhone } from '@/shared/lib/phone';
 import { Button } from '@/shared/ui/button/Button';
 import { Check, Field } from '@/shared/ui/field/Field';
@@ -91,7 +90,7 @@ export function RegisterModal({ open }) {
                     Я ознакомился(ась) и&nbsp;принимаю <Link className="link" to="/rules" target="_blank" rel="noopener">Правила акции</Link> «Год Козы&nbsp;— лови призы»
                 </Check>
                 <Check name="consentPd" required checked={pd} onChange={(e) => setPd(e.target.checked)} error={errors.pd}>
-                    Я даю <SoonLink className="link">согласие на&nbsp;обработку моих персональных данных</SoonLink>
+                    Я даю <Link className="link" to="/policy" target="_blank" rel="noopener">согласие на&nbsp;обработку моих персональных данных</Link>
                 </Check>
                 <div className="modal__actions"><Button block type="submit" disabled={busy}>{busy ? 'Секунду…' : 'Зарегистрироваться'}</Button></div>
                 <p className="modal__foot">Уже есть кабинет? <button type="button" className="link" onClick={() => openModal('login')}>Войти</button></p>

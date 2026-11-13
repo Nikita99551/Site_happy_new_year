@@ -8,6 +8,15 @@ const pad = (n) => String(n).padStart(2, '0');
 function Block({ block }) {
   if (block.type === 'p') return <p>{block.text}</p>;
   if (block.type === 'ul') return <ul>{block.items.map((it) => <li key={it}>{it}</li>)}</ul>;
+  // Широкая таблица (больше двух столбцов, как перечень лиц в политике ПДн) — карточкой «столбец — значение»:
+  // пять столбцов не помещаются в лист даже на компьютере (11.11)
+  if (block.head.length > 2) {
+    return block.rows.map((r) => (
+      <dl key={r[0]} className="doc__rows">
+        {r.map((c, i) => <div key={i}><dt>{block.head[i]}</dt><dd>{c}</dd></div>)}
+      </dl>
+    ));
+  }
   return (
     <table>
       <thead><tr>{block.head.map((h) => <th key={h}>{h}</th>)}</tr></thead>

@@ -36,6 +36,12 @@
 .doc__body th, .doc__body td { padding: 8px 16px 8px 0; text-align: left; border-bottom: 1px solid var(--kr); font-weight: 500; vertical-align: top; }
 .doc__body th { font-weight: 800; color: var(--g); }
 .doc__body td:last-child { font-weight: 800; color: var(--g); }
+/* Широкая таблица карточкой: подпись столбца над значением, строки разделены линией */
+.doc__rows { margin: 16px 0 0; padding: 4px 20px; border: 1.5px solid var(--kr); border-radius: 6px; }
+.doc__rows > div { padding: 12px 0; }
+.doc__rows > div + div { border-top: 1px solid var(--kr); }
+.doc__rows dt { font-weight: 800; color: var(--g); }
+.doc__rows dd { margin: 4px 0 0; }
 .doc__pre { padding: 32px 0 40px 66px; border-bottom: 1.5px dashed var(--kr); }
 @include below-lg {
   .doc__grid { grid-template-columns: 1fr; gap: 40px; }

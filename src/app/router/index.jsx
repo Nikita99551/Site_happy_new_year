@@ -31,7 +31,12 @@ function withReload(importer) {
 const RoutePage = lazy(withReload(() => import('@/pages/route')));
 const ConditionsPage = lazy(withReload(() => import('@/pages/conditions')));
 const PrizesPage = lazy(withReload(() => import('@/pages/prizes')));
-const RulesPage = lazy(() => withReload(() => import('@/pages/document'))().then((m) => ({ default: m.RulesPage })));
+const loadDocument = withReload(() => import('@/pages/document'));
+const RulesPage = lazy(() => loadDocument().then((m) => ({ default: m.RulesPage })));
+// Документы о персональных данных открыты в показе с 13.11 (на них ссылаются галочки регистрации)
+const PolicyPage = lazy(() => loadDocument().then((m) => ({ default: m.PolicyPage })));
+const PrivacyPage = lazy(() => loadDocument().then((m) => ({ default: m.PrivacyPage })));
+const PublishConsentPage = lazy(() => loadDocument().then((m) => ({ default: m.PublishConsentPage })));
 const PartnerPage = lazy(withReload(() => import('@/pages/partner')));
 const NotFoundPage = lazy(withReload(() => import('@/pages/not-found')));
 
@@ -68,6 +73,9 @@ export function AppRouter() {
         <Route path={ROUTES.conditions} element={<ConditionsPage />} />
         <Route path={ROUTES.prizes} element={<PrizesPage />} />
         <Route path={ROUTES.rules} element={<RulesPage />} />
+        <Route path={ROUTES.policy} element={<PolicyPage />} />
+        <Route path={ROUTES.privacy} element={<PrivacyPage />} />
+        <Route path={ROUTES.publishConsent} element={<PublishConsentPage />} />
         <Route path={ROUTES.partner} element={<Navigate to="/#partners" replace />} />
         <Route path={`${ROUTES.partner}/:slug`} element={<PartnerPage />} />
         {/* Другие адреса (и ещё не показанные страницы) — своя страница 404 */}

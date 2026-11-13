@@ -1,5 +1,4 @@
 import { Link } from 'react-router-dom';
-import { SoonLink } from '@/shared/ui/soon-link/SoonLink';
 import './Footer.scss';
 
 /** Подвал: логотип, разделы, правила и согласие. compact — только нижняя строка (страницы-документы).
@@ -22,7 +21,8 @@ export function Footer({ compact = false, adNote = false }) {
         <div className="footer__bottom">
           <span>© Аникс, 2026–2027</span>
           <Link to="/rules">Правила акции</Link>
-          <SoonLink>Обработка персональных данных</SoonLink>
+          <Link to="/policy">Обработка персональных данных</Link>
+          <Link to="/privacy">Политика обработки данных</Link>
         </div>
         {/* Пометка рекламы (Никита, 13.11.2026): только на страницах партнёров, текст дословно; неразрывные пробелы только против переносов */}
         {adNote && (

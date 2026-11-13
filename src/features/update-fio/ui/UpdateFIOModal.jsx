@@ -1,6 +1,6 @@
 import { useState } from 'react';
+import { Link } from 'react-router-dom';
 import { useModal } from '@/features/modal';
-import { SoonLink } from '@/shared/ui/soon-link/SoonLink';
 import { errorText } from '@/shared/lib/errors';
 import { Button } from '@/shared/ui/button/Button';
 import { Field } from '@/shared/ui/field/Field';
@@ -70,7 +70,7 @@ export function UpdateFIOModal({ open, onSave, onClose }) {
         <Field label="Фамилия, имя, отчество" type="text" name="fio" autoComplete="name" placeholder="Иванова Анна Сергеевна" maxLength={120} required
           value={fio} onChange={(e) => { setFio(e.target.value); if (error) setError(''); }} error={error} />
         <div className="modal__actions"><Button block type="submit" disabled={busy}>{busy ? 'Секунду…' : 'Сохранить'}</Button></div>
-        <p className="modal__foot">Нажимая «Сохранить», вы&nbsp;даёте <SoonLink className="link">согласие на&nbsp;обработку персональных данных</SoonLink></p>
+        <p className="modal__foot">Нажимая «Сохранить», вы&nbsp;даёте <Link className="link" to="/policy" target="_blank" rel="noopener">согласие на&nbsp;обработку персональных данных</Link></p>
       </form>
     </Modal>
   );
