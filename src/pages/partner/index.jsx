@@ -53,7 +53,7 @@ export default function PartnerPage() {
               <Link className="partner-hero__task reveal" style={d(240)} to="#task">
                 <svg className="partner-hero__task-box" viewBox="0 0 48 48" aria-hidden="true"><PartnerBox x={24} y={24} s={44} /></svg>
                 {taskOpen
-                  ? <span><b>Задание партнёра: «{task.title}»</b><small>Задание открыто. Смотрите ответы участников&nbsp;↓</small></span>
+                  ? <span><b>Задание партнёра: «{task.title}»</b><small>{task.hiddenAnswers ? <>Задание открыто. Ответить можно ниже&nbsp;↓</> : <>Задание открыто. Смотрите ответы участников&nbsp;↓</>}</small></span>
                   : <span><b>Задание партнёра на&nbsp;{task.step}‑м шаге</b><small>Откроется, когда вы дойдёте до&nbsp;{task.step}‑го шага&nbsp;↓</small></span>}
               </Link>
             )}

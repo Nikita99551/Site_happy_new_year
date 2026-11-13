@@ -18,3 +18,11 @@
   .task-note { margin: 12px 0 16px; font-size: 16px; }
   .task-prize { margin-top: 14px; font-size: 17px; }
 }
+/* Кто получит приз (правка 13.11: у Cola Bochkari — первые 20 правильных ответов, у «Алмака» — 3 призовых места) */
+.task-prize__who { display: block; margin-top: 4px; font-weight: 600; font-size: 16px; line-height: 1.4; color: var(--mu); }
+/* Невысокий телефон (360×640): окно без прокрутки — текст задания до 4 строк, «кто получит приз» не показываем.
+   Всё целиком — на странице партнёра, куда ведёт кнопка «Выполнить задание» */
+@media (max-width: 600px) and (max-height: 700px) {
+  .task-card p { display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 4; overflow: hidden; }
+  .task-prize__who { display: none; }
+}

@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { getPartner, partnerPath } from '@/entities/partner';
 import { useSession } from '@/entities/user';
 import { useModal } from '@/features/modal';
-import { CAMPAIGN, PARTNER_TASKS, stepsCostText } from '@/shared/config/campaign';
+import { CAMPAIGN, PARTNER_LABEL, PARTNER_TASKS, readyTask, stepsCostText } from '@/shared/config/campaign';
 import { plural } from '@/shared/lib/text';
 import { Button } from '@/shared/ui/button/Button';
 import { PartnerBox } from '@/shared/ui/lights';
@@ -21,9 +21,11 @@ export function PartnerTaskModal({ open }) {
   const [step, setStep] = useState(CAMPAIGN.partnerStops[0]);
   const asked = state?.name === 'task' ? state.payload?.step : undefined;
   if (asked !== undefined && asked !== step) setStep(asked);
-  // Страница партнёра скрыта (в показе видны не все) — задание ещё «скоро появится», ссылки нет
-  const t = getPartner(PARTNER_TASKS[step]?.slug) ? PARTNER_TASKS[step] : null;
-  const partner = getPartner(t?.slug)?.title ?? 'С родной земли';
+  // Партнёр шага известен, а задание ещё готовится (СПК, 13.11) — его имя есть, в коробке «Скоро появится».
+  // Страницы партнёра нет на сайте — задания тоже нет, ссылки нет
+  const who = getPartner(PARTNER_TASKS[step]?.slug);
+  const t = who ? readyTask(step) : null;
+  const partner = who?.title ?? PARTNER_LABEL;
   const prize = t?.prize;
   // Пройденный круг открывает задания на всех шагах
   const reached = Boolean(user) && (user.step >= step || user.circlesDone > 0);
@@ -61,9 +63,9 @@ export function PartnerTaskModal({ open }) {
           {t ? <><b>{t.title}</b><p>{t.task}</p></> : <><b>Скоро появится здесь</b><p>Партнёр готовит задание. Когда оно будет готово, здесь появится, что нужно сделать и&nbsp;какие призы разыгрываются.</p></>}
         </div>
       )}
-      <p className="task-prize"><small>Разыгрывает партнёр</small>{prize ?? 'Приз партнёр объявит позже'}</p>
+      <p className="task-prize"><small>Приз</small>{prize ?? 'Приз партнёр объявит позже'}{t?.winners && <span className="task-prize__who">{t.winners}</span>}</p>
       {/* Вместо списка 1-2-3 одна строка (правка 03.11): окно помещается и на невысоком телефоне */}
-      <p className="task-note">Выполнять не&nbsp;обязательно. Ответ отправляют на&nbsp;странице партнёра, там&nbsp;же ответы других участников.</p>
+      <p className="task-note">Выполнять не&nbsp;обязательно. Ответ отправляют на&nbsp;странице партнёра{t?.hiddenAnswers ? '' : <>, там&nbsp;же ответы других участников</>}.</p>
       <div className="modal__actions">{action}</div>
     </Modal>
   );

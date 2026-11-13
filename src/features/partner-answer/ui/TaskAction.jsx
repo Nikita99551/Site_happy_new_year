@@ -1,6 +1,6 @@
 import { useSession } from '@/entities/user';
 import { useModal } from '@/features/modal';
-import { isTaskOpen, stepsCostText } from '@/shared/config/campaign';
+import { isTaskOpen, stepsCostText, taskOfPartner } from '@/shared/config/campaign';
 import { plural } from '@/shared/lib/text';
 import { Button } from '@/shared/ui/button/Button';
 import { IconHeart } from '@/shared/ui/icons/Icons';
@@ -9,18 +9,22 @@ import { IconHeart } from '@/shared/ui/icons/Icons';
  * Что может сделать участник с заданием партнёра (правка 08.11): одна строка пояснения и одна кнопка.
  * Гость — войти; не дошёл до шага — сколько осталось и «Зарегистрировать чек»; дошёл — «Ответить»;
  * уже ответил — статус своего ответа и «Посмотреть». compact — для окна «Все ответы» (кнопка поменьше, без «чека»).
+ * Викторина (hiddenAnswers, 13.11): ответ не публикуется — так и пишем, кнопки «Посмотреть мой ответ» нет.
  */
 export function TaskAction({ slug, step, mine, compact = false }) {
   const { user, ready } = useSession();
   const { open } = useModal();
   if (!ready) return null;
   const small = compact || undefined;
+  const hidden = Boolean(taskOfPartner(slug)?.hiddenAnswers);
 
   let text;
   let action = null;
   if (!user) {
     text = <>Войдите, чтобы видеть свои шаги.</>;
     action = <Button small={small} onClick={() => open('auth')}>Войти или зарегистрироваться</Button>;
+  } else if (mine && mine.status !== 'rejected' && hidden) {
+    text = <>Ваш ответ принят. Итоги подведёт партнёр.</>;
   } else if (mine && mine.status !== 'rejected') {
     text = mine.status === 'review'
       ? <>Ваш ответ на&nbsp;проверке. После проверки его увидят все участники.</>
@@ -33,7 +37,9 @@ export function TaskAction({ slug, step, mine, compact = false }) {
   } else {
     text = mine?.status === 'rejected'
       ? <>Ответ не&nbsp;прошёл проверку. Можно отправить другой.</>
-      : <>Задание открыто. Ответ увидят все участники после проверки.</>;
+      : hidden
+        ? <>Задание открыто. Ответить можно один раз, ответ увидят только организатор и&nbsp;партнёр.</>
+        : <>Задание открыто. Ответ увидят все участники после проверки.</>;
     action = <Button small={small} onClick={() => open('answer', { slug })}>{mine ? 'Ответить ещё раз' : 'Ответить на задание'}</Button>;
   }
 

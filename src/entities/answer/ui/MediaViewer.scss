@@ -35,3 +35,17 @@ video.viewer__media { min-width: min(320px, calc(100vw - 48px)); }
   .viewer__media { max-width: calc(100vw - 20px); max-height: calc(100dvh - 110px); }
   .viewer__close { right: 4px; top: -8px; width: 44px; height: 44px; }
 }
+
+/* Несколько фото в ответе (правка 13.11): стрелки и «Фото 2 из 3» над подписью; ←/→ на клавиатуре тоже листают */
+.viewer__cap { display: flex; flex-direction: column; align-items: center; gap: 10px; }
+.viewer__nav { display: inline-flex; align-items: center; gap: 14px; }
+.viewer__arrow {
+  display: grid; place-items: center; width: 48px; height: 48px; border: 0; border-radius: 50%;
+  background: var(--cr); color: var(--g); box-shadow: 0 4px 14px rgba(0, 0, 0, 0.35); cursor: pointer;
+}
+.viewer__arrow svg { width: 20px; height: 20px; }
+.viewer__arrow:focus-visible { outline: 3px solid var(--go); outline-offset: 2px; }
+.viewer__num { min-width: 7.5em; font-weight: 800; font-variant-numeric: tabular-nums; }
+@media (max-width: 600px) {
+  .viewer__arrow { width: 44px; height: 44px; }
+}

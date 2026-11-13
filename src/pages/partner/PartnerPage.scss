@@ -258,3 +258,15 @@
 @media (max-width: 400px) { .good__title { -webkit-line-clamp: 4; min-height: calc(4 * 1.25em); font-size: 14px; } }
 @media (max-width: 374px) { .good__title { font-size: 13px; } }
 @media (max-width: 350px) { .goods { grid-template-columns: minmax(0, 1fr); } .good__title { min-height: 0; font-size: 15px; } }
+
+/* Настоящие задания (правка 13.11): условия по пунктам, приз и кто его получит */
+.ptask__rules { display: grid; gap: 10px; margin: 18px 0 0; padding: 0; list-style: none; counter-reset: rule; }
+.ptask__rules li {
+  position: relative; padding-left: 44px; font-size: clamp(17px, 1.2vw, 19px); line-height: 1.45; counter-increment: rule; text-wrap: pretty;
+}
+.ptask__rules li::before {
+  content: counter(rule); position: absolute; left: 0; top: -1px; display: grid; place-items: center; width: 30px; height: 30px;
+  border-radius: 50%; background: var(--g); color: var(--cr); font-family: var(--font-num); font-weight: 800; font-size: 18px;
+}
+.ptask__prize p { margin: 0; }
+.ptask__prize .ptask__winners { margin-top: 8px; font-weight: 600; font-size: 17px; line-height: 1.4; color: var(--mu); }

@@ -1,7 +1,8 @@
 import { useLayoutEffect, useRef, useState } from 'react';
 import { formatDuration } from '@/shared/lib/media';
 import { formatDay } from '@/shared/lib/text';
-import { IconHeart, IconPlay } from '@/shared/ui/icons/Icons';
+import { IconHeart, IconPhoto, IconPlay } from '@/shared/ui/icons/Icons';
+import { answerPhotos } from '../model/answers';
 import './AnswerCard.scss';
 
 /** Цвет кружка с буквой имени: свой у каждого имени, из цветов кампании */
@@ -55,7 +56,9 @@ export function AnswerCard({ answer, layout = 'column', lines = 5, expanded = fa
     return () => ro.disconnect();
   }, [answer.text, lines]);
 
-  const media = answer.video ?? answer.photo;
+  // До 3 фото в ответе (правка 13.11): в карточке первое, сколько всего — значком; остальные листаются в просмотре
+  const photos = answerPhotos(answer);
+  const media = answer.video ?? photos[0];
   const meta = [answer.place, formatDay(answer.at)].filter(Boolean).join(' · ');
   const statusText = answer.status === 'review' ? 'На проверке — пока его видите только вы' : answer.status === 'rejected' ? 'Не прошёл проверку' : '';
 
@@ -66,9 +69,10 @@ export function AnswerCard({ answer, layout = 'column', lines = 5, expanded = fa
           type="button"
           className={`answer__media${answer.video ? ' answer__media--video' : ''}`}
           onClick={() => onMedia?.(answer)}
-          aria-label={answer.video ? `Смотреть видео: ${answer.author}` : `Открыть фото крупно: ${answer.author}`}
+          aria-label={answer.video ? `Смотреть видео: ${answer.author}` : photos.length > 1 ? `Открыть ${photos.length} фото крупно: ${answer.author}` : `Открыть фото крупно: ${answer.author}`}
         >
-          <img src={answer.video ? answer.video.poster : answer.photo.src} alt="" loading="lazy" decoding="async" />
+          <img src={answer.video ? answer.video.poster : photos[0].src} alt="" loading="lazy" decoding="async" />
+          {!answer.video && photos.length > 1 && <span className="answer__count" aria-hidden="true"><IconPhoto />{photos.length}</span>}
           {answer.video && <span className="answer__play"><IconPlay /></span>}
           {answer.video && answer.video.duration > 0 && <span className="answer__dur">{formatDuration(answer.video.duration)}</span>}
         </button>

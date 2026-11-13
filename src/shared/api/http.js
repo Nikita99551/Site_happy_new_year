@@ -241,7 +241,8 @@ export const httpApi = {
   sendAnswer(slug, input) {
     const form = new FormData();
     form.set('text', input.text ?? '');
-    if (input.photo) form.set('photo', input.photo);
+    // До 3 фото (правка 13.11): поле photo повторяется столько раз, сколько фото (photo, photo, photo)
+    for (const file of input.photos ?? []) form.append('photo', file);
     if (input.video) form.set('video', input.video);
     form.set('consent', '1');
     // Видео до 100 МБ с телефона грузится долго: ждём до 5 минут

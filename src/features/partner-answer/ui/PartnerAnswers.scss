@@ -132,3 +132,17 @@ dialog#m-answers { padding: 30px 0 14px; }
   .media-pick__thumb { width: 76px; height: 76px; }
   .field--area textarea { font-size: 18px; }
 }
+
+/* До 3 фото в ответе (правка 13.11): выбранные файлы списком, ниже — «Добавить ещё фото» */
+.media-pick__list { display: grid; gap: 10px; margin: 0; padding: 0; list-style: none; }
+.media-pick__list + .media-pick__add { margin-top: 10px; }
+.media-pick__add--more { padding-block: 12px; }
+.media-pick__add--more .media-pick__icons svg { width: 26px; height: 26px; }
+/* Два-три фото — плитками в один ряд, чтобы окно не вырастало втрое (имя файла не показываем, «Убрать» под плиткой) */
+.media-pick__list--grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.media-pick__list--grid .media-pick__chosen { flex-direction: column; align-items: stretch; gap: 8px; padding: 8px; }
+.media-pick__list--grid .media-pick__thumb { width: 100%; height: auto; aspect-ratio: 4 / 3; }
+.media-pick__list--grid .media-pick__info { justify-items: center; text-align: center; }
+.media-pick__list--grid .media-pick__info b { font-size: 16px; }
+.media-pick__list--grid .media-pick__info small { display: none; }
+.media-pick__list--grid .media-pick__actions { justify-content: center; margin-top: 0; }

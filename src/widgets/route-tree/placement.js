@@ -55,7 +55,8 @@ export function placeHere(tg, k, partnerStops, step) {
   const side = w / 2 - 4 * k;
   const spots = [
     [cx, below],
-    [cx + 3 * k - w / 2, below], // левее коробки партнёра (она справа снизу от шара)
+    // левее коробки партнёра (она справа снизу от шара); 13.11 — с зазором ~6 px на телефоне, а не 2 px (правило «не впритык»)
+    [cx - 4 * k - w / 2, below],
     [cx - side, below],
     [cx + side, below],
     [cx, below + h * 0.55],
@@ -65,7 +66,7 @@ export function placeHere(tg, k, partnerStops, step) {
   ];
   const fits = ([x, y]) => {
     const b = box(x, y, w, h);
-    return !solid.some((s) => overlaps(b, s, 1 * k)) && !balls.some((s) => overlaps(b, s)) && !own.some((s) => overlaps(b, s));
+    return !solid.some((s) => overlaps(b, s, 6 * k)) && !balls.some((s) => overlaps(b, s)) && !own.some((s) => overlaps(b, s));
   };
   const cost = ([x, y]) => {
     const b = box(x, y, w, h);

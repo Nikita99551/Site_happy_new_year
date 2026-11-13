@@ -1,7 +1,7 @@
 import { useRef, useState } from 'react';
 import { getPartner, partnerPath } from '@/entities/partner';
 import { useModal } from '@/features/modal';
-import { CAMPAIGN, PARTNER_STEPS_TEXT, PARTNER_TASKS, stepsCostText } from '@/shared/config/campaign';
+import { CAMPAIGN, PARTNER_LABEL, PARTNER_STEPS_TEXT, PARTNER_TASKS, readyTask, stepsCostText } from '@/shared/config/campaign';
 import { plural } from '@/shared/lib/text';
 import { Button } from '@/shared/ui/button/Button';
 import { IconCheck } from '@/shared/ui/icons/Icons';
@@ -24,11 +24,12 @@ export function PartnerTasks({ step, circle, guest }) {
   const [picked, setPicked] = useState(null);
   // По умолчанию — последнее открытое задание партнёра, чья страница есть на сайте (правка 08.11: в показе видны
   // не все партнёры, и на 28-м шаге стояло «скоро появится»)
-  const shown = (n) => !!getPartner(PARTNER_TASKS[n]?.slug);
+  const shown = (n) => !!getPartner(PARTNER_TASKS[n]?.slug) && !!readyTask(n);
   const sel = picked ?? opened.filter(shown).pop() ?? opened[opened.length - 1] ?? STOPS.find(shown) ?? STOPS[0];
-  // Страница партнёра скрыта (в показе видны не все) — задание ещё «скоро появится», ссылки нет
-  const t = getPartner(PARTNER_TASKS[sel]?.slug) ? PARTNER_TASKS[sel] : null;
-  const partner = t ? getPartner(t.slug).title : 'С родной земли';
+  // Партнёр шага известен, а задание ещё готовится (СПК, 13.11) — имя есть, задание «скоро появится»; страницы нет — ни того ни другого
+  const who = getPartner(PARTNER_TASKS[sel]?.slug);
+  const t = who ? readyTask(sel) : null;
+  const partner = who?.title ?? PARTNER_LABEL;
   const prize = t?.prize;
   const on = isOpen(sel);
   const left = sel - step;
@@ -64,7 +65,7 @@ export function PartnerTasks({ step, circle, guest }) {
         <div className="section-head reveal">
           <span className="ribbon ribbon--green">Задания партнёров</span>
           <h2>Задания от&nbsp;партнёров</h2>
-          <p className="lead">На&nbsp;{PARTNER_STEPS_TEXT}‑м шагах открываются задания от&nbsp;партнёров акции. Выполнять их не&nbsp;обязательно. Выполнили задание&nbsp;— участвуете в&nbsp;розыгрыше призов партнёра.</p>
+          <p className="lead">На&nbsp;{PARTNER_STEPS_TEXT}‑м шагах открываются задания от&nbsp;партнёров акции. Выполнять их не&nbsp;обязательно. За&nbsp;выполненное задание можно получить приз партнёра: кто его получит, написано в&nbsp;каждом задании.</p>
         </div>
         <div className="ptasks__panel reveal">
           <div className="ptasks__bar">
@@ -92,7 +93,7 @@ export function PartnerTasks({ step, circle, guest }) {
             </div>
             <div className="ptasks__info">
               <div className="ptasks__task"><small>Задание</small>{body}</div>
-              <p className="ptasks__prize"><small>Разыгрывает партнёр</small>{prize ?? 'Приз партнёр объявит позже'}</p>
+              <p className="ptasks__prize"><small>Приз</small>{prize ?? 'Приз партнёр объявит позже'}{t?.winners && <span className="ptasks__winners">{t.winners}</span>}</p>
               {action && <div className="ptasks__action">{action}</div>}
             </div>
           </div>

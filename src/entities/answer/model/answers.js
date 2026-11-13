@@ -16,6 +16,9 @@ export function answersChanged(slug) {
 }
 
 /** Отправить ответ на задание партнёра; после ответа сервера списки перечитываются */
+/** Фото ответа списком: сервер отдаёт photos (до 3, правка 13.11); старый ответ с одним photo тоже понимаем */
+export const answerPhotos = (a) => (a?.photos?.length ? a.photos : a?.photo ? [a.photo] : []);
+
 export async function sendAnswer(slug, input) {
   const answer = await api.sendAnswer(slug, input);
   answersChanged(slug);

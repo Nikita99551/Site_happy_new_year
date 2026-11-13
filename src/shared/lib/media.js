@@ -9,6 +9,8 @@ export const MEDIA_LIMITS = {
   videoMb: 100,
   videoSec: 60,
   textMax: 1000,
+  /** Сколько фото можно приложить к одному ответу (правка 13.11: «Логика молока» просит продукты и готовое блюдо) */
+  photosMax: 3,
 };
 
 const PHOTO_RE = /^image\/(jpeg|png|webp|heic|heif)$/i;

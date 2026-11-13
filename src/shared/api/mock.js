@@ -148,7 +148,9 @@ function profileOf(s) {
 const ANSWER_REVIEW_MS = 60000;
 /** Видео, выбранные в этой вкладке. Файл в localStorage не помещается: в демо видео играет до перезагрузки страницы */
 const demoVideos = new Map();
-const answerKind = (a) => (a.video ? 'video' : a.photo ? 'photo' : 'text');
+const answerKind = (a) => (a.video ? 'video' : a.photos?.length || a.photo ? 'photo' : 'text');
+/** «Макароны Алмак» = «макароны алмак»: регистр, ё и лишние пробелы не важны (как на сайте) */
+const norm = (s) => s.toLowerCase().replace(/ё/g, 'е').replace(/\s+/g, ' ');
 const byNew = (a, b) => Date.parse(b.at) - Date.parse(a.at);
 const byPopular = (a, b) => b.likes - a.likes || byNew(a, b);
 const slugStep = (slug) => CAMPAIGN.partnerStops.find((n) => PARTNER_TASKS[n]?.slug === slug);
@@ -335,6 +337,10 @@ export const mockApi = {
     if (!isTaskOpen(currentUser(), step)) throw new Error(`Ответы видны тем, кто дошёл до ${step}‑го шага`);
     const s = load();
     const all = allAnswers(s, slug, Date.now());
+    // Викторина (правка 13.11): чужие ответы не отдаём никому, только свой
+    if (PARTNER_TASKS[step]?.hiddenAnswers) {
+      return { items: [], next: null, counts: { all: 0, text: 0, photo: 0, video: 0 }, mine: clone(all.find((a) => a.mine) ?? null) };
+    }
     const pub = all.filter((a) => a.status === 'published');
     const counts = { all: pub.length, text: 0, photo: 0, video: 0 };
     for (const a of pub) counts[answerKind(a)] += 1;
@@ -354,23 +360,27 @@ export const mockApi = {
     if (!s.phone) throw new Error('Сначала войдите или зарегистрируйтесь');
     const step = slugStep(slug);
     const task = PARTNER_TASKS[step];
-    if (!task) throw new Error('У этого партнёра нет задания');
+    if (!task?.task) throw new Error('У этого партнёра пока нет задания');
     if (!isTaskOpen(currentUser(), step)) throw new Error(`Задание откроется, когда вы дойдёте до ${step}‑го шага`);
     const prev = s.answers?.[slug]?.[s.phone];
     if (prev && prev.status !== 'rejected') throw new Error('Вы уже ответили на это задание');
-    const text = String(input.text ?? '').trim().slice(0, MEDIA_LIMITS.textMax);
+    const text = String(input.text ?? '').trim().slice(0, task.textMax ?? MEDIA_LIMITS.textMax);
+    const photos = (input.photos ?? []).slice(0, MEDIA_LIMITS.photosMax);
     const { accepts } = task;
+    const minPhotos = Math.min(task.minPhotos ?? 1, MEDIA_LIMITS.photosMax);
     if (accepts.text === 'required' && !text) throw new Error('Напишите ответ');
-    if (accepts.photo === 'required' && !input.photo) throw new Error('Добавьте фото');
+    if (text && task.mustContain && !norm(text).includes(norm(task.mustContain))) throw new Error(`Добавьте слова «${task.mustContain}»`);
+    if (accepts.photo === 'required' && !input.video && photos.length < minPhotos) throw new Error(minPhotos > 1 ? `Нужно хотя бы ${minPhotos} фото` : 'Добавьте фото');
     if (accepts.video === 'required' && !input.video) throw new Error('Добавьте видео');
-    if (!text && !input.photo && !input.video) throw new Error('Добавьте фото, видео или напишите пару слов');
+    if (!text && !photos.length && !input.video) throw new Error('Добавьте фото, видео или напишите пару слов');
     const now = Date.now();
     const id = `my-${slug}-${now}`;
     const a = { id, ...authorOf(s, s.phone), at: new Date(now).toISOString(), likes: 0, status: 'review', readyAt: new Date(now + ANSWER_REVIEW_MS).toISOString() };
     if (text) a.text = text;
-    if (input.photo) {
+    if (photos.length) {
       try {
-        a.photo = await shrinkPhoto(input.photo);
+        // Несколько фото в localStorage помещаются только уменьшенными
+        a.photos = await Promise.all(photos.map((f) => shrinkPhoto(f, photos.length > 1 ? 1024 : 1280)));
       } catch {
         // На сервере подойдёт и HEIC с iPhone; в демо браузер не всё умеет открыть
         throw new Error('Не получилось открыть фото. Попробуйте JPEG или PNG');

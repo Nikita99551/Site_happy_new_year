@@ -488,3 +488,5 @@ html.no-anim .tree .ball--current { animation: none; }
   .receipt__row b { font-size: 16px; }
   .receipt__steps { font-size: 22px; }
 }
+/* Кто получит приз партнёра (правка 13.11) */
+.ptasks__winners { display: block; margin-top: 4px; font-weight: 600; font-size: 16px; line-height: 1.4; color: var(--mu); }

@@ -3,6 +3,7 @@ import { AnswerCard, MediaViewer, toggleLike, useAnswers } from '@/entities/answ
 import { useSession } from '@/entities/user';
 import { useModal } from '@/features/modal';
 import { TaskAction } from '@/features/partner-answer';
+import { MEDIA_LIMITS } from '@/shared/lib/media';
 import { formatNumber } from '@/shared/lib/text';
 import { Button } from '@/shared/ui/button/Button';
 import { IconPhoto, IconVideo } from '@/shared/ui/icons/Icons';
@@ -28,6 +29,8 @@ const KINDS = {
  * чтобы страница не превращалась в бесконечную ленту.
  * Правка 08.11 (Никита): задание и ответы видят только те, кто дошёл до шага с коробкой (canSee). Гость и тот, кто не дошёл,
  * видят закрытую коробку с замком: на каком шаге откроется и сколько осталось — без текста задания и без ответов.
+ * 13.11 (настоящие задания): условия по пунктам (rules), приз и кто его получит (winners), фото «до 3» или «2–3»;
+ * у викторины (hiddenAnswers) чужие ответы не показываем — только свой статус.
  */
 export function TaskSection({ partner, task, canSee }) {
   const { user } = useSession();
@@ -63,7 +66,10 @@ export function TaskSection({ partner, task, canSee }) {
   const top = items.filter((a) => !a.mine).slice(0, ON_PAGE);
   const total = counts?.all ?? 0;
   const nothingRequired = !Object.values(task.accepts).includes('required');
-  const kinds = ['text', 'photo', 'video'].filter((k) => task.accepts[k]);
+  // Сначала обязательное («Фото» у «Меленки»), потом то, что по желанию
+  const kinds = ['text', 'photo', 'video'].filter((k) => task.accepts[k]).sort((a, b) => (task.accepts[b] === 'required') - (task.accepts[a] === 'required'));
+  const max = MEDIA_LIMITS.photosMax;
+  const kindLabel = (k) => (k !== 'photo' ? KINDS[k].label : (task.minPhotos ?? 1) > 1 ? `${task.minPhotos}–${max} фото` : `Фото, до ${max}`);
   const openAll = (focus) => open('answers', { slug: partner.slug, focus });
   const onLike = (a) => (user ? toggleLike(a).catch(() => {}) : open('auth'));
 
@@ -73,19 +79,24 @@ export function TaskSection({ partner, task, canSee }) {
         <div className="section-head ptask__head reveal">
           <span className="ribbon ribbon--cream">Задание партнёра · {task.step}‑й шаг</span>
           <h2>{task.title}</h2>
-          <p className="lead">Вы дошли до&nbsp;{task.step}‑го шага, и&nbsp;задание открыто. Выполнять не&nbsp;обязательно: выполнили&nbsp;— участвуете в&nbsp;розыгрыше приза партнёра.</p>
+          <p className="lead">Вы дошли до&nbsp;{task.step}‑го шага, и&nbsp;задание открыто. Выполнять его не&nbsp;обязательно, а&nbsp;кто получит приз, написано рядом с&nbsp;заданием.</p>
         </div>
 
         <div className="ptask__card reveal">
           <div className="ptask__main">
             <small className="ptask__kicker">Задание от&nbsp;«{partner.title}»</small>
             <p className="ptask__text">{task.task}</p>
+            {task.rules && (
+              <ol className="ptask__rules" aria-label="Условия">
+                {task.rules.map((t) => <li key={t}>{t}</li>)}
+              </ol>
+            )}
             <ul className="ptask__accepts" aria-label="Что можно прислать">
               {kinds.map((k) => {
-                const { icon: Icon, label } = KINDS[k];
+                const { icon: Icon } = KINDS[k];
                 return (
                   <li key={k}>
-                    <Icon />{label}
+                    <Icon />{kindLabel(k)}
                     {task.accepts[k] === 'optional' && !nothingRequired && <i>по&nbsp;желанию</i>}
                   </li>
                 );
@@ -94,11 +105,20 @@ export function TaskSection({ partner, task, canSee }) {
             </ul>
           </div>
           <div className="ptask__side">
-            <p className="ptask__prize"><small>Разыгрывает партнёр</small>{task.prize ?? 'Приз партнёр объявит позже'}</p>
+            <div className="ptask__prize">
+              <small>Приз</small>
+              <p>{task.prize ?? 'Приз партнёр объявит позже'}</p>
+              {task.winners && <p className="ptask__winners">{task.winners}</p>}
+            </div>
             <TaskAction slug={partner.slug} step={task.step} mine={mine} />
           </div>
         </div>
 
+        {task.hiddenAnswers ? (
+          <div className="ptask__answers">
+            <p className="ptask__empty">Ответы на&nbsp;этот вопрос не&nbsp;публикуем, чтобы не&nbsp;подсказывать другим участникам. Итоги подведёт партнёр.</p>
+          </div>
+        ) : (
         <div className="ptask__answers">
           <div className="ptask__answers-head">
             <h3>Ответы участников{total > 0 && <span className="ptask__count">{formatNumber(total)}</span>}</h3>
@@ -123,6 +143,7 @@ export function TaskSection({ partner, task, canSee }) {
             </div>
           )}
         </div>
+        )}
       </div>
       <MediaViewer answer={viewing} onClose={() => setViewing(null)} />
     </section>

@@ -81,7 +81,7 @@
  * @property {() => string | null} selectedStore — Выбранный магазин: из профиля или сохранённый локально до входа
  * @property {(value?: boolean) => boolean | undefined} cookieConsent — Согласие на cookie: undefined — ещё не отвечал
  * @property {(slug: string, query: AnswersQuery) => Promise<AnswersPage>} answers — Ответы на задание партнёра. GET /partners/:slug/answers?sort=&type=&cursor=&limit=
- * @property {(slug: string, input: AnswerInput) => Promise<TaskAnswer>} sendAnswer — Отправить ответ. POST /partners/:slug/answers (multipart/form-data: text, photo, video, consent=1).
+ * @property {(slug: string, input: AnswerInput) => Promise<TaskAnswer>} sendAnswer — Отправить ответ. POST /partners/:slug/answers (multipart/form-data: text, photo — до 3 раз, video, consent=1).
  *   401 — не вошёл, 403 — задание ещё не открыто (не дошёл до шага), 409 — уже отвечал на это задание, 413 — файл больше лимита
  * @property {(id: string, like: boolean) => Promise<{ likes: number; liked: boolean }>} likeAnswer — Сердечко: PUT /answers/:id/like — поставить, DELETE — снять; 401 — не вошёл
  */
@@ -95,7 +95,8 @@
  * @property {string} [place] — Город или посёлок магазина участника («Бийск»), можно пусто
  * @property {string} at — Когда отправлен, ISO 8601
  * @property {string} [text]
- * @property {{ src: string; w: number; h: number }} [photo] — Фото после проверки, уменьшенное сервером (до 1600 px) и без геометок EXIF
+ * @property {{ src: string; w: number; h: number }[]} [photos] — До 3 фото по порядку (правка 13.11), уменьшенные сервером (до 1600 px) и без геометок EXIF.
+ *   Старое поле photo (одно фото) сайт тоже понимает
  * @property {{ src: string; poster: string; duration: number }} [video] — Видео (mp4 H.264), кадр-обложка и длительность в секундах
  * @property {number} likes — Сколько сердечек
  * @property {boolean} liked — Текущий участник уже поставил сердечко
@@ -124,6 +125,6 @@
 /**
  * @typedef {Object} AnswerInput
  * @property {string} text — Можно пустую строку, если задание принимает только фото или видео
- * @property {File | null} photo — JPEG, PNG, HEIC или WebP до 10 МБ
+ * @property {File[]} photos — До 3 фото (JPEG, PNG, HEIC или WebP, каждое до 10 МБ); пустой список — без фото
  * @property {File | null} video — MP4 или MOV до 1 минуты и до 100 МБ
  */

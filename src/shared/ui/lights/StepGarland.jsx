@@ -6,11 +6,14 @@ import { taskButton } from './taskButton';
 /**
  * Гирлянда шагов 1:1 по макету: три дуги по 10 шагов, лампочки 20×28, вехи 10/20 — зубчатый круг, 30 — звезда.
  * Используется на «Моём маршруте» (прогресс) и на «Условиях» (шкала круга).
- * partnerLabel — подпись под каждой коробкой партнёра (правка 02.11: пока «С родной земли»), шкала становится выше.
+ * partnerLabel — подпись под коробкой партнёра: строка или функция (n) => название партнёра шага (правка 13.11, было «С родной земли»).
+ *   Коробки через шаг (2 и 4) стоят близко — подпись второй опускается на строку, чтобы названия не налезали.
  * onPartner(n) — коробки становятся кнопками окна задания (правка 03.11, главная).
  */
 export function StepGarland({ step, here = false, labels = true, partners = [], partnerLabel, onPartner, wire = '#0b2417', textColor = '#fff8e8', startSolid = false, height, segment, moving = false }) {
-  const H = height ?? (labels ? 170 : 150) + (partnerLabel ? 28 : 0);
+  const labelOf = typeof partnerLabel === 'function' ? partnerLabel : () => partnerLabel;
+  const lowered = (n) => partners.includes(n - 2) && !lowered(n - 2);
+  const H = height ?? (labels ? 170 : 150) + (partnerLabel ? 28 : 0) + (partnerLabel && partners.some(lowered) ? 20 : 0);
   const SW = 1312 / 3;
   const shadowId = useId();
   const bulbs = [];
@@ -76,10 +79,16 @@ export function StepGarland({ step, here = false, labels = true, partners = [], 
     if (partners.includes(n)) {
       partnerBoxes.push(
         <g key={`p${n}`} {...taskButton(n, partnerBoxes.length, onPartner)}>
-          {onPartner && <rect x={x - 56} y={y + 50} width={112} height={partnerLabel ? 64 : 42} fill="transparent" />}
+          {onPartner && <rect x={x - 56} y={y + 50} width={112} height={partnerLabel ? 64 + (lowered(n) ? 19 : 0) : 42} fill="transparent" />}
           <line x1={x} y1={y + 36} x2={x} y2={y + 54} stroke="#173f2a" strokeWidth={1.5} />
           <PartnerBox x={x} y={y + 72} s={36} />
-          {partnerLabel && <text x={x} y={y + 107} textAnchor="middle" fontFamily={FONT_TEXT} fontWeight={800} fontSize={14} fill={textColor} opacity={0.85}>{partnerLabel}</text>}
+          {partnerLabel && (() => {
+            const t = labelOf(n);
+            // Длинное название у края не уходит за рамку: центр подписи сдвигается внутрь (ширина — по числу букв)
+            const half = (t.length * 14 * 0.62) / 2;
+            const lx = Math.min(Math.max(x, half + 6), 1312 - half - 6);
+            return <text x={lx} y={y + 107 + (lowered(n) ? 19 : 0)} textAnchor="middle" fontFamily={FONT_TEXT} fontWeight={800} fontSize={14} fill={textColor} opacity={0.85}>{t}</text>;
+          })()}
         </g>,
       );
     }

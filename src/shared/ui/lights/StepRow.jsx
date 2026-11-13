@@ -27,8 +27,31 @@ export function StepRow({ row, step, here = false, labels = true, partners = [],
   const milestone = first + 9;
   const hasHere = here && step >= first && step < milestone;
   const hasBoxes = partners.some((p) => p >= first && p < milestone);
+  // Подпись — строка или функция (n) => название партнёра шага (правка 13.11, вместо «С родной земли»).
+  // Названия ставим по очереди: под своей коробкой, а если задевает чужую коробку или соседнее название — ниже на строку
+  const labelOf = typeof partnerLabel === 'function' ? partnerLabel : () => partnerLabel;
+  const rowBoxes = partners.filter((p) => p >= first && p < milestone).map((p) => {
+    const x = X0 + (p - first) * DX;
+    return { n: p, x, y: wireY(x), r: [x - 12, wireY(x) + 40, x + 12, wireY(x) + 64] };
+  });
+  const hit = (a, b) => a[0] < b[2] + 2 && b[0] < a[2] + 2 && a[1] < b[3] + 2 && b[1] < a[3] + 2;
+  const placed = {};
+  if (partnerLabel) {
+    const taken = rowBoxes.map((b) => b.r);
+    for (const b of rowBoxes) {
+      const lines = splitLabel(labelOf(b.n));
+      const half = (Math.max(...lines.map((l) => l.length)) * 11 * 0.62) / 2;
+      const lx = Math.min(Math.max(b.x, half + 4), W - half - 4);
+      let ly = b.y + 76;
+      const rect = () => [lx - half, ly - 9, lx + half, ly - 9 + 12 * lines.length];
+      while (taken.some((r) => r !== b.r && hit(rect(), r)) && ly < b.y + 76 + 12 * 6) ly += 12;
+      taken.push(rect());
+      placed[b.n] = { lines, lx, ly, bottom: rect()[3] };
+    }
+  }
+  const labelsBottom = Math.max(0, ...Object.values(placed).map((l) => l.bottom));
   // Подпись сертификата в три строки — ряду с вехой 10/20 нужно чуть больше высоты
-  const H = hasHere || hasBoxes ? 146 : labels && milestone !== 30 ? 126 : 100;
+  const H = Math.max(hasHere || hasBoxes ? 146 : labels && milestone !== 30 ? 126 : 100, Math.ceil(labelsBottom + 8));
   const wirePath = Array.from({ length: 31 }, (_, i) => {
     const x = (i * W) / 30;
     return `${i ? 'L' : 'M'} ${x.toFixed(1)} ${wireY(x).toFixed(1)}`;
@@ -59,11 +82,11 @@ export function StepRow({ row, step, here = false, labels = true, partners = [],
       // onPartner — коробка с подписью становится кнопкой окна задания (правка 03.11, главная); прозрачная рамка — палец попадает легче
       boxes.push(
         <g key={`p${n}`} {...taskButton(n, boxes.length, onPartner)}>
-          {onPartner && <rect x={x - 32} y={y + 38} width={64} height={partnerLabel ? 56 : 30} fill="transparent" />}
+          {onPartner && <rect x={x - 32} y={y + 38} width={64} height={placed[n] ? placed[n].bottom - y - 38 : 30} fill="transparent" />}
           <PartnerBox x={x} y={y + 52} s={24} />
-          {partnerLabel && (
-            <text x={x} y={y + 76} textAnchor="middle" fontFamily={FONT_TEXT} fontWeight={800} fontSize={11} fill={textColor} opacity={0.85}>
-              {splitLabel(partnerLabel).map((t, j) => <tspan key={j} x={x} dy={j ? 12 : 0}>{t}</tspan>)}
+          {placed[n] && (
+            <text x={placed[n].lx} y={placed[n].ly} textAnchor="middle" fontFamily={FONT_TEXT} fontWeight={800} fontSize={11} fill={textColor} opacity={0.85}>
+              {placed[n].lines.map((t, j) => <tspan key={j} x={placed[n].lx} dy={j ? 12 : 0}>{t}</tspan>)}
             </text>
           )}
         </g>,
@@ -108,7 +131,8 @@ export function StepRow({ row, step, here = false, labels = true, partners = [],
           </text>
         )}
       </g>
-      {row === 0 && !(hx > 0 && hx < 60) && <text x={X0 - 10} y={78} fontFamily={FONT_TEXT} fontWeight={700} fontSize={13} fill={textColor}>Старт</text>}
+      {/* «Старт» прячется, если рядом «вы здесь» или коробка 2-го шага (с 13.11 там задание «Простоквашино») */}
+      {row === 0 && !(hx > 0 && hx < 60) && !partners.includes(2) && <text x={X0 - 10} y={78} fontFamily={FONT_TEXT} fontWeight={700} fontSize={13} fill={textColor}>Старт</text>}
       {hx > 0 && (
         <g key={hx} className={`lights__here${moving ? ' lights__here--pop' : ''}`}>
           <path d={G_BURST} fill="#e31e24" transform={`translate(${hx - 30} ${hy + 6}) scale(0.81)`} filter={`url(#${shadowId})`} />

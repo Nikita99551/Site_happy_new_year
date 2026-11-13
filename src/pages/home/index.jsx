@@ -307,7 +307,7 @@ export function HomePage() {
         <div className="container">
           <div className="partners__paper-wrap reveal"><div className="partners__paper">
             <h2>Партнёры акции</h2>
-            <p className="lead">5&nbsp;товаров партнёров в&nbsp;одном чеке дают ещё 1&nbsp;шаг сверх шагов за&nbsp;сумму покупки. А&nbsp;на&nbsp;{PARTNER_STEPS_TEXT}‑м шагах маршрута вас ждут задания от&nbsp;партнёров: выполните задание и&nbsp;участвуйте в&nbsp;розыгрыше призов партнёра.</p>
+            <p className="lead">5&nbsp;товаров партнёров в&nbsp;одном чеке дают ещё 1&nbsp;шаг сверх шагов за&nbsp;сумму покупки. А&nbsp;на&nbsp;{PARTNER_STEPS_TEXT}‑м шагах маршрута вас ждут задания от&nbsp;партнёров: выполните задание и&nbsp;получите шанс на&nbsp;приз партнёра.</p>
             <ul className="partner-tiles">
               {PARTNERS.map((p) => <li key={p.slug}><Link className="partner-tile" to={partnerPath(p.slug)} aria-label={p.title}><PartnerLogo partner={p} compact /></Link></li>)}
             </ul>
