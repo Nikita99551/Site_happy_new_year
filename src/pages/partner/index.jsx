@@ -30,7 +30,7 @@ export default function PartnerPage() {
   const taskOpen = Boolean(task) && isTaskOpen(user, task.step);
 
   return (
-    <PageLayout title={`${partner.title} · Партнёр новогодней акции Аникс 2027`} revealDeps={[slug, ready, taskOpen]}>
+    <PageLayout title={`${partner.title} · Партнёр новогодней акции Аникс 2027`} adNote revealDeps={[slug, ready, taskOpen]}>
       {/* ===== Первый экран ===== */}
       <section className="section section--cream partner-hero">
         <div className="container partner-hero__grid">

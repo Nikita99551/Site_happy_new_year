@@ -2,8 +2,9 @@ import { Link } from 'react-router-dom';
 import { SoonLink } from '@/shared/ui/soon-link/SoonLink';
 import './Footer.scss';
 
-/** Подвал: логотип, разделы, правила и согласие. compact — только нижняя строка (страницы-документы). */
-export function Footer({ compact = false }) {
+/** Подвал: логотип, разделы, правила и согласие. compact — только нижняя строка (страницы-документы).
+ *  adNote — пометка «Реклама» с данными рекламодателя (только страницы партнёров, Никита 13.11.2026). */
+export function Footer({ compact = false, adNote = false }) {
   return (
     <footer className="footer">
       <div className="container">
@@ -23,6 +24,15 @@ export function Footer({ compact = false }) {
           <Link to="/rules">Правила акции</Link>
           <SoonLink>Обработка персональных данных</SoonLink>
         </div>
+        {/* Пометка рекламы (Никита, 13.11.2026): только на страницах партнёров, текст дословно; неразрывные пробелы только против переносов */}
+        {adNote && (
+          <p className="footer__legal">
+            РЕКЛАМА. РЕКЛАМОДАТЕЛЬ: ООО&nbsp;«ТОРГОВАЯ СЕТЬ АНИКС». ИНН&nbsp;2204039458. ЮРИДИЧЕСКИЙ АДРЕС: 659316, АЛТАЙСКИЙ КРАЙ,
+            Г.&nbsp;БИЙСК, УЛ.&nbsp;СОЦИАЛИСТИЧЕСКАЯ, Д.&nbsp;5/1, ОФИС&nbsp;305. СРОК ПРОВЕДЕНИЯ АКЦИИ: С&nbsp;16.11.2026 ПО&nbsp;10.01.2027
+            ВКЛЮЧИТЕЛЬНО. ПОДРОБНАЯ ИНФОРМАЦИЯ ОБ&nbsp;ОРГАНИЗАТОРЕ АКЦИИ, ПРАВИЛАХ ЕЁ&nbsp;ПРОВЕДЕНИЯ, КОЛИЧЕСТВЕ ПРИЗОВ, СРОКАХ, МЕСТЕ
+            И&nbsp;ПОРЯДКЕ ИХ&nbsp;ПОЛУЧЕНИЯ РАЗМЕЩЕНА НА&nbsp;САЙТЕ PROMO.TDANIX.RU.
+          </p>
+        )}
       </div>
     </footer>
   );
