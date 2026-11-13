@@ -24,7 +24,7 @@ export function ProcessingModal({ open }) {
         <Button block to="/route" onClick={close}>Перейти к&nbsp;маршруту</Button>
         <Button block variant="secondary" onClick={() => openModal('receipt')}>Зарегистрировать ещё чек</Button>
       </div>
-      <p className="modal__foot">Сохраните чек до&nbsp;24&nbsp;января 2027&nbsp;года. Если он зарегистрирован, на&nbsp;нём напечатан ваш номер телефона.</p>
+      <p className="modal__foot">Сохраните чек до&nbsp;12&nbsp;февраля 2027&nbsp;года. Если он зарегистрирован, на&nbsp;нём напечатан ваш номер телефона.</p>
     </Modal>
   );
 }

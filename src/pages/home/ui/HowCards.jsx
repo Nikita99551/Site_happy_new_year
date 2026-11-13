@@ -15,7 +15,7 @@ export function HowCards() {
   return (
     <div className="how__cards">
       <article className="how__card reveal" style={d(0)}>
-        <div className="wavy"><span className="wavy__n">1</span><span className="wavy__icon"><IconBag /></span><h3>Покупайте в&nbsp;Аникс</h3><p>Чек от&nbsp;600&nbsp;₽. Алкоголь и&nbsp;табачные изделия в&nbsp;сумму не&nbsp;входят. Сохраните чек до&nbsp;24&nbsp;января 2027&nbsp;года.</p></div>
+        <div className="wavy"><span className="wavy__n">1</span><span className="wavy__icon"><IconBag /></span><h3>Покупайте в&nbsp;Аникс</h3><p>Чек от&nbsp;600&nbsp;₽. Алкоголь и&nbsp;табачные изделия в&nbsp;сумму не&nbsp;входят. Сохраните чек до&nbsp;12&nbsp;февраля 2027&nbsp;года.</p></div>
       </article>
       <article className="how__card reveal" style={d(80)}>
         <div className="wavy wavy--green"><span className="wavy__n">2</span><span className="wavy__icon"><IconReceipt /></span><h3>Регистрируйте чек</h3><p>У&nbsp;кассира, на&nbsp;кассе самообслуживания или на&nbsp;этом сайте. До&nbsp;5&nbsp;чеков в&nbsp;день.</p></div>

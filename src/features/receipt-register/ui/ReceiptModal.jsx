@@ -103,7 +103,7 @@ export function ReceiptModal({ open }) {
       </div>
       <div className={`ticket ticket--green modal__ticket modal__ticket--${channel}`}>
         <span className="num">600&nbsp;₽</span>
-        <div><b>= 1&nbsp;шаг</b><p>Чек от&nbsp;600&nbsp;₽, до&nbsp;5&nbsp;чеков в&nbsp;день<span className="modal__ticket-extra">, 5&nbsp;товаров партнёров&nbsp;— ещё шаг</span>. Чек храните до&nbsp;24&nbsp;января&nbsp;2027.</p></div>
+        <div><b>= 1&nbsp;шаг</b><p>Чек от&nbsp;600&nbsp;₽, до&nbsp;5&nbsp;чеков в&nbsp;день<span className="modal__ticket-extra">, 5&nbsp;товаров партнёров&nbsp;— ещё шаг</span>. Чек храните до&nbsp;12&nbsp;февраля&nbsp;2027.</p></div>
       </div>
       {channel === 'store' ? <ReceiptHint /> : <DeliveryHint />}
       <form className="modal__form" noValidate onSubmit={submit} style={{ marginTop: 0 }}>
