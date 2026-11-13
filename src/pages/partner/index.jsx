@@ -91,11 +91,6 @@ export default function PartnerPage() {
             <div className="reveal">
               <h2>О компании</h2>
               {partner.about.map((t) => <p className="lead" key={t.slice(0, 24)}>{t}</p>)}
-              {partner.site && (
-                <p className="partner-about__site">
-                  <a className="link" href={partner.site} target="_blank" rel="noopener noreferrer">Сайт производителя&nbsp;→</a>
-                </p>
-              )}
             </div>
             {partner.facts.length > 0 && (
               <div className="facts partner-about__facts reveal" style={d(120)}>
